@@ -1,3 +1,5 @@
 <?php
 
-return [];
+return [
+    'create-path' => app_path('Livewire/Tables'),
+];
