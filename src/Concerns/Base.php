@@ -22,6 +22,11 @@ trait Base
 
     public int $perPage = 15;
 
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     abstract public function columns(): array;
 
     abstract public function datasource(): Builder|Collection;
