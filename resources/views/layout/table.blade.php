@@ -2,9 +2,13 @@
     @if(!isset($data['columns']))
         <p>Please define the columns</p>
     @else
-        <input wire:model.live.debounce="search" />
+        <div class="flex justify-end mt-4">
+            <div class="w-[300px]">
+                <x-simple-tables::input-search wire:model.live.debounce="search" />
+            </div>
+        </div>
 
-        <div class="mt-8 flow-root">
+        <div class="mt-4 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                     <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
@@ -57,6 +61,8 @@
             </div>
         </div>
 
-        {{ $data['rows']->links() }}
+        <div class="mt-4">
+            {{ $data['rows']->links() }}
+        </div>
     @endif
 </div>

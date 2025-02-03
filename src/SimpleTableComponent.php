@@ -5,12 +5,13 @@ namespace TiagoSpem\SimpleTables;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use TiagoSpem\SimpleTables\Concerns\Base;
+use TiagoSpem\SimpleTables\Concerns\SearchModifier;
 use TiagoSpem\SimpleTables\Concerns\TableStyle;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 
 abstract class SimpleTableComponent extends Component
 {
-    use Base, TableStyle;
+    use Base, SearchModifier, TableStyle;
 
     /**
      * @throws InvalidColumnException

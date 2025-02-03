@@ -27,7 +27,7 @@ class Processor implements ProcessorInterface
             }
         }
 
-        return collect($columns)->transform(fn (Column $column) => $column->toLivewire());
+        return collect($columns)->transform(fn (Column $column): array => $column->toLivewire());
     }
 
     /**
@@ -47,14 +47,12 @@ class Processor implements ProcessorInterface
                 ->orderBy($this->component->sortBy, $this->component->sortDirection)
                 ->when(
                     $this->component->paginated,
-                    fn ($query) => $query->paginate($this->component->perPage)
+                    fn (Builder $query) => $query->paginate($this->component->perPage)
                 );
 
             return $data;
-        } elseif ($datasource instanceof Collection) {
-            return [];
         }
 
-        return null;
+        return [];
     }
 }

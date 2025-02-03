@@ -27,7 +27,7 @@ class CreateCommand extends Command
         $name = str_replace(['\\', '/'], '/', $name);
         $parts = explode('/', $name);
         $className = array_pop($parts);
-        $subPath = ! empty($parts) ? implode('/', $parts).'/' : '';
+        $subPath = $parts === [] ? '' : implode('/', $parts).'/';
 
         $basePath = config('simple-tables.create-path');
         $targetPath = $basePath.'/'.$subPath.$className.'.php';
@@ -44,7 +44,7 @@ class CreateCommand extends Command
 
         $relativePath = ltrim(str_replace(app_path(), '', $basePath), '\\/');
         $namespaceBase = 'App\\'.str_replace('/', '\\', $relativePath);
-        $namespace = $namespaceBase.($parts ? '\\'.implode('\\', $parts) : '');
+        $namespace = $namespaceBase.($parts !== [] ? '\\'.implode('\\', $parts) : '');
 
         $content = file_get_contents($stubPath);
         $content = str_replace(
