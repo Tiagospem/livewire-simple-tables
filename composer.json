@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "php": "^8.3.0"
+        "php": "^8.3.0",
+        "livewire/livewire": "^3.5"
     },
     "require-dev": {
         "laravel/pint": "^1.18.1",
@@ -23,11 +24,21 @@
     "autoload": {
         "psr-4": {
             "TiagoSpem\\SimpleTables\\": "src/"
-        }
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "TiagoSpem\\SimpleTables\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TiagoSpem\\SimpleTables\\Providers\\SimpleTablesServiceProvider"
+            ]
         }
     },
     "minimum-stability": "stable",
