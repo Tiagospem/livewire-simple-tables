@@ -1,0 +1,23 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use TiagoSpem\SimpleTables\{SimpleTableComponent, Column};
+
+class {{ class }} extends SimpleTableComponent
+{
+    function columns(): array
+    {
+        return [
+            Column::add('Id', 'id')->notSearchable(),
+            Column::add('Email', 'email'),
+        ];
+    }
+
+    function datasource(): Builder
+    {
+        return User::query();
+    }
+}
