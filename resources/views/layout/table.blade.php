@@ -12,45 +12,41 @@
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                     <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
-                        <x-simple-tables::table>
-                            <x-simple-tables::thead>
-                                <x-simple-tables::tr>
+                        <x-simple-tables::table :class="theme($theme, 'table.content')">
+                            <x-simple-tables::thead :class="theme($theme, 'table.thead')">
+                                <x-simple-tables::tr :class="theme($theme, 'table.tr')">
                                     @foreach($data['columns'] as $column)
-                                        <x-simple-tables::th>
+                                        <x-simple-tables::th :class="theme($theme, 'table.th')">
                                             {{ $column['title'] }}
                                         </x-simple-tables::th>
 
                                         @if($loop->last)
-                                            <x-simple-tables::th class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                            <x-simple-tables::th :class="theme($theme, 'table.th_last')">
                                                 <span class="sr-only">action</span>
                                             </x-simple-tables::th>
                                         @endif
                                     @endforeach
                                 </x-simple-tables::tr>
                             </x-simple-tables::thead>
-                            <x-simple-tables::tbody>
+                            <x-simple-tables::tbody :class="theme($theme, 'table.tbody')">
                                 @forelse($data['rows'] as $row)
-                                    <x-simple-tables::tr>
+                                    <x-simple-tables::tr :class="theme($theme, 'table.tr')">
                                         @foreach($data['columns'] as $column)
-                                            <x-simple-tables::td>
+                                            <x-simple-tables::td :class="theme($theme, 'table.td')">
                                                 {{ data_get($row, $column['field']) }}
                                             </x-simple-tables::td>
 
                                             @if($loop->last)
-                                                <x-simple-tables::td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                <x-simple-tables::td :class="theme($theme, 'table.td_last')">
                                                     <a href="#" class="text-indigo-600 hover:text-indigo-900">action</a>
                                                 </x-simple-tables::td>
                                             @endif
                                         @endforeach
                                     </x-simple-tables::tr>
                                 @empty
-                                    <x-simple-tables::tr>
-                                        <x-simple-tables::td colspan="9999">
-                                            <div class="text-center">
-                                                <p class="text-sm text-gray-500">
-                                                    {{ __('simple-tables::table.no-records') }}
-                                                </p>
-                                            </div>
+                                    <x-simple-tables::tr :class="theme($theme, 'table.tr')">
+                                        <x-simple-tables::td colspan="9999" :class="theme($theme, 'table.td_no_records')">
+                                            {{ __('simple-tables::table.no-records') }}
                                         </x-simple-tables::td>
                                     </x-simple-tables::tr>
                                 @endforelse

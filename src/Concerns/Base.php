@@ -20,7 +20,7 @@ trait Base
 
     public bool $paginated = true;
 
-    public int $perPage = 15;
+    public int $perPage = 10;
 
     public function updatedSearch(): void
     {

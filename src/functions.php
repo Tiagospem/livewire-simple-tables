@@ -1,8 +1,8 @@
 <?php
 
-if (! function_exists('simple_tables')) {
-    function simple_tables(): string
+if (! function_exists('theme')) {
+    function theme(array $theme, string $element): string
     {
-        return 'simple-tables';
+        return strval(data_get($theme, $element));
     }
 }
