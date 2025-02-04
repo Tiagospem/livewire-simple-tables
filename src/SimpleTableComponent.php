@@ -7,11 +7,12 @@ use Livewire\Component;
 use TiagoSpem\SimpleTables\Concerns\Base;
 use TiagoSpem\SimpleTables\Concerns\SearchModifier;
 use TiagoSpem\SimpleTables\Concerns\ThemeManager;
+use TiagoSpem\SimpleTables\Concerns\ValueModifier;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 
 abstract class SimpleTableComponent extends Component
 {
-    use Base, SearchModifier, ThemeManager;
+    use Base, SearchModifier, ThemeManager, ValueModifier;
 
     /**
      * @throws InvalidColumnException

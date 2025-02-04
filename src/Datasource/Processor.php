@@ -39,6 +39,7 @@ class Processor implements ProcessorInterface
 
         $data = [
             'columns' => $this->getColumns(),
+            'modifiers' => $this->component->modifiers(),
         ];
 
         if ($datasource instanceof Builder) {

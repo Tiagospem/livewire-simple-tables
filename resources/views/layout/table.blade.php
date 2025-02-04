@@ -33,7 +33,13 @@
                                     <x-simple-tables::tr :class="theme($theme, 'table.tr')">
                                         @foreach($data['columns'] as $column)
                                             <x-simple-tables::td :class="theme($theme, 'table.td')">
-                                                {{ data_get($row, $column['field']) }}
+                                                @php
+                                                    $field = $column['field'];
+                                                    $modifiers = collect($data['modifiers'] ?? []);
+                                                    $modifier = $modifiers->firstWhere('column', $field);
+                                                    $value = $modifier ? $modifier->callback->__invoke($row) : data_get($row, $field);
+                                                    echo e($value);
+                                                @endphp
                                             </x-simple-tables::td>
 
                                             @if($loop->last)
