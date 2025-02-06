@@ -4,9 +4,9 @@ namespace TiagoSpem\SimpleTables\Concerns;
 
 use TiagoSpem\SimpleTables\SimpleTableModifiers;
 
-trait ValueModifier
+trait DataModifier
 {
-    public function modifiers(): SimpleTableModifiers
+    public function dataModifier(): SimpleTableModifiers
     {
         return app(SimpleTableModifiers::class);
     }

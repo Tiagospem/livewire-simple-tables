@@ -5,6 +5,7 @@ namespace TiagoSpem\SimpleTables\Datasource\Processors;
 use Illuminate\Database\Eloquent\Builder;
 use TiagoSpem\SimpleTables\Datasource\ProcessorInterface;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
+use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 
 class DataBuilderProcessor implements ProcessorInterface
@@ -15,6 +16,7 @@ class DataBuilderProcessor implements ProcessorInterface
 
     /**
      * @throws InvalidColumnException
+     * @throws InvalidParametersException
      */
     public function process(): array
     {

@@ -4,8 +4,13 @@ namespace TiagoSpem\SimpleTables;
 
 class SimpleTableManager
 {
-    public function modifiers(): SimpleTableModifiers
+    public function dataModifiers(): SimpleTableModifiers
     {
         return app(SimpleTableModifiers::class);
+    }
+
+    public function styleModifiers(): SimpleTablesStyleModifiers
+    {
+        return app(SimpleTablesStyleModifiers::class);
     }
 }

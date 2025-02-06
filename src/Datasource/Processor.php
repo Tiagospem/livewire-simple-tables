@@ -8,6 +8,7 @@ use TiagoSpem\SimpleTables\Datasource\Processors\DataBuilderProcessor;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataCollectionProcessor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidDatasetException;
+use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 
 class Processor implements ProcessorInterface
@@ -17,6 +18,7 @@ class Processor implements ProcessorInterface
     /**
      * @throws InvalidColumnException
      * @throws InvalidDatasetException
+     * @throws InvalidParametersException
      */
     public function process(): ?array
     {

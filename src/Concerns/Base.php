@@ -8,6 +8,7 @@ use Livewire\WithPagination;
 use TiagoSpem\SimpleTables\Datasource\Processor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidDatasetException;
+use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 
 trait Base
 {
@@ -33,7 +34,9 @@ trait Base
     abstract public function datasource(): Builder|Collection;
 
     /**
-     * @throws InvalidColumnException|InvalidDatasetException
+     * @throws InvalidColumnException
+     * @throws InvalidDatasetException
+     * @throws InvalidParametersException
      */
     protected function getData(): ?array
     {

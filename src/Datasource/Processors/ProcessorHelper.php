@@ -7,6 +7,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
+use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
+use TiagoSpem\SimpleTables\SimpleTableModifiers;
 
 trait ProcessorHelper
 {
@@ -28,15 +30,33 @@ trait ProcessorHelper
 
     /**
      * @throws InvalidColumnException
+     * @throws InvalidParametersException
      */
     protected function return(Collection|Builder|LengthAwarePaginator $rows): array
     {
-        $modifiers = $this->simpleTableComponent->modifiers();
+        $modifiers = $this->simpleTableComponent->dataModifier();
+
+        $styleModifier = $this->simpleTableComponent->styleModifier();
+
+        $this->validateModifiers($modifiers);
 
         return [
             'columns' => $this->getColumns(),
             'modifiers' => $modifiers,
+            'styleModifier' => $styleModifier,
             'rows' => $rows,
         ];
+    }
+
+    /**
+     * @throws InvalidParametersException
+     */
+    private function validateModifiers(SimpleTableModifiers $modifiers): void
+    {
+        foreach ($modifiers->fields as $field => $modifier) {
+            if ($modifier['numberOfParameters'] > 2) {
+                throw new InvalidParametersException("The modifier for the column {$field} has more than 2 parameters.");
+            }
+        }
     }
 }

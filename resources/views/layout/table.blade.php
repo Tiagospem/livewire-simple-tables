@@ -30,24 +30,20 @@
                             </x-simple-tables::thead>
                             <x-simple-tables::tbody :class="theme($theme, 'table.tbody')">
                                 @php
-                                    $modifiers = $data['modifiers'] ?? [];
+                                    $modifiers = $data['modifiers'];
+                                    $styleModifier = $data['styleModifier'];
                                 @endphp
                                 @forelse($data['rows'] as $row)
-                                    <x-simple-tables::tr :class="theme($theme, 'table.tr')">
+                                    @php
+                                        $style = style($styleModifier, $row)
+                                    @endphp
+                                    <x-simple-tables::tr :class="theme($theme, 'table.tr', $style['tr'])">
                                         @foreach($data['columns'] as $column)
-                                            <x-simple-tables::td :class="theme($theme, 'table.td')">
-                                                @php
-                                                    $field = $column['field'];
-                                                    $rawValue = data_get($row, $field);
-
-                                                    if (isset($modifiers->fields[$field])) {
-                                                        $value = $modifiers->fields[$field]->__invoke($rawValue);
-                                                    } else {
-                                                        $value = $rawValue;
-                                                    }
-
-                                                    echo e($value);
-                                                @endphp
+                                            @php
+                                                $parsedData = parseData($modifiers, $column, $row)
+                                            @endphp
+                                            <x-simple-tables::td :class="theme($theme, 'table.td', $style['td'] ?? $parsedData['tdStyle'])">
+                                                {!! e($parsedData['content']) !!}
                                             </x-simple-tables::td>
 
                                             @if($loop->last)
