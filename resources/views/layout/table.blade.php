@@ -48,18 +48,19 @@
 
                                 @forelse ($data['rows'] as $row)
                                     @php
-                                        $style = style($styleModifier, $row);
-                                        $dynamicTrClass = $style['tr'] ?? $trClass;
+                                        $parsedStyles = parseStyle($styleModifier, $row, $theme);
+                                        $dynamicParsedTrClass = $parsedStyles['trStyle'];
+                                        $dynamicParsedTdClass = $parsedStyles['tdStyle'];
                                     @endphp
 
-                                    <x-simple-tables::tr :class="$dynamicTrClass">
+                                    <x-simple-tables::tr :class="$dynamicParsedTrClass">
                                         @foreach($data['columns'] as $column)
                                             @php
-                                                $parsedData = parseData($modifiers, $column, $row);
-                                                $dynamicTdClass = $style['td'] ?? $parsedData['tdStyle'] ?? $tdClass;
+                                                $parsedData = parseData($modifiers, $column, $row, $theme, $dynamicParsedTdClass);
+                                                $dynamicTdStyle = $parsedData['dynamicTdStyle'];
                                             @endphp
 
-                                            <x-simple-tables::td :class="$dynamicTdClass">
+                                            <x-simple-tables::td :class="$dynamicTdStyle">
                                                 {{ $parsedData['content'] }}
                                             </x-simple-tables::td>
 

@@ -16,7 +16,8 @@ class SimpleTableModifiers
         ?string $view = null,
         string $rowName = 'row',
         ?string $tdStyle = null,
-        ?Closure $columnRule = null
+        ?Closure $columnRule = null,
+        bool $replaceStyle = false,
     ): self {
         if (blank($callback) && blank($view)) {
             return $this;
@@ -31,8 +32,9 @@ class SimpleTableModifiers
         $this->fields[$column] = [
             'callback' => $callback,
             'numberOfParameters' => $numberOfParameters,
-            'tdStyle' => $tdStyle,
-            'columnRule' => $columnRule,
+            'customTdStyle' => $tdStyle,
+            'customTdStyleRule' => $columnRule,
+            'replaceStyle' => $replaceStyle,
         ];
 
         return $this;
