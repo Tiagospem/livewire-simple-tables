@@ -9,13 +9,14 @@ use TiagoSpem\SimpleTables\Concerns\SearchModifier;
 use TiagoSpem\SimpleTables\Concerns\ThemeManager;
 use TiagoSpem\SimpleTables\Concerns\ValueModifier;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
+use TiagoSpem\SimpleTables\Exceptions\InvalidDatasetException;
 
 abstract class SimpleTableComponent extends Component
 {
     use Base, SearchModifier, ThemeManager, ValueModifier;
 
     /**
-     * @throws InvalidColumnException
+     * @throws InvalidColumnException|InvalidDatasetException
      */
     public function render(): View
     {

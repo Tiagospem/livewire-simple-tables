@@ -29,15 +29,23 @@
                                 </x-simple-tables::tr>
                             </x-simple-tables::thead>
                             <x-simple-tables::tbody :class="theme($theme, 'table.tbody')">
+                                @php
+                                    $modifiers = $data['modifiers'] ?? [];
+                                @endphp
                                 @forelse($data['rows'] as $row)
                                     <x-simple-tables::tr :class="theme($theme, 'table.tr')">
                                         @foreach($data['columns'] as $column)
                                             <x-simple-tables::td :class="theme($theme, 'table.td')">
                                                 @php
                                                     $field = $column['field'];
-                                                    $modifiers = collect($data['modifiers'] ?? []);
-                                                    $modifier = $modifiers->firstWhere('column', $field);
-                                                    $value = $modifier ? $modifier->callback->__invoke($row) : data_get($row, $field);
+                                                    $rawValue = data_get($row, $field);
+
+                                                    if (isset($modifiers->fields[$field])) {
+                                                        $value = $modifiers->fields[$field]->__invoke($rawValue);
+                                                    } else {
+                                                        $value = $rawValue;
+                                                    }
+
                                                     echo e($value);
                                                 @endphp
                                             </x-simple-tables::td>

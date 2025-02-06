@@ -1,10 +1,8 @@
 <?php
 
-namespace TiagoSpem\SimpleTables\Concerns;
+namespace TiagoSpem\SimpleTables;
 
-use TiagoSpem\SimpleTables\SimpleTableModifiers;
-
-trait ValueModifier
+class SimpleTableManager
 {
     public function modifiers(): SimpleTableModifiers
     {
