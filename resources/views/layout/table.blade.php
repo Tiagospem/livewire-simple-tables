@@ -24,7 +24,7 @@
 
                             $actionBuilder = $data['actions'];
 
-                            $hasActions = filled($actionBuilder->actions);
+                            $hasActions = $actionBuilder->hasActions();
                         @endphp
 
                         <x-simple-tables::table :class="$tableClass">
@@ -70,7 +70,9 @@
 
                                             @if ($loop->last && $hasActions)
                                                 <x-simple-tables::td :class="theme($theme, 'table.td_last')">
-                                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">action</a>
+                                                    @if(is_callable($actionBuilder->view))
+                                                        {!! $actionBuilder->view->__invoke($row) !!}
+                                                    @endif
                                                 </x-simple-tables::td>
                                             @endif
                                         @endforeach

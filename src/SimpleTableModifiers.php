@@ -24,7 +24,7 @@ class SimpleTableModifiers
         }
 
         if (filled($view)) {
-            $callback = $this->createViewCallback($view, $rowName);
+            $callback = $this->createViewCallback(view: $view, rowName: $rowName);
         }
 
         $numberOfParameters = $this->getNumberOfParameters($callback);
