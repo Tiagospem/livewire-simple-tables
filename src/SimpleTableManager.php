@@ -13,4 +13,9 @@ class SimpleTableManager
     {
         return app(SimpleTablesStyleModifiers::class);
     }
+
+    public function actionBuilder(): SimpleTablesActionBuilder
+    {
+        return app(SimpleTablesActionBuilder::class);
+    }
 }

@@ -48,11 +48,11 @@ if (! function_exists('parseStyle')) {
         $trClass = $styleModifier->trCallback?->__invoke($row) ?? null;
         $tdClass = $styleModifier->tdCallback?->__invoke($row) ?? null;
 
-        if (!$styleModifier->replaceTrStyle && $trClass) {
+        if (! $styleModifier->replaceTrStyle && $trClass) {
             $trClass = trim(theme($theme, 'table.tr').' '.$trClass);
         }
 
-        if (!$styleModifier->replaceTdStyle && $tdClass) {
+        if (! $styleModifier->replaceTdStyle && $tdClass) {
             $tdClass = theme($theme, 'table.td').' '.$tdClass;
         }
 

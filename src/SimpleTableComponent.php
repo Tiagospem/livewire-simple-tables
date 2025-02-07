@@ -4,6 +4,7 @@ namespace TiagoSpem\SimpleTables;
 
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Concerns\Base;
 use TiagoSpem\SimpleTables\Concerns\DataModifier;
 use TiagoSpem\SimpleTables\Concerns\SearchModifier;
@@ -15,7 +16,7 @@ use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 
 abstract class SimpleTableComponent extends Component
 {
-    use Base, DataModifier, SearchModifier, StyleModifier, ThemeManager;
+    use ActionBuilder, Base, DataModifier, SearchModifier, StyleModifier, ThemeManager;
 
     /**
      * @throws InvalidColumnException

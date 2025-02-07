@@ -21,6 +21,10 @@
                             $thClass = theme($theme, 'table.th');
                             $thLastClass = theme($theme, 'table.th_last');
                             $tdNoRecordsClass = theme($theme, 'table.td_no_records');
+
+                            $actionBuilder = $data['actions'];
+
+                            $hasActions = filled($actionBuilder->actions);
                         @endphp
 
                         <x-simple-tables::table :class="$tableClass">
@@ -31,7 +35,7 @@
                                             {{ $column['title'] }}
                                         </x-simple-tables::th>
 
-                                        @if ($loop->last)
+                                        @if ($loop->last && $hasActions)
                                             <x-simple-tables::th :class="$thLastClass">
                                                 <span class="sr-only">action</span>
                                             </x-simple-tables::th>
@@ -64,7 +68,7 @@
                                                 {{ $parsedData['content'] }}
                                             </x-simple-tables::td>
 
-                                            @if ($loop->last)
+                                            @if ($loop->last && $hasActions)
                                                 <x-simple-tables::td :class="theme($theme, 'table.td_last')">
                                                     <a href="#" class="text-indigo-600 hover:text-indigo-900">action</a>
                                                 </x-simple-tables::td>

@@ -38,12 +38,15 @@ trait ProcessorHelper
 
         $styleModifier = $this->simpleTableComponent->styleModifier();
 
+        $actionBuilder = $this->simpleTableComponent->actionBuilder();
+
         $this->validateModifiers($modifiers);
 
         return [
             'columns' => $this->getColumns(),
             'modifiers' => $modifiers,
             'styleModifier' => $styleModifier,
+            'actions' => $actionBuilder,
             'rows' => $rows,
         ];
     }
