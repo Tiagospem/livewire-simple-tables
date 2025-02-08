@@ -8,6 +8,8 @@ class SimpleTablesActionBuilder
 {
     public ?Closure $view = null;
 
+    public bool $disabled = false;
+
     public array $actionButton = [];
 
     public array $actionEvent = [];
@@ -65,6 +67,13 @@ class SimpleTablesActionBuilder
         return $this;
     }
 
+    public function disabled(Closure|bool $disabled = true): self
+    {
+        $this->actionButton['disabled'] = $disabled;
+
+        return $this;
+    }
+
     public function hasActions(): bool
     {
         return filled($this->view) || filled($this->actionButton);
@@ -115,6 +124,25 @@ class SimpleTablesActionBuilder
         }
 
         return null;
+    }
+
+    public function getIsActionDisabled(mixed $row): bool
+    {
+        if(!isset($this->actionButton['disabled'])) {
+            return false;
+        }
+
+        if (is_bool($this->actionButton['disabled'])) {
+            return $this->actionButton['disabled'];
+        }
+
+        $disabledCallback = $this->actionButton['disabled'];
+
+        if (is_callable($disabledCallback)) {
+            return (bool) $disabledCallback($row);
+        }
+
+        return false;
     }
 
     public function getActionUrlTarget(): string

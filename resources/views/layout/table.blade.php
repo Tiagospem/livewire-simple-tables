@@ -83,6 +83,9 @@
                                                         <div>
                                                             @php
                                                                 $hasButtonName = $actionBuilder->hasButtonName();
+                                                                $actionDisabled = $actionBuilder->getIsActionDisabled(
+                                                                    $row,
+                                                                );
 
                                                                 $clickEvent = [
                                                                     'actionUrl' => $actionBuilder->getActionUrl($row),
@@ -91,12 +94,14 @@
                                                                     'eventParams' => $actionBuilder->getEventParams(
                                                                         $row,
                                                                     ),
+                                                                    'disabled' => $actionDisabled,
                                                                 ];
                                                             @endphp
                                                             <button
                                                                 x-on:click="manageClick({{ json_encode($clickEvent) }})"
                                                                 @class([
                                                                     'gap-x-1.5' => $hasButtonName,
+                                                                    '!pointer-events-none !opacity-50' => $actionDisabled,
                                                                     $themeButtonActionClass,
                                                                 ]) type="button">
                                                                 <x-dynamic-component :component="$actionBuilder->getButtonIcon()"
