@@ -18,13 +18,14 @@ class SimpleTableModifiers
         ?string $tdStyle = null,
         ?Closure $columnRule = null,
         bool $replaceStyle = false,
+        array $customParams = []
     ): self {
         if (blank($callback) && blank($view)) {
             return $this;
         }
 
         if (filled($view)) {
-            $callback = $this->createViewCallback(view: $view, rowName: $rowName);
+            $callback = $this->createViewCallback(view: $view, rowName: $rowName, customParams: $customParams);
         }
 
         $numberOfParameters = $this->getNumberOfParameters($callback);
@@ -40,9 +41,9 @@ class SimpleTableModifiers
         return $this;
     }
 
-    private function createViewCallback(string $view, string $rowName): Closure
+    private function createViewCallback(string $view, string $rowName, array $customParams): Closure
     {
-        return fn (string $_, mixed $row) => view($view, [$rowName => $row]);
+        return fn (string $_, mixed $row) => view($view, [$rowName => $row, ...$customParams]);
     }
 
     private function getNumberOfParameters(Closure $callback): int
