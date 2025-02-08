@@ -13,30 +13,31 @@
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                     <div class="overflow-hidden shadow-sm ring-1 ring-black/5 sm:rounded-lg">
                         @php
-                            $tableClass = theme($theme, 'table.content');
-                            $theadClass = theme($theme, 'table.thead');
-                            $tbodyClass = theme($theme, 'table.tbody');
-                            $trClass = theme($theme, 'table.tr');
-                            $tdClass = theme($theme, 'table.td');
-                            $thClass = theme($theme, 'table.th');
-                            $thLastClass = theme($theme, 'table.th_last');
-                            $tdNoRecordsClass = theme($theme, 'table.td_no_records');
+                            $themeTableClass = theme($theme, 'table.content');
+                            $themeTheadClass = theme($theme, 'table.thead');
+                            $themeTbodyClass = theme($theme, 'table.tbody');
+                            $themeTrClass = theme($theme, 'table.tr');
+                            $themeThClass = theme($theme, 'table.th');
+                            $themeThLastClass = theme($theme, 'table.th_last');
+                            $themeTdNoRecordsClass = theme($theme, 'table.td_no_records');
+
+                            $themeButtonActionClass = theme($theme, 'action.button');
 
                             $actionBuilder = $data['actions'];
 
                             $hasActions = $actionBuilder->hasActions();
                         @endphp
 
-                        <x-simple-tables::table :class="$tableClass">
-                            <x-simple-tables::thead :class="$theadClass">
-                                <x-simple-tables::tr :class="$trClass">
+                        <x-simple-tables::table :class="$themeTableClass">
+                            <x-simple-tables::thead :class="$themeTheadClass">
+                                <x-simple-tables::tr :class="$themeTrClass">
                                     @foreach($data['columns'] as $column)
-                                        <x-simple-tables::th :class="$thClass">
+                                        <x-simple-tables::th :class="$themeThClass">
                                             {{ $column['title'] }}
                                         </x-simple-tables::th>
 
                                         @if ($loop->last && $hasActions)
-                                            <x-simple-tables::th :class="$thLastClass">
+                                            <x-simple-tables::th :class="$themeThLastClass">
                                                 <span class="sr-only">action</span>
                                             </x-simple-tables::th>
                                         @endif
@@ -44,7 +45,7 @@
                                 </x-simple-tables::tr>
                             </x-simple-tables::thead>
 
-                            <x-simple-tables::tbody :class="$tbodyClass">
+                            <x-simple-tables::tbody :class="$themeTbodyClass">
                                 @php
                                     $modifiers = $data['modifiers'];
                                     $styleModifier = $data['styleModifier'];
@@ -69,17 +70,40 @@
                                             </x-simple-tables::td>
 
                                             @if ($loop->last && $hasActions)
-                                                <x-simple-tables::td :class="theme($theme, 'table.td_last')">
+                                                <x-simple-tables::td :class="$themeThLastClass">
                                                     @if(is_callable($actionBuilder->view))
                                                         {!! $actionBuilder->view->__invoke($row) !!}
+                                                    @else
+                                                        @if(filled($actionBuilder->actionButton))
+                                                            @php
+                                                                $urlCallback = $actionBuilder->getUrlCallback();
+                                                                $isTargetBlank = $actionBuilder->getIsTargetBlank();
+                                                            @endphp
+                                                            @if(filled($urlCallback))
+                                                                <a href="{{ $urlCallback($row) }}" {{ $isTargetBlank ? 'target="_blank"' : '' }}>
+                                                            @endif
+                                                                <button type="button" class="{{ $themeButtonActionClass }}">
+                                                                    <x-dynamic-component
+                                                                        :component="$actionBuilder->getButtonIcon()"
+                                                                        @class([
+                                                                            '-mr-0.5' => filled($actionBuilder->getButtonName()),
+                                                                             $actionBuilder->getActionIconStyle(),
+                                                                        ])
+                                                                    />
+                                                                    <span>{{ $actionBuilder->getButtonName() }}</span>
+                                                                </button>
+                                                            @if(filled($urlCallback))
+                                                                </a>
+                                                            @endif
+                                                        @endif
                                                     @endif
                                                 </x-simple-tables::td>
                                             @endif
                                         @endforeach
                                     </x-simple-tables::tr>
                                 @empty
-                                    <x-simple-tables::tr :class="$trClass">
-                                        <x-simple-tables::td colspan="9999" :class="$tdNoRecordsClass">
+                                    <x-simple-tables::tr :class="$themeTrClass">
+                                        <x-simple-tables::td colspan="9999" :class="$themeTdNoRecordsClass">
                                             {{ __('simple-tables::table.no-records') }}
                                         </x-simple-tables::td>
                                     </x-simple-tables::tr>

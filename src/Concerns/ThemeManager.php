@@ -28,6 +28,8 @@ trait ThemeManager
 
     protected string $tableTdNoRecordsStyle = '';
 
+    protected string $actionButtonStyle = '';
+
     /**
      * @throws InvalidThemeException
      */

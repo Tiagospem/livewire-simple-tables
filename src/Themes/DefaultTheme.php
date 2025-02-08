@@ -18,6 +18,10 @@ class DefaultTheme implements ThemeInterface
                 'td_last' => 'relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6',
                 'td_no_records' => 'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center',
             ],
+            'action' => [
+                'button' => 'flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+                'dropdown' => '',
+            ],
             'pagination' => [],
         ];
     }
