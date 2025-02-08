@@ -1,3 +1,6 @@
-<th {{ $attributes }} scope="col">
+<th
+    {{ $attributes }}
+    scope="col"
+>
     {{ $slot }}
 </th>

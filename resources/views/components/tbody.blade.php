@@ -1,3 +1,3 @@
-<tbody {{ $attributes }} x-data="clickEvent">
+<tbody {{ $attributes }}>
     {{ $slot }}
 </tbody>

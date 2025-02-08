@@ -6,18 +6,20 @@ use Closure;
 
 class SimpleTablesActionBuilder
 {
-    public ?Closure $view = null;
+    private ?Closure $view = null;
 
-    public bool $disabled = false;
+    private array $actionButton = [];
 
-    public array $actionButton = [];
+    private array $actionEvent = [];
 
-    public array $actionEvent = [];
+    private string $actionIconStyle = 'size-4';
 
-    public string $actionIconStyle = 'size-4';
+    private array $dropdown = [];
 
-    public function dropdown(): self
+    public function dropdown(array $options): self
     {
+        $this->dropdown[] = $this->validateActionOptions($options);
+
         return $this;
     }
 
@@ -79,9 +81,29 @@ class SimpleTablesActionBuilder
         return filled($this->view) || filled($this->actionButton);
     }
 
+    public function hasActionButton(): bool
+    {
+        return filled($this->actionButton);
+    }
+
     public function hasButtonName(): bool
     {
         return filled($this->actionButton['name']);
+    }
+
+    public function hasActionView(): bool
+    {
+        return is_callable($this->view);
+    }
+
+    public function hasDropdown(): bool
+    {
+        return filled($this->dropdown);
+    }
+
+    public function hasIcon(): bool
+    {
+        return filled($this->actionButton['icon']);
     }
 
     public function getButtonName(): string
@@ -126,9 +148,20 @@ class SimpleTablesActionBuilder
         return null;
     }
 
+    public function getActionView(mixed $row): mixed
+    {
+        $viewCallback = $this->view;
+
+        if (is_callable($viewCallback)) {
+            return $viewCallback($row);
+        }
+
+        return null;
+    }
+
     public function getIsActionDisabled(mixed $row): bool
     {
-        if(!isset($this->actionButton['disabled'])) {
+        if (! isset($this->actionButton['disabled'])) {
             return false;
         }
 
@@ -148,5 +181,10 @@ class SimpleTablesActionBuilder
     public function getActionUrlTarget(): string
     {
         return $this->actionButton['target'];
+    }
+
+    private function validateActionOptions(array $options): array
+    {
+        return collect($options)->map(fn(Option $option): array => $option->toLivewire())->all();
     }
 }

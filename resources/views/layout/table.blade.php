@@ -77,49 +77,21 @@
 
                                             @if ($loop->last && $hasActions)
                                                 <x-simple-tables::td :class="$themeThLastClass">
-                                                    @if (is_callable($actionBuilder->view))
-                                                        {!! $actionBuilder->view->__invoke($row) !!}
-                                                    @elseif(filled($actionBuilder->actionButton))
-                                                        <div>
-                                                            @php
-                                                                $hasButtonName = $actionBuilder->hasButtonName();
-                                                                $actionDisabled = $actionBuilder->getIsActionDisabled(
-                                                                    $row,
-                                                                );
-
-                                                                $clickEvent = [
-                                                                    'actionUrl' => $actionBuilder->getActionUrl($row),
-                                                                    'actionTarget' => $actionBuilder->getActionUrlTarget(),
-                                                                    'eventName' => $actionBuilder->getEventName(),
-                                                                    'eventParams' => $actionBuilder->getEventParams(
-                                                                        $row,
-                                                                    ),
-                                                                    'disabled' => $actionDisabled,
-                                                                ];
-                                                            @endphp
-                                                            <button
-                                                                x-on:click="manageClick({{ json_encode($clickEvent) }})"
-                                                                @class([
-                                                                    'gap-x-1.5' => $hasButtonName,
-                                                                    '!pointer-events-none !opacity-50' => $actionDisabled,
-                                                                    $themeButtonActionClass,
-                                                                ]) type="button">
-                                                                <x-dynamic-component :component="$actionBuilder->getButtonIcon()"
-                                                                    @class([
-                                                                        '-mr-0.5' => $hasButtonName,
-                                                                        $actionBuilder->getActionIconStyle(),
-                                                                    ]) />
-                                                                <span>{{ $actionBuilder->getButtonName() }}</span>
-                                                            </button>
-                                                        </div>
-                                                    @endif
+                                                    <x-simple-tables::action-button
+                                                        :actionBuilder="$actionBuilder"
+                                                        :themeButtonActionClass="$themeButtonActionClass"
+                                                        :row="$row"
+                                                    />
                                                 </x-simple-tables::td>
                                             @endif
                                         @endforeach
                                     </x-simple-tables::tr>
                                 @empty
                                     <x-simple-tables::tr :class="$themeTrClass">
-                                        <x-simple-tables::td colspan="9999" :class="$themeTdNoRecordsClass">
+                                        <x-simple-tables::td
+                                            colspan="9999"
+                                            :class="$themeTdNoRecordsClass"
+                                        >
                                             {{ __('simple-tables::table.no-records') }}
                                         </x-simple-tables::td>
                                     </x-simple-tables::tr>
