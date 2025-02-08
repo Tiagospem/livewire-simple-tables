@@ -20,9 +20,9 @@ class SimpleTablesActionBuilder
         return $this;
     }
 
-    public function view(string $view, string $rowName = 'row'): self
+    public function view(string $view, string $rowName = 'row', array $customParams = []): self
     {
-        $this->view = $this->createViewCallback(view: $view, rowName: $rowName);
+        $this->view = $this->createViewCallback(view: $view, rowName: $rowName, customParams: $customParams);
 
         return $this;
     }
@@ -32,8 +32,8 @@ class SimpleTablesActionBuilder
         return filled($this->actions) || filled($this->view);
     }
 
-    private function createViewCallback(string $view, string $rowName): Closure
+    private function createViewCallback(string $view, string $rowName, array $customParams): Closure
     {
-        return fn (mixed $row) => view(view: $view, data: [$rowName => $row]);
+        return fn (mixed $row) => view(view: $view, data: [$rowName => $row, ...$customParams]);
     }
 }
