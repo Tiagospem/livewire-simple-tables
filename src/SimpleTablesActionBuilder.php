@@ -40,13 +40,13 @@ class SimpleTablesActionBuilder
         return $this;
     }
 
-    //    public function url(Closure $href, bool $_target = false): self
-    //    {
-    //        $this->actionButton['href'] = $href;
-    //        $this->actionButton['target'] = $_target;
-    //
-    //        return $this;
-    //    }
+    public function href(Closure $href, bool $_target = false): self
+    {
+        $this->actionButton['href'] = $href;
+        $this->actionButton['target'] = $_target;
+
+        return $this;
+    }
 
     public function event(string $name, Closure $params): self
     {
