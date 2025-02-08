@@ -1,0 +1,30 @@
+{
+  "name": "simpletables",
+  "version": "1.0.0",
+  "description": "laravel table component",
+  "scripts": {
+    "dev": "mix watch",
+    "build": "mix --production",
+    "format": "blade-formatter --write resources/**/*.blade.php",
+    "feb": "npm run format && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tispa4/livewire-simple-tables.git"
+  },
+  "keywords": [
+    "livewire",
+    "laravel",
+    "alpine",
+    "tailwind"
+  ],
+  "author": "Tiago Padilha <tiagospem@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "alpinejs": "^3.14.8"
+  },
+  "devDependencies": {
+    "laravel-mix": "^6.0.49",
+    "blade-formatter": "^1.42.2"
+  }
+}

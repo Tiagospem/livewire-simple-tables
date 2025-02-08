@@ -10,6 +10,8 @@ class SimpleTablesActionBuilder
 
     public array $actionButton = [];
 
+    public array $actionEvent = [];
+
     public string $actionIconStyle = 'size-4';
 
     public function dropdown(): self
@@ -38,17 +40,27 @@ class SimpleTablesActionBuilder
         return $this;
     }
 
-    public function url(Closure $href, bool $_target = false): self
+    //    public function url(Closure $href, bool $_target = false): self
+    //    {
+    //        $this->actionButton['href'] = $href;
+    //        $this->actionButton['target'] = $_target;
+    //
+    //        return $this;
+    //    }
+
+    public function event(string $name, Closure $params): self
     {
-        $this->actionButton['href'] = $href;
-        $this->actionButton['target'] = $_target;
+        $this->actionEvent = [
+            'name' => $name,
+            'params' => $params,
+        ];
 
         return $this;
     }
 
     public function view(string $view, string $rowName = 'row', array $customParams = []): self
     {
-        $this->view = $this->createViewCallback(view: $view, rowName: $rowName, customParams: $customParams);
+        $this->view = fn (mixed $row) => view(view: $view, data: [$rowName => $row, ...$customParams]);
 
         return $this;
     }
@@ -56,6 +68,11 @@ class SimpleTablesActionBuilder
     public function hasActions(): bool
     {
         return filled($this->view) || filled($this->actionButton);
+    }
+
+    public function hasButtonName(): bool
+    {
+        return filled($this->actionButton['name']);
     }
 
     public function getButtonName(): string
@@ -73,18 +90,35 @@ class SimpleTablesActionBuilder
         return $this->actionIconStyle;
     }
 
-    public function getUrlCallback(): ?Closure
+    public function getActionUrl(mixed $row): ?string
     {
-        return $this->actionButton['href'] ?? null;
+        $urlCallback = $this->actionButton['href'] ?? null;
+
+        if (is_callable($urlCallback)) {
+            return $urlCallback($row);
+        }
+
+        return null;
     }
 
-    public function getUrlTargetBlank(): string
+    public function getEventName(): string
+    {
+        return $this->actionEvent['name'] ?? '';
+    }
+
+    public function getEventParams(mixed $row): mixed
+    {
+        $eventParamsCallback = $this->actionEvent['params'] ?? null;
+
+        if (is_callable($eventParamsCallback)) {
+            return $eventParamsCallback($row);
+        }
+
+        return null;
+    }
+
+    public function getActionUrlTarget(): string
     {
         return $this->actionButton['target'];
-    }
-
-    private function createViewCallback(string $view, string $rowName, array $customParams): Closure
-    {
-        return fn (mixed $row) => view(view: $view, data: [$rowName => $row, ...$customParams]);
     }
 }

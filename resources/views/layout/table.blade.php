@@ -31,7 +31,7 @@
                         <x-simple-tables::table :class="$themeTableClass">
                             <x-simple-tables::thead :class="$themeTheadClass">
                                 <x-simple-tables::tr :class="$themeTrClass">
-                                    @foreach($data['columns'] as $column)
+                                    @foreach ($data['columns'] as $column)
                                         <x-simple-tables::th :class="$themeThClass">
                                             {{ $column['title'] }}
                                         </x-simple-tables::th>
@@ -59,9 +59,15 @@
                                     @endphp
 
                                     <x-simple-tables::tr :class="$dynamicParsedTrClass">
-                                        @foreach($data['columns'] as $column)
+                                        @foreach ($data['columns'] as $column)
                                             @php
-                                                $parsedData = parseData($modifiers, $column, $row, $theme, $dynamicParsedTdClass);
+                                                $parsedData = parseData(
+                                                    $modifiers,
+                                                    $column,
+                                                    $row,
+                                                    $theme,
+                                                    $dynamicParsedTdClass,
+                                                );
                                                 $dynamicTdStyle = $parsedData['dynamicTdStyle'];
                                             @endphp
 
@@ -71,31 +77,36 @@
 
                                             @if ($loop->last && $hasActions)
                                                 <x-simple-tables::td :class="$themeThLastClass">
-                                                    @if(is_callable($actionBuilder->view))
+                                                    @if (is_callable($actionBuilder->view))
                                                         {!! $actionBuilder->view->__invoke($row) !!}
-                                                    @else
-                                                        @if(filled($actionBuilder->actionButton))
+                                                    @elseif(filled($actionBuilder->actionButton))
+                                                        <div>
                                                             @php
-                                                                $urlCallback = $actionBuilder->getUrlCallback();
-                                                                $urlTarget = $actionBuilder->getUrlTargetBlank();
+                                                                $hasButtonName = $actionBuilder->hasButtonName();
+
+                                                                $clickEvent = [
+                                                                    'actionUrl' => $actionBuilder->getActionUrl($row),
+                                                                    'actionTarget' => $actionBuilder->getActionUrlTarget(),
+                                                                    'eventName' => $actionBuilder->getEventName(),
+                                                                    'eventParams' => $actionBuilder->getEventParams(
+                                                                        $row,
+                                                                    ),
+                                                                ];
                                                             @endphp
-                                                            @if(filled($urlCallback))
-                                                                <a href="{{ $urlCallback($row) }}" target="{{ $urlTarget }}">
-                                                            @endif
-                                                                <button type="button" class="{{ $themeButtonActionClass }}">
-                                                                    <x-dynamic-component
-                                                                        :component="$actionBuilder->getButtonIcon()"
-                                                                        @class([
-                                                                            '-mr-0.5' => filled($actionBuilder->getButtonName()),
-                                                                             $actionBuilder->getActionIconStyle(),
-                                                                        ])
-                                                                    />
-                                                                    <span>{{ $actionBuilder->getButtonName() }}</span>
-                                                                </button>
-                                                            @if(filled($urlCallback))
-                                                                </a>
-                                                            @endif
-                                                        @endif
+                                                            <button
+                                                                x-on:click="manageClick({{ json_encode($clickEvent) }})"
+                                                                @class([
+                                                                    'gap-x-1.5' => $hasButtonName,
+                                                                    $themeButtonActionClass,
+                                                                ]) type="button">
+                                                                <x-dynamic-component :component="$actionBuilder->getButtonIcon()"
+                                                                    @class([
+                                                                        '-mr-0.5' => $hasButtonName,
+                                                                        $actionBuilder->getActionIconStyle(),
+                                                                    ]) />
+                                                                <span>{{ $actionBuilder->getButtonName() }}</span>
+                                                            </button>
+                                                        </div>
                                                     @endif
                                                 </x-simple-tables::td>
                                             @endif
