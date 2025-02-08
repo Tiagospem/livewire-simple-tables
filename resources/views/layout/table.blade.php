@@ -77,10 +77,10 @@
                                                         @if(filled($actionBuilder->actionButton))
                                                             @php
                                                                 $urlCallback = $actionBuilder->getUrlCallback();
-                                                                $isTargetBlank = $actionBuilder->getIsTargetBlank();
+                                                                $urlTarget = $actionBuilder->getUrlTargetBlank();
                                                             @endphp
                                                             @if(filled($urlCallback))
-                                                                <a href="{{ $urlCallback($row) }}" {{ $isTargetBlank ? 'target="_blank"' : '' }}>
+                                                                <a href="{{ $urlCallback($row) }}" target="{{ $urlTarget }}">
                                                             @endif
                                                                 <button type="button" class="{{ $themeButtonActionClass }}">
                                                                     <x-dynamic-component

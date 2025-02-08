@@ -24,24 +24,24 @@ class SimpleTablesActionBuilder
         return $this;
     }
 
-    public function button(?string $icon = null, ?string $name = null, ?Closure $urlCallback = null, bool $targetBlank = false): self
+    public function button(?string $icon = null, ?string $name = null, ?Closure $href = null, string $_target = '_parent'): self
     {
         if (filled($icon) || filled($name)) {
             $this->actionButton = [
                 'icon' => $icon,
                 'name' => $name,
-                'url_callback' => $urlCallback,
-                'target_blank' => $targetBlank,
+                'href' => $href,
+                'target' => $_target,
             ];
         }
 
         return $this;
     }
 
-    public function url(Closure $urlCallback, bool $targetBlank = false): self
+    public function url(Closure $href, bool $_target = false): self
     {
-        $this->actionButton['url_callback'] = $urlCallback;
-        $this->actionButton['target_blank'] = $targetBlank;
+        $this->actionButton['href'] = $href;
+        $this->actionButton['target'] = $_target;
 
         return $this;
     }
@@ -75,12 +75,12 @@ class SimpleTablesActionBuilder
 
     public function getUrlCallback(): ?Closure
     {
-        return $this->actionButton['url_callback'] ?? null;
+        return $this->actionButton['href'] ?? null;
     }
 
-    public function getIsTargetBlank(): bool
+    public function getUrlTargetBlank(): string
     {
-        return $this->actionButton['target_blank'] ?? false;
+        return $this->actionButton['target'];
     }
 
     private function createViewCallback(string $view, string $rowName, array $customParams): Closure
