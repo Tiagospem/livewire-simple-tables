@@ -7,7 +7,7 @@ use TiagoSpem\SimpleTables\Modify;
 trait SearchModifier
 {
     /**
-     * @return array<string, Modify>
+     * @return array<int, Modify>
      */
     public function beforeSearch(): array
     {
