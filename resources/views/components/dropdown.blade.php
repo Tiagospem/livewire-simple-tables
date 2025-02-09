@@ -26,34 +26,34 @@
                 aria-labelledby="menu-button"
                 tabindex="-1"
             >
-                @foreach ($actionOptions as $actionOption)
-                    @php
-                        $isValidDivider = $actionOption->getIsDivider() && filled($actionOption->getDividerOptions());
-                        $isDividerHidden = $isValidDivider ? $actionOption->getIsHidden($row) : true;
-                        $isOptionHidden = $isValidDivider ? true : $actionOption->getIsHidden($row);
-                    @endphp
-                    @if ($isValidDivider)
-                        @if (!$isDividerHidden)
-                            <div class="border-t border-b border-gray-100 first:border-t-0 last:border-b-0">
-                                @foreach ($actionOption->getDividerOptions() as $dividerOption)
-                                    <x-simple-tables::dropdown-option
-                                        title="{{ $dividerOption->getName() }}"
-                                        icon="{{ $dividerOption->getIcon() ?? $defaultDropdownOptionIcon }}"
-                                        @class([
-                                            'border-t border-gray-100' => $loop->first,
-                                            'border-b border-gray-100' => $loop->last,
-                                        ])
-                                    />
-                                @endforeach
-                            </div>
-                        @endif
+                @php
+                    $visibleOptions = collect($actionOptions)->filter(function ($actionOption) use ($row) {
+                        if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions())) {
+                            return !$actionOption->getIsHidden($row);
+                        }
+                        return !$actionOption->getIsHidden($row);
+                    });
+                @endphp
+
+                @foreach ($visibleOptions as $actionOption)
+                    @if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions()))
+                        <div class="border-t border-b border-gray-100 first:border-t-0 last:border-b-0">
+                            @foreach ($actionOption->getDividerOptions() as $dividerOption)
+                                <x-simple-tables::dropdown-option
+                                    title="{{ $dividerOption->getName() }}"
+                                    icon="{{ $dividerOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                                    @class([
+                                        'border-t border-gray-100' => $loop->first,
+                                        'border-b border-gray-100' => $loop->last,
+                                    ])
+                                />
+                            @endforeach
+                        </div>
                     @else
-                        @if (!$isOptionHidden)
-                            <x-simple-tables::dropdown-option
-                                title="{{ $actionOption->getName() }}"
-                                icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
-                            />
-                        @endif
+                        <x-simple-tables::dropdown-option
+                            title="{{ $actionOption->getName() }}"
+                            icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                        />
                     @endif
                 @endforeach
             </div>
