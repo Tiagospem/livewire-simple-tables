@@ -12,14 +12,14 @@ final class Option
 
     private bool $isDivider = false;
 
-    private Closure|bool $isHidden = false;
+    private Closure|bool $hidden = false;
+
+    private Closure|bool $disabled = false;
 
     /**
      * @var array<Option>
      */
     private array $dividerOptions = [];
-
-    // private bool $disabled = false;
 
     // public string $style = '';
 
@@ -49,7 +49,14 @@ final class Option
 
     public function hidden(Closure|bool $hidden = true): self
     {
-        $this->isHidden = $hidden;
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    public function disabled(Closure|bool $disabled = true): self
+    {
+        $this->disabled = $disabled;
 
         return $this;
     }
@@ -84,13 +91,24 @@ final class Option
 
     public function getIsHidden(mixed $row): bool
     {
-        $closure = $this->isHidden;
+        $closure = $this->hidden;
 
         if ($closure instanceof Closure) {
             return (bool) $closure($row);
         }
 
-        return (bool) $this->isHidden;
+        return (bool) $this->hidden;
+    }
+
+    public function getIsDisabled(mixed $row): bool
+    {
+        $closure = $this->disabled;
+
+        if ($closure instanceof Closure) {
+            return (bool) $closure($row);
+        }
+
+        return (bool) $this->disabled;
     }
 
     /**

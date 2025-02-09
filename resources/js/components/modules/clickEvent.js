@@ -70,6 +70,12 @@ export default () => ({
                         },
                     },
                     {
+                        name: 'computeStyles',
+                        options: {
+                            gpuAcceleration: false,
+                        },
+                    },
+                    {
                         name: 'flip',
                         options: {
                             fallbackPlacements: ['top-end', 'bottom-start'],

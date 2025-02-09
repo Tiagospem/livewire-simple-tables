@@ -1,7 +1,8 @@
-@props(['title' => '', 'icon' => ''])
+@props(['title' => '', 'icon' => '', 'disabled' => false])
 <div
-    class="py-1"
+    @class(['py-1', 'opacity-50 pointer-events-none' => $disabled])
     role="none"
+    {{ $attributes }}
 >
     <a
         href="#"

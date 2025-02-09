@@ -20,42 +20,48 @@
                 x-cloak
                 x-show="dropdownOpen"
                 x-on:click.away="dropdownOpen = false"
-                class="z-40 w-56 fixed rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                class="z-40 w-56 fixed overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
                 tabindex="-1"
             >
-                @php
-                    $visibleOptions = collect($actionOptions)->filter(function ($actionOption) use ($row) {
-                        if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions())) {
+                <div class="max-h-[300px] overflow-auto custom-scrollbar">
+                    @php
+                        $visibleOptions = collect($actionOptions)->filter(function ($actionOption) use ($row) {
+                            if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions())) {
+                                return !$actionOption->getIsHidden($row);
+                            }
                             return !$actionOption->getIsHidden($row);
-                        }
-                        return !$actionOption->getIsHidden($row);
-                    });
-                @endphp
+                        });
+                    @endphp
 
-                @foreach ($visibleOptions as $actionOption)
-                    @if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions()))
-                        <div class="border-t border-b border-gray-100 first:border-t-0 last:border-b-0">
-                            @foreach ($actionOption->getDividerOptions() as $dividerOption)
-                                <x-simple-tables::dropdown-option
-                                    title="{{ $dividerOption->getName() }}"
-                                    icon="{{ $dividerOption->getIcon() ?? $defaultDropdownOptionIcon }}"
-                                    @class([
-                                        'border-t border-gray-100' => $loop->first,
-                                        'border-b border-gray-100' => $loop->last,
-                                    ])
-                                />
-                            @endforeach
-                        </div>
-                    @else
-                        <x-simple-tables::dropdown-option
-                            title="{{ $actionOption->getName() }}"
-                            icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
-                        />
-                    @endif
-                @endforeach
+                    @foreach ($visibleOptions as $actionOption)
+                        @php
+                            $optionDisabled = $actionOption->getIsDisabled($row);
+                        @endphp
+                        @if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions()))
+                            <div class="border-t border-b border-gray-100 first:border-t-0 last:border-b-0">
+                                @foreach ($actionOption->getDividerOptions() as $dividerOption)
+                                    @php
+                                        $optionDividerDisabled = $dividerOption->getIsDisabled($row);
+                                    @endphp
+                                    <x-simple-tables::dropdown-option
+                                        title="{{ $dividerOption->getName() }}"
+                                        icon="{{ $dividerOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                                        :disabled="$optionDisabled || $optionDividerDisabled"
+                                    />
+                                @endforeach
+                            </div>
+                        @else
+                            <x-simple-tables::dropdown-option
+                                title="{{ $actionOption->getName() }}"
+                                icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                                :disabled="$optionDisabled"
+                            />
+                        @endif
+                    @endforeach
+                </div>
             </div>
         </template>
     @endif
