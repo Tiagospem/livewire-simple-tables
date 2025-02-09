@@ -2,6 +2,8 @@
 
 namespace TiagoSpem\SimpleTables;
 
+use Closure;
+
 final class Option
 {
     private ?string $name = null;
@@ -9,6 +11,8 @@ final class Option
     private ?string $icon = null;
 
     private bool $isDivider = false;
+
+    private Closure|bool $isHidden = false;
 
     /**
      * @var array<Option>
@@ -43,6 +47,13 @@ final class Option
         return $option;
     }
 
+    public function hidden(Closure|bool $hidden = true): self
+    {
+        $this->isHidden = $hidden;
+
+        return $this;
+    }
+
     /**
      * @param  array<Option>  $options
      */
@@ -69,6 +80,17 @@ final class Option
     public function getIsDivider(): bool
     {
         return $this->isDivider;
+    }
+
+    public function getIsHidden(mixed $row): bool
+    {
+        $closure = $this->isHidden;
+
+        if ($closure instanceof Closure) {
+            return (bool) $closure($row);
+        }
+
+        return (bool) $this->isHidden;
     }
 
     /**

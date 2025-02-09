@@ -29,6 +29,7 @@
             :$hasDropdown
             :$actionOptions
             :$defaultDropdownOptionIcon
+            :$row
         >
             <x-slot:actionButton>
                 <button
