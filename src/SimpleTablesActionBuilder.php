@@ -15,7 +15,8 @@ class SimpleTablesActionBuilder
      *     name?: string|null,
      *     href?: Closure|null,
      *     target?: string,
-     *     disabled?: bool|Closure
+     *     disabled?: bool|Closure,
+     *     hidden?: bool|Closure
      * }
      */
     private array $actionButton = [];
@@ -99,6 +100,13 @@ class SimpleTablesActionBuilder
     public function disabled(Closure|bool $disabled = true): self
     {
         $this->actionButton['disabled'] = $disabled;
+
+        return $this;
+    }
+
+    public function hidden(Closure|bool $hidden = true): self
+    {
+        $this->actionButton['hidden'] = $hidden;
 
         return $this;
     }
@@ -202,6 +210,17 @@ class SimpleTablesActionBuilder
     public function getDefaultDropdownOptionIcon(): ?string
     {
         return $this->defaultDropdownOptionIcon;
+    }
+
+    public function getIsHidden(mixed $row): bool
+    {
+        $hidden = $this->actionButton['hidden'] ?? false;
+
+        if ($hidden instanceof Closure) {
+            return (bool) $hidden($row);
+        }
+
+        return (bool) $hidden;
     }
 
     /**

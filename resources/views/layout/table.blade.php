@@ -75,7 +75,7 @@
                                                 {!! $parsedData['content'] !!}
                                             </x-simple-tables::td>
 
-                                            @if ($loop->last && $hasActions)
+                                            @if ($loop->last && $hasActions && !$actionBuilder->getIsHidden($row))
                                                 <x-simple-tables::td :class="$themeThLastClass">
                                                     <x-simple-tables::action-button
                                                         :actionBuilder="$actionBuilder"
