@@ -4,6 +4,14 @@ namespace TiagoSpem\SimpleTables;
 
 final class Option
 {
+    private ?string $name = null;
+
+    private ?string $icon = null;
+
+    private bool $isDivider = false;
+
+    // private bool $disabled = false;
+
     // public string $style = '';
 
     // public bool $disabled = false;
@@ -15,14 +23,41 @@ final class Option
     // public string $eventName = '';
 
     // public array $eventParams = [];
-
-    public static function add(): Option
+    public static function make(): Option
     {
         return new self;
     }
 
-    public static function divider(): Option
+    public static function add(string $name, ?string $icon = null): self
     {
-        return new self;
+        $option = new self;
+
+        $option->name = $name;
+        $option->icon = $icon;
+
+        return $option;
+    }
+
+    public static function divider(): self
+    {
+        $option = new self;
+        $option->isDivider = true;
+
+        return $option;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function getIsDivider(): bool
+    {
+        return $this->isDivider;
     }
 }

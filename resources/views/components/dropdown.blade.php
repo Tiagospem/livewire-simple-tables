@@ -1,4 +1,4 @@
-@props(['hasDropdown' => false])
+@props(['hasDropdown' => false, 'actionOptions' => [], 'defaultDropdownOptionIcon' => null])
 <div class="relative inline-block text-left">
     {{ $actionButton }}
 
@@ -21,10 +21,12 @@
                 aria-labelledby="menu-button"
                 tabindex="-1"
             >
-                <x-simple-tables::dropdown-option
-                    title="Test"
-                    icon="heroicon-o-bolt"
-                />
+                @foreach ($actionOptions as $actionOption)
+                    <x-simple-tables::dropdown-option
+                        title="{{ $actionOption->getName() }}"
+                        icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                    />
+                @endforeach
             </div>
         </template>
     @endif

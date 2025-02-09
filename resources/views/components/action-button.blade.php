@@ -10,7 +10,11 @@
 
             $hasDropdown = $actionBuilder->hasDropdown();
 
+            $actionOptions = $actionBuilder->getActionOptions();
+
             $hasIcon = $actionBuilder->hasIcon();
+
+            $defaultDropdownOptionIcon = $actionBuilder->getDefaultDropdownOptionIcon();
 
             $clickEvent = [
                 'actionUrl' => $actionBuilder->getActionUrl($row),
@@ -21,7 +25,11 @@
                 'disabled' => $actionDisabled,
             ];
         @endphp
-        <x-simple-tables::dropdown :$hasDropdown>
+        <x-simple-tables::dropdown
+            :$hasDropdown
+            :$actionOptions
+            :$defaultDropdownOptionIcon
+        >
             <x-slot:actionButton>
                 <button
                     x-on:click="handleClick({{ json_encode($clickEvent) }})"

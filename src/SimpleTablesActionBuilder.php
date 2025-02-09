@@ -30,20 +30,12 @@ class SimpleTablesActionBuilder
 
     private string $actionIconStyle = 'size-4';
 
+    private ?string $defaultDropdownOptionIcon = null;
+
     /**
      * @var array<Option>
      */
     private array $dropdown = [];
-
-    /**
-     * @param  array<Option>  $options
-     */
-    public function dropdown(array $options): self
-    {
-        $this->dropdown = $options;
-
-        return $this;
-    }
 
     public function actionIconStyle(string $style): self
     {
@@ -85,6 +77,16 @@ class SimpleTablesActionBuilder
     }
 
     /**
+     * @param  array<Option>  $options
+     */
+    public function dropdown(array $options): self
+    {
+        $this->dropdown = $options;
+
+        return $this;
+    }
+
+    /**
      * @param  array<string, mixed>  $customParams
      */
     public function view(string $view, string $rowName = 'row', array $customParams = []): self
@@ -97,6 +99,13 @@ class SimpleTablesActionBuilder
     public function disabled(Closure|bool $disabled = true): self
     {
         $this->actionButton['disabled'] = $disabled;
+
+        return $this;
+    }
+
+    public function defaultDropdownOptionIcon(string $icon): self
+    {
+        $this->defaultDropdownOptionIcon = $icon;
 
         return $this;
     }
@@ -188,5 +197,18 @@ class SimpleTablesActionBuilder
     public function getActionUrlTarget(): string
     {
         return (string) ($this->actionButton['target'] ?? '_parent');
+    }
+
+    public function getDefaultDropdownOptionIcon(): ?string
+    {
+        return $this->defaultDropdownOptionIcon;
+    }
+
+    /**
+     * @return array<Option>
+     */
+    public function getActionOptions(): array
+    {
+        return $this->dropdown;
     }
 }
