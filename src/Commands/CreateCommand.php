@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 class CreateCommand extends Command
 {
     /** @var string */
-    protected $signature = 'simple-table:create {name : The name of the SimpleTable component}';
+    protected $signature = 'st:create {name : The name of the SimpleTable component}';
 
     /** @var string */
     protected $description = 'Make a new SimpleTable component.';
