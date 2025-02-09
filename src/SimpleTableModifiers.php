@@ -8,8 +8,20 @@ use ReflectionFunction;
 
 class SimpleTableModifiers
 {
+    /**
+     * @var array<string, array{
+     *     callback: Closure,
+     *     numberOfParameters: int,
+     *     customTdStyle?: string|null,
+     *     customTdStyleRule?: Closure|null,
+     *     replaceStyle?: bool
+     * }>
+     */
     public array $fields = [];
 
+    /**
+     * @param  array<string, mixed>  $customParams
+     */
     public function modify(
         string $column,
         ?Closure $callback = null,
@@ -25,9 +37,14 @@ class SimpleTableModifiers
         }
 
         if (filled($view)) {
-            $callback = $this->createViewCallback(view: $view, rowName: $rowName, customParams: $customParams);
+            $callback = $this->createViewCallback(
+                view: $view,
+                rowName: $rowName,
+                customParams: $customParams
+            );
         }
 
+        /** @var Closure $callback */
         $numberOfParameters = $this->getNumberOfParameters($callback);
 
         $this->fields[$column] = [
@@ -41,6 +58,20 @@ class SimpleTableModifiers
         return $this;
     }
 
+    public function getCustomTdStyleRule(string $field, mixed $row): ?string
+    {
+        if (isset($this->fields[$field]['customTdStyleRule'])) {
+            $result = $this->fields[$field]['customTdStyleRule']->__invoke($row);
+
+            return is_string($result) || $result === null ? $result : null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $customParams
+     */
     private function createViewCallback(string $view, string $rowName, array $customParams): Closure
     {
         return fn (string $_, mixed $row) => view($view, [$rowName => $row, ...$customParams]);
@@ -51,11 +82,9 @@ class SimpleTableModifiers
         try {
             $reflection = new ReflectionFunction($callback);
 
-            $numberOfParameters = $reflection->getNumberOfParameters();
+            return $reflection->getNumberOfParameters();
         } catch (Exception) {
-            $numberOfParameters = 1;
+            return 1;
         }
-
-        return $numberOfParameters;
     }
 }

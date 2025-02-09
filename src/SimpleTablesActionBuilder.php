@@ -3,22 +3,44 @@
 namespace TiagoSpem\SimpleTables;
 
 use Closure;
+use Illuminate\View\View;
 
 class SimpleTablesActionBuilder
 {
     private ?Closure $view = null;
 
+    /**
+     * @var array{
+     *     icon?: string|null,
+     *     name?: string|null,
+     *     href?: Closure|null,
+     *     target?: string,
+     *     disabled?: bool|Closure
+     * }
+     */
     private array $actionButton = [];
 
+    /**
+     * @var array{
+     *     name?: string,
+     *     params?: Closure
+     * }
+     */
     private array $actionEvent = [];
 
     private string $actionIconStyle = 'size-4';
 
+    /**
+     * @var array<Option>
+     */
     private array $dropdown = [];
 
+    /**
+     * @param  array<Option>  $options
+     */
     public function dropdown(array $options): self
     {
-        $this->dropdown[] = $this->validateActionOptions($options);
+        $this->dropdown = $options;
 
         return $this;
     }
@@ -30,24 +52,24 @@ class SimpleTablesActionBuilder
         return $this;
     }
 
-    public function button(?string $icon = null, ?string $name = null, ?Closure $href = null, string $_target = '_parent'): self
+    public function button(?string $icon = null, ?string $name = null, ?Closure $href = null, string $target = '_parent'): self
     {
         if (filled($icon) || filled($name)) {
             $this->actionButton = [
                 'icon' => $icon,
                 'name' => $name,
                 'href' => $href,
-                'target' => $_target,
+                'target' => $target,
             ];
         }
 
         return $this;
     }
 
-    public function href(Closure $href, bool $_target = false): self
+    public function href(Closure $href, string $target = '_parent'): self
     {
         $this->actionButton['href'] = $href;
-        $this->actionButton['target'] = $_target;
+        $this->actionButton['target'] = $target;
 
         return $this;
     }
@@ -62,9 +84,12 @@ class SimpleTablesActionBuilder
         return $this;
     }
 
+    /**
+     * @param  array<string, mixed>  $customParams
+     */
     public function view(string $view, string $rowName = 'row', array $customParams = []): self
     {
-        $this->view = fn (mixed $row) => view(view: $view, data: [$rowName => $row, ...$customParams]);
+        $this->view = fn (mixed $row) => view($view, [$rowName => $row, ...$customParams]);
 
         return $this;
     }
@@ -78,42 +103,46 @@ class SimpleTablesActionBuilder
 
     public function hasActions(): bool
     {
-        return filled($this->view) || filled($this->actionButton);
+        if ($this->hasActionView()) {
+            return true;
+        }
+
+        return $this->hasActionButton();
     }
 
     public function hasActionButton(): bool
     {
-        return filled($this->actionButton);
+        return $this->actionButton !== [];
     }
 
     public function hasButtonName(): bool
     {
-        return filled($this->actionButton['name']);
+        return isset($this->actionButton['name']) && filled($this->actionButton['name']);
     }
 
     public function hasActionView(): bool
     {
-        return is_callable($this->view);
-    }
-
-    public function hasDropdown(): bool
-    {
-        return filled($this->dropdown);
+        return $this->view instanceof Closure;
     }
 
     public function hasIcon(): bool
     {
-        return filled($this->actionButton['icon']);
+        return ! empty($this->actionButton['icon']);
+    }
+
+    public function hasDropdown(): bool
+    {
+        return $this->dropdown !== [];
     }
 
     public function getButtonName(): string
     {
-        return $this->actionButton['name'] ?? '';
+        return (string) ($this->actionButton['name'] ?? '');
     }
 
     public function getButtonIcon(): string
     {
-        return $this->actionButton['icon'] ?? '';
+        return (string) ($this->actionButton['icon'] ?? '');
     }
 
     public function getActionIconStyle(): string
@@ -125,66 +154,39 @@ class SimpleTablesActionBuilder
     {
         $urlCallback = $this->actionButton['href'] ?? null;
 
-        if (is_callable($urlCallback)) {
-            return $urlCallback($row);
-        }
-
-        return null;
+        return $urlCallback instanceof Closure ? $urlCallback($row) : null;
     }
 
     public function getEventName(): string
     {
-        return $this->actionEvent['name'] ?? '';
+        return (string) ($this->actionEvent['name'] ?? '');
     }
 
     public function getEventParams(mixed $row): mixed
     {
         $eventParamsCallback = $this->actionEvent['params'] ?? null;
 
-        if (is_callable($eventParamsCallback)) {
-            return $eventParamsCallback($row);
-        }
-
-        return null;
+        return $eventParamsCallback instanceof Closure ? $eventParamsCallback($row) : null;
     }
 
-    public function getActionView(mixed $row): mixed
+    public function getActionView(mixed $row): ?View
     {
-        $viewCallback = $this->view;
-
-        if (is_callable($viewCallback)) {
-            return $viewCallback($row);
-        }
-
-        return null;
+        return $this->view instanceof Closure ? ($this->view)($row) : null;
     }
 
     public function getIsActionDisabled(mixed $row): bool
     {
-        if (! isset($this->actionButton['disabled'])) {
-            return false;
+        $disabled = $this->actionButton['disabled'] ?? false;
+
+        if ($disabled instanceof Closure) {
+            return (bool) $disabled($row);
         }
 
-        if (is_bool($this->actionButton['disabled'])) {
-            return $this->actionButton['disabled'];
-        }
-
-        $disabledCallback = $this->actionButton['disabled'];
-
-        if (is_callable($disabledCallback)) {
-            return (bool) $disabledCallback($row);
-        }
-
-        return false;
+        return (bool) $disabled;
     }
 
     public function getActionUrlTarget(): string
     {
-        return $this->actionButton['target'];
-    }
-
-    private function validateActionOptions(array $options): array
-    {
-        return collect($options)->map(fn(Option $option): array => $option->toLivewire())->all();
+        return (string) ($this->actionButton['target'] ?? '_parent');
     }
 }

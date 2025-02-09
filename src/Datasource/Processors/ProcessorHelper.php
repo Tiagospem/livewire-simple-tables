@@ -2,17 +2,22 @@
 
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\SimpleTableModifiers;
+use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
+use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
 trait ProcessorHelper
 {
     /**
+     * @return Collection<int, array<string, mixed>>
+     *
      * @throws InvalidColumnException
      */
     protected function getColumns(): Collection
@@ -29,10 +34,19 @@ trait ProcessorHelper
     }
 
     /**
+     * @param  Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>  $rows
+     * @return array{
+     *     columns: Collection<int, array<string, mixed>>,
+     *     modifiers: SimpleTableModifiers,
+     *     styleModifier: SimpleTablesStyleModifiers,
+     *     actions: SimpleTablesActionBuilder,
+     *     rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>
+     * }
+     *
      * @throws InvalidColumnException
      * @throws InvalidParametersException
      */
-    protected function return(Collection|Builder|LengthAwarePaginator $rows): array
+    protected function return(Collection|QueryBuilder|LengthAwarePaginator|LengthAwarePaginatorContract $rows): array
     {
         $modifiers = $this->simpleTableComponent->dataModifier();
 

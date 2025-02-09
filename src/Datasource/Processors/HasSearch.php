@@ -3,12 +3,18 @@
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Modify;
 
 trait HasSearch
 {
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function builderSearch(Builder $query): Builder
     {
         $columns = collect($this->simpleTableComponent->columns())
@@ -37,6 +43,10 @@ trait HasSearch
         });
     }
 
+    /**
+     * @param  Collection<int, mixed>  $collection
+     * @return Collection<int, mixed>
+     */
     protected function collectionSearch(Collection $collection): Collection
     {
         $search = $this->sanitizeSearch($this->simpleTableComponent->search);
@@ -58,7 +68,9 @@ trait HasSearch
                 $modifiedSearch = $this->applyBeforeSearchModifiers($field, $search);
                 $value = data_get($item, $field);
 
-                if (str_contains(strtolower((string) $value), strtolower($modifiedSearch))) {
+                $value = is_scalar($value) || is_null($value) ? strval($value) : '';
+
+                if (str_contains(strtolower($value), strtolower($modifiedSearch))) {
                     return true;
                 }
             }
@@ -67,9 +79,21 @@ trait HasSearch
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @param  array<string>  $relations
+     */
     private function applyNestedWhereHas(Builder $query, array $relations, string $column, string $search): void
     {
+        if (blank($relations)) {
+            throw new InvalidArgumentException('The relations array cannot be empty.');
+        }
+
         $relation = array_shift($relations);
+
+        if (blank($relation)) {
+            throw new InvalidArgumentException('The relation name cannot be empty.');
+        }
 
         $query->whereHas($relation, function (Builder $q) use ($relations, $column, $search): void {
             if ($relations !== []) {
@@ -80,17 +104,21 @@ trait HasSearch
         });
     }
 
-    private function sanitizeSearch(string $search): string
+    private function sanitizeSearch(?string $search = ''): string
     {
+        if (blank($search)) {
+            return '';
+        }
+
         return strtolower(htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
     }
 
-    private function applyBeforeSearchModifiers(string $field, string $value): mixed
+    private function applyBeforeSearchModifiers(string $field, string $value): string
     {
         $modifier = collect($this->simpleTableComponent->beforeSearch())
             ->filter(fn (Modify $modifier): bool => $modifier->column === $field)
             ->first();
 
-        return filled($modifier) ? $modifier->callback->__invoke($value) : $value;
+        return filled($modifier) ? (string) $modifier->callback->__invoke($value) : $value;
     }
 }

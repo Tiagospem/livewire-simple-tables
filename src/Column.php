@@ -34,12 +34,15 @@ final class Column implements Wireable
         return $this->field;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toLivewire(): array
     {
         return (array) $this;
     }
 
-    public static function fromLivewire($value)
+    public static function fromLivewire($value): mixed
     {
         return $value;
     }

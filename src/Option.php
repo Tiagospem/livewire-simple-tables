@@ -2,14 +2,8 @@
 
 namespace TiagoSpem\SimpleTables;
 
-use Livewire\Wireable;
-
-final class Option implements Wireable
+final class Option
 {
-    public ?string $title = null;
-
-    public ?string $icon = null;
-
     // public string $style = '';
 
     // public bool $disabled = false;
@@ -22,23 +16,13 @@ final class Option implements Wireable
 
     // public array $eventParams = [];
 
-    public static function add(string $title, ?string $icon = null): Option
+    public static function add(): Option
     {
-        $option = new self;
-
-        $option->title = $title;
-        $option->icon = $icon;
-
-        return $option;
+        return new self;
     }
 
-    public function toLivewire(): array
+    public static function divider(): Option
     {
-        return (array) $this;
-    }
-
-    public static function fromLivewire($value)
-    {
-        return $value;
+        return new self;
     }
 }

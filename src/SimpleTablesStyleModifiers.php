@@ -6,9 +6,9 @@ use Closure;
 
 class SimpleTablesStyleModifiers
 {
-    public ?Closure $trCallback = null;
+    private ?Closure $trCallback = null;
 
-    public ?Closure $tdCallback = null;
+    private ?Closure $tdCallback = null;
 
     public bool $replaceTrStyle = false;
 
@@ -43,5 +43,27 @@ class SimpleTablesStyleModifiers
         $this->replaceTdStyle = true;
 
         return $this;
+    }
+
+    public function getTrStyle(mixed $row): ?string
+    {
+        $callback = $this->trCallback ?? null;
+
+        if (is_callable($callback)) {
+            return $callback($row);
+        }
+
+        return null;
+    }
+
+    public function geTdStyle(mixed $row): ?string
+    {
+        $callback = $this->tdCallback ?? null;
+
+        if (is_callable($callback)) {
+            return $callback($row);
+        }
+
+        return null;
     }
 }

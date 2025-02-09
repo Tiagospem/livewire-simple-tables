@@ -72,7 +72,7 @@
                                             @endphp
 
                                             <x-simple-tables::td :class="$dynamicTdStyle">
-                                                {{ $parsedData['content'] }}
+                                                {!! $parsedData['content'] !!}
                                             </x-simple-tables::td>
 
                                             @if ($loop->last && $hasActions)
@@ -103,6 +103,7 @@
             </div>
         </div>
 
+    @if($paginated)
         <div class="mt-4">
             {{ $data['rows']->links() }}
         </div>
