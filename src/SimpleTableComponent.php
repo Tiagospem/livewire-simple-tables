@@ -11,7 +11,6 @@ use TiagoSpem\SimpleTables\Concerns\SearchModifier;
 use TiagoSpem\SimpleTables\Concerns\StyleModifier;
 use TiagoSpem\SimpleTables\Concerns\ThemeManager;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
-use TiagoSpem\SimpleTables\Exceptions\InvalidDatasetException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 
 abstract class SimpleTableComponent extends Component
@@ -20,7 +19,6 @@ abstract class SimpleTableComponent extends Component
 
     /**
      * @throws InvalidColumnException
-     * @throws InvalidDatasetException
      * @throws InvalidParametersException
      */
     public function render(): View

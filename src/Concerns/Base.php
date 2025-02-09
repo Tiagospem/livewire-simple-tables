@@ -12,7 +12,6 @@ use Livewire\WithPagination;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Datasource\Processor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
-use TiagoSpem\SimpleTables\Exceptions\InvalidDatasetException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
@@ -57,7 +56,6 @@ trait Base
      *  }
      *
      * @throws InvalidColumnException
-     * @throws InvalidDatasetException
      * @throws InvalidParametersException
      */
     protected function getData(): array
