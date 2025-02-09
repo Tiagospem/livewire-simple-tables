@@ -41,7 +41,7 @@
                             $optionDisabled = $actionOption->getIsDisabled($row);
                         @endphp
                         @if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions()))
-                            <div class="border-t border-b border-gray-100 first:border-t-0 last:border-b-0">
+                            <div class="border-t border-b border-gray-100">
                                 @foreach ($actionOption->getDividerOptions() as $dividerOption)
                                     @php
                                         $optionDividerDisabled = $dividerOption->getIsDisabled($row);
