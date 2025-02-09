@@ -10,6 +10,11 @@ final class Option
 
     private bool $isDivider = false;
 
+    /**
+     * @var array<Option>
+     */
+    private array $dividerOptions = [];
+
     // private bool $disabled = false;
 
     // public string $style = '';
@@ -38,10 +43,15 @@ final class Option
         return $option;
     }
 
-    public static function divider(): self
+    /**
+     * @param  array<Option>  $options
+     */
+    public static function divider(array $options): self
     {
         $option = new self;
+
         $option->isDivider = true;
+        $option->dividerOptions = $options;
 
         return $option;
     }
@@ -59,5 +69,13 @@ final class Option
     public function getIsDivider(): bool
     {
         return $this->isDivider;
+    }
+
+    /**
+     * @return array<Option>
+     */
+    public function getDividerOptions(): array
+    {
+        return $this->dividerOptions;
     }
 }

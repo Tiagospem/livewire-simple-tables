@@ -15,17 +15,32 @@
                 x-cloak
                 x-show="dropdownOpen"
                 x-on:click.away="dropdownOpen = false"
-                class="z-40 w-56 fixed divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                class="z-40 w-56 fixed rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
                 tabindex="-1"
             >
                 @foreach ($actionOptions as $actionOption)
-                    <x-simple-tables::dropdown-option
-                        title="{{ $actionOption->getName() }}"
-                        icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
-                    />
+                    @if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions()))
+                        <div class="border-t border-b border-gray-100 first:border-t-0 last:border-b-0">
+                            @foreach ($actionOption->getDividerOptions() as $dividerOption)
+                                <x-simple-tables::dropdown-option
+                                    title="{{ $dividerOption->getName() }}"
+                                    icon="{{ $dividerOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                                    @class([
+                                        'border-t border-gray-100' => $loop->first,
+                                        'border-b border-gray-100' => $loop->last,
+                                    ])
+                                />
+                            @endforeach
+                        </div>
+                    @else
+                        <x-simple-tables::dropdown-option
+                            title="{{ $actionOption->getName() }}"
+                            icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                        />
+                    @endif
                 @endforeach
             </div>
         </template>
