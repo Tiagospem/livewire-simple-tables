@@ -14,7 +14,7 @@ class CreateCommand extends Command
 
     public function handle(): int
     {
-        $name = $this->argument('name');
+        $name = parserString($this->argument('name'));
 
         $stubPath = __DIR__.'/../../resources/stubs/table.stub';
 
@@ -42,11 +42,11 @@ class CreateCommand extends Command
             mkdir(dirname($targetPath), 0755, true);
         }
 
-        $relativePath = ltrim(str_replace(app_path(), '', $basePath), '\\/');
+        $relativePath = ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
         $namespaceBase = 'App\\'.str_replace('/', '\\', $relativePath);
         $namespace = $namespaceBase.($parts !== [] ? '\\'.implode('\\', $parts) : '');
 
-        $content = file_get_contents($stubPath);
+        $content = file_get_contents($stubPath) ?: '';
         $content = str_replace(
             ['{{ namespace }}', '{{ class }}'],
             [$namespace, $className],
@@ -54,7 +54,6 @@ class CreateCommand extends Command
         );
 
         file_put_contents($targetPath, $content);
-
         $this->info('Component created: '.$targetPath);
 
         return self::SUCCESS;

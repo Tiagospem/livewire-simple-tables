@@ -30,7 +30,7 @@ trait ProcessorHelper
             }
         }
 
-        return collect($columns)->transform(fn (Column $column): array => $column->toLivewire());
+        return new Collection(array_map(fn (Column $column): array => $column->toLivewire(), $columns));
     }
 
     /**

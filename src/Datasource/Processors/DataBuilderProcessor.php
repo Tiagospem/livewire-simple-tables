@@ -46,7 +46,7 @@ class DataBuilderProcessor implements ProcessorInterface
             ->orderBy($this->simpleTableComponent->sortBy, $this->simpleTableComponent->sortDirection)
             ->when(
                 $this->simpleTableComponent->paginated,
-                fn (QueryBuilder $query) => $query->paginate($this->simpleTableComponent->perPage)
+                fn (QueryBuilder|Builder $query) => $query->paginate($this->simpleTableComponent->perPage)
             );
 
         return $this->return($rows);

@@ -42,7 +42,7 @@ final class Column implements Wireable
         return (array) $this;
     }
 
-    public static function fromLivewire($value): mixed
+    public static function fromLivewire(mixed $value): mixed
     {
         return $value;
     }

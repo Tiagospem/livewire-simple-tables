@@ -25,7 +25,7 @@ if (! function_exists('parseData')) {
     {
         $field = $column['field'];
         $rawValue = data_get($row, $field);
-        $content = is_scalar($rawValue) || is_null($rawValue) ? strval($rawValue) : '';
+        $content = parserString($rawValue);
         $dynamicTdStyle = null;
         $defaultTdStyle = theme($theme, 'table.td');
 
@@ -90,5 +90,12 @@ if (! function_exists('mergeClasses')) {
         $classes = array_unique(explode(' ', $normalizedClasses));
 
         return implode(' ', $classes);
+    }
+}
+
+if (! function_exists('parserString')) {
+    function parserString(mixed $value): string
+    {
+        return is_scalar($value) || is_null($value) ? strval($value) : '';
     }
 }

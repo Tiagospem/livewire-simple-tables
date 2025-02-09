@@ -103,9 +103,10 @@
             </div>
         </div>
 
-    @if($paginated)
-        <div class="mt-4">
-            {{ $data['rows']->links() }}
-        </div>
+        @if ($paginated)
+            <div class="mt-4">
+                {{ $data['rows']->links() }}
+            </div>
+        @endif
     @endif
 </div>

@@ -8,6 +8,9 @@ use TiagoSpem\SimpleTables\Themes\ThemeInterface;
 
 trait ThemeManager
 {
+    /**
+     * @var array<string, string|array<string, string>>
+     */
     public array $theme = [];
 
     protected string $tableContentStyle = '';
@@ -37,6 +40,10 @@ trait ThemeManager
     {
         $themeClass = config('simple-tables.theme');
 
+        if (! is_string($themeClass) && ! is_object($themeClass)) {
+            throw new InvalidThemeException('Invalid theme class');
+        }
+
         if (! is_subclass_of($themeClass, ThemeInterface::class)) {
             throw new InvalidThemeException('Theme must implement ThemeInterface');
         }
@@ -60,19 +67,22 @@ trait ThemeManager
                 $this->theme[$section] = [];
             }
 
-            $this->theme[$section][$key] = trim((string) $value);
+            $this->theme[$section][$key] = trim(parserString($value));
         }
     }
 
-    private function isStyleProperty(string $propertyName, $value): bool
+    private function isStyleProperty(string $propertyName, mixed $value): bool
     {
         if (! str_ends_with($propertyName, 'Style')) {
             return false;
         }
 
-        return ! blank(trim((string) $value));
+        return ! blank(trim(parserString($value)));
     }
 
+    /**
+     * @return array{0: string, 1: string}
+     */
     private function parseStyleProperty(string $propertyName): array
     {
         $snake = Str::snake($propertyName);

@@ -68,7 +68,7 @@ trait HasSearch
                 $modifiedSearch = $this->applyBeforeSearchModifiers($field, $search);
                 $value = data_get($item, $field);
 
-                $value = is_scalar($value) || is_null($value) ? strval($value) : '';
+                $value = parserString($value);
 
                 if (str_contains(strtolower($value), strtolower($modifiedSearch))) {
                     return true;
@@ -119,6 +119,6 @@ trait HasSearch
             ->filter(fn (Modify $modifier): bool => $modifier->column === $field)
             ->first();
 
-        return filled($modifier) ? (string) $modifier->callback->__invoke($value) : $value;
+        return filled($modifier) ? parserString($modifier->callback->__invoke($value)) : $value;
     }
 }
