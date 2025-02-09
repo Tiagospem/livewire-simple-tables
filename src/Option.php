@@ -12,9 +12,13 @@ final class Option
 
     private bool $isDivider = false;
 
+    private string $target = '_parent';
+
     private Closure|bool $hidden = false;
 
     private Closure|bool $disabled = false;
+
+    private Closure|string $href = '';
 
     /**
      * @var array<Option>
@@ -24,8 +28,6 @@ final class Option
     // public string $style = '';
 
     // public bool $disabled = false;
-
-    // public string $href = '';
 
     // public string $target = '_parent';
 
@@ -57,6 +59,17 @@ final class Option
     public function disabled(Closure|bool $disabled = true): self
     {
         $this->disabled = $disabled;
+
+        return $this;
+    }
+
+    public function href(Closure|string $href, ?string $target = null): self
+    {
+        $this->href = $href;
+
+        if ($target) {
+            $this->target = $target;
+        }
 
         return $this;
     }
@@ -109,6 +122,22 @@ final class Option
         }
 
         return (bool) $this->disabled;
+    }
+
+    public function getActionUrl(mixed $row): string
+    {
+        $closure = $this->href;
+
+        if ($closure instanceof Closure) {
+            return (string) $closure($row);
+        }
+
+        return parserString($this->href);
+    }
+
+    public function getActionUrlTarget(): string
+    {
+        return $this->target;
     }
 
     /**

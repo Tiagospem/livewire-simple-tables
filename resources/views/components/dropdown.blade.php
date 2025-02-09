@@ -39,17 +39,31 @@
                     @foreach ($visibleOptions as $actionOption)
                         @php
                             $optionDisabled = $actionOption->getIsDisabled($row);
+
+                            $clickEvent = [
+                                'actionUrl' => $actionOption->getActionUrl($row),
+                                'actionTarget' => $actionOption->getActionUrlTarget(),
+                                'disabled' => $optionDisabled,
+                            ];
                         @endphp
                         @if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions()))
                             <div class="border-t border-b border-gray-100">
                                 @foreach ($actionOption->getDividerOptions() as $dividerOption)
                                     @php
                                         $optionDividerDisabled = $dividerOption->getIsDisabled($row);
+
+                                        $clickEvent = [
+                                            'actionUrl' => $dividerOption->getActionUrl($row),
+                                            'actionTarget' => $dividerOption->getActionUrlTarget(),
+                                            'disabled' => $optionDividerDisabled,
+                                        ];
+
                                     @endphp
                                     <x-simple-tables::dropdown-option
                                         title="{{ $dividerOption->getName() }}"
                                         icon="{{ $dividerOption->getIcon() ?? $defaultDropdownOptionIcon }}"
                                         :disabled="$optionDisabled || $optionDividerDisabled"
+                                        :$clickEvent
                                     />
                                 @endforeach
                             </div>
@@ -58,6 +72,7 @@
                                 title="{{ $actionOption->getName() }}"
                                 icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
                                 :disabled="$optionDisabled"
+                                :$clickEvent
                             />
                         @endif
                     @endforeach

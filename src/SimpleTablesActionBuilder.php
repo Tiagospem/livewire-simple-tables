@@ -174,6 +174,11 @@ class SimpleTablesActionBuilder
         return $urlCallback instanceof Closure ? $urlCallback($row) : null;
     }
 
+    public function getActionUrlTarget(): string
+    {
+        return (string) ($this->actionButton['target'] ?? '_parent');
+    }
+
     public function getEventName(): string
     {
         return (string) ($this->actionEvent['name'] ?? '');
@@ -200,11 +205,6 @@ class SimpleTablesActionBuilder
         }
 
         return (bool) $disabled;
-    }
-
-    public function getActionUrlTarget(): string
-    {
-        return (string) ($this->actionButton['target'] ?? '_parent');
     }
 
     public function getDefaultDropdownOptionIcon(): ?string
