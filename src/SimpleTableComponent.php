@@ -21,8 +21,6 @@ abstract class SimpleTableComponent extends Component
 {
     use ActionBuilder, DataModifier, SearchModifier, StyleModifier, ThemeManager, WithPagination;
 
-    private bool $showSearch = false;
-
     public ?string $search = '';
 
     public string $sortBy = 'id';
@@ -33,9 +31,9 @@ abstract class SimpleTableComponent extends Component
 
     public int $perPage = 10;
 
-    public function mount(): void
+    private function showSearch(): bool
     {
-        $this->showSearch = collect($this->columns())
+        return collect($this->columns())
             ->filter(fn (Column $column): bool => $column->searchable)
             ->isNotEmpty();
     }
@@ -64,7 +62,7 @@ abstract class SimpleTableComponent extends Component
         return view('simple-tables::layout.table', [
             'data' => (new Processor($this))->process(),
             'theme' => $this->theme,
-            'showSearch' => $this->showSearch,
+            'showSearch' => $this->showSearch(),
         ]);
     }
 }
