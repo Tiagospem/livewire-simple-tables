@@ -19,9 +19,9 @@ use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
 use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
-final class Processor implements ProcessorInterface
+final readonly class Processor implements ProcessorInterface
 {
-    public function __construct(protected SimpleTableComponent $simpleTableComponent) {}
+    public function __construct(private SimpleTableComponent $simpleTableComponent) {}
 
     /**
      * @return array{

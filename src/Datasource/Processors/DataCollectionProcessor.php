@@ -70,7 +70,7 @@ final class DataCollectionProcessor implements ProcessorInterface
      * @param  Collection<TKey, TValue>  $collection
      * @return LengthAwarePaginator<TKey, TValue>
      */
-    protected function paginateCollection(Collection $collection): LengthAwarePaginator
+    private function paginateCollection(Collection $collection): LengthAwarePaginator
     {
         $page = LengthAwarePaginator::resolveCurrentPage();
         $perPage = $this->simpleTableComponent->perPage;
