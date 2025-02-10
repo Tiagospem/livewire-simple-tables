@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Themes;
 
-class DefaultTheme implements ThemeInterface
+final class DefaultTheme implements ThemeInterface
 {
     public function getStyles(): array
     {

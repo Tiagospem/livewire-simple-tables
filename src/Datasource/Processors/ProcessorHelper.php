@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
@@ -16,27 +18,27 @@ use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 trait ProcessorHelper
 {
     /**
-     * @return Collection<int, array<string, mixed>>
+     * @return array<Column>
      *
      * @throws InvalidColumnException
      */
-    protected function getColumns(): Collection
+    protected function getColumns(): array
     {
         $columns = $this->simpleTableComponent->columns();
 
         foreach ($columns as $column) {
-            if (! $column instanceof Column) {
-                throw new InvalidColumnException;
+            if ( ! $column instanceof Column) {
+                throw new InvalidColumnException();
             }
         }
 
-        return new Collection(array_map(fn (Column $column): array => $column->toLivewire(), $columns));
+        return $columns;
     }
 
     /**
      * @param  Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>  $rows
      * @return array{
-     *     columns: Collection<int, array<string, mixed>>,
+     *     columns: array<Column>,
      *     modifiers: SimpleTableModifiers,
      *     styleModifier: SimpleTablesStyleModifiers,
      *     actions: SimpleTablesActionBuilder,

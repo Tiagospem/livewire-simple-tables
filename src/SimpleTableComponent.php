@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables;
 
 use Illuminate\Contracts\View\View;
@@ -19,7 +21,12 @@ use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 
 abstract class SimpleTableComponent extends Component
 {
-    use ActionBuilder, DataModifier, SearchModifiers, StyleModifier, ThemeManager, WithPagination;
+    use ActionBuilder;
+    use DataModifier;
+    use SearchModifiers;
+    use StyleModifier;
+    use ThemeManager;
+    use WithPagination;
 
     public ?string $search = '';
 
@@ -31,17 +38,6 @@ abstract class SimpleTableComponent extends Component
 
     public int $perPage = 10;
 
-    private function showSearch(): bool
-    {
-        return $this->getSearchableColumns()
-            ->isNotEmpty();
-    }
-
-    public function updatedSearch(): void
-    {
-        $this->resetPage();
-    }
-
     /**
      * @return array<int, Column>
      */
@@ -51,6 +47,11 @@ abstract class SimpleTableComponent extends Component
      * @return Builder<Model>|Collection<int, mixed>
      */
     abstract public function datasource(): Builder|Collection;
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
 
     /**
      * @throws InvalidColumnException
@@ -63,5 +64,11 @@ abstract class SimpleTableComponent extends Component
             'theme' => $this->theme,
             'showSearch' => $this->showSearch(),
         ]);
+    }
+
+    private function showSearch(): bool
+    {
+        return $this->getSearchableColumns()
+            ->isNotEmpty();
     }
 }
