@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables;
 
 use Closure;
 
-class SimpleTablesStyleModifiers
+final class SimpleTablesStyleModifiers
 {
-    private ?Closure $trCallback = null;
-
-    private ?Closure $tdCallback = null;
-
     public bool $replaceTrStyle = false;
 
     public bool $replaceTdStyle = false;
 
+    private ?Closure $trCallback = null;
+
+    private ?Closure $tdCallback = null;
+
     public static function make(): SimpleTablesStyleModifiers
     {
-        return new self;
+        return new self();
     }
 
     public function tr(Closure $callback, bool $replace = false): self

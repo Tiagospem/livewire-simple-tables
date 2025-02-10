@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Concerns;
 
 use Illuminate\Support\Str;
@@ -44,15 +46,15 @@ trait ThemeManager
     {
         $themeClass = config('simple-tables.theme');
 
-        if (! is_string($themeClass) && ! is_object($themeClass)) {
+        if ( ! is_string($themeClass) && ! is_object($themeClass)) {
             throw new InvalidThemeException('Invalid theme class');
         }
 
-        if (! is_subclass_of($themeClass, ThemeInterface::class)) {
+        if ( ! is_subclass_of($themeClass, ThemeInterface::class)) {
             throw new InvalidThemeException('Theme must implement ThemeInterface');
         }
 
-        $themeInstance = new $themeClass;
+        $themeInstance = new $themeClass();
         $this->theme = $themeInstance->getStyles();
 
         $this->applyDynamicOverrides();
@@ -61,13 +63,13 @@ trait ThemeManager
     private function applyDynamicOverrides(): void
     {
         foreach (get_object_vars($this) as $propertyName => $value) {
-            if (! $this->isStyleProperty($propertyName, $value)) {
+            if ( ! $this->isStyleProperty($propertyName, $value)) {
                 continue;
             }
 
             [$section, $key] = $this->parseStyleProperty($propertyName);
 
-            if (! isset($this->theme[$section]) || ! is_array($this->theme[$section])) {
+            if ( ! isset($this->theme[$section]) || ! is_array($this->theme[$section])) {
                 $this->theme[$section] = [];
             }
 
@@ -77,7 +79,7 @@ trait ThemeManager
 
     private function isStyleProperty(string $propertyName, mixed $value): bool
     {
-        if (! str_ends_with($propertyName, 'Style')) {
+        if ( ! str_ends_with($propertyName, 'Style')) {
             return false;
         }
 
@@ -91,16 +93,16 @@ trait ThemeManager
     {
         $snake = Str::snake($propertyName);
 
-        if (! str_ends_with($snake, '_style')) {
+        if ( ! str_ends_with($snake, '_style')) {
             return [$snake, 'content'];
         }
 
-        $base = substr($snake, 0, -6);
+        $base = mb_substr($snake, 0, -6);
 
         $parts = explode('_', $base, 2);
 
         $section = $parts[0];
-        $key = count($parts) === 2 ? $parts[1] : 'content';
+        $key = 2 === count($parts) ? $parts[1] : 'content';
 
         return [$section, $key];
     }

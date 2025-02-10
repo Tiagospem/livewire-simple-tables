@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Facades;
 
 use Illuminate\Support\Facades\Facade;
@@ -13,7 +15,7 @@ use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
  * @method static SimpleTablesStyleModifiers styleModifiers()
  * @method static SimpleTablesActionBuilder actionBuilder()
  */
-class SimpleTables extends Facade
+final class SimpleTables extends Facade
 {
     protected static function getFacadeAccessor(): string
     {

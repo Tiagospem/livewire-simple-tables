@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -38,14 +40,14 @@ trait HasSearch
                             $this->applyNestedWhereHas($q, $parts, $columnName, $search);
                         });
                     } else {
-                        $qualifiedField = implode('.', $parts).".$columnName";
+                        $qualifiedField = implode('.', $parts) . ".{$columnName}";
 
-                        $query->orWhere($qualifiedField, 'like', "%$search%");
+                        $query->orWhere($qualifiedField, 'like', "%{$search}%");
                     }
                 } else {
-                    $qualifiedField = "$modelTable.$field";
+                    $qualifiedField = "{$modelTable}.{$field}";
 
-                    $query->orWhere($qualifiedField, 'like', "%$search%");
+                    $query->orWhere($qualifiedField, 'like', "%{$search}%");
                 }
             }
         });
@@ -77,7 +79,7 @@ trait HasSearch
 
                 $value = parserString($value);
 
-                if (str_contains(strtolower($value), strtolower($modifiedSearch))) {
+                if (str_contains(mb_strtolower($value), mb_strtolower($modifiedSearch))) {
                     return true;
                 }
             }
@@ -103,10 +105,10 @@ trait HasSearch
         }
 
         $query->whereHas($relation, function (Builder $q) use ($relations, $column, $search): void {
-            if ($relations !== []) {
+            if ([] !== $relations) {
                 $this->applyNestedWhereHas($q, $relations, $column, $search);
             } else {
-                $q->where($column, 'like', "%$search%");
+                $q->where($column, 'like', "%{$search}%");
             }
         });
     }
@@ -117,13 +119,13 @@ trait HasSearch
             return '';
         }
 
-        return strtolower(htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        return mb_strtolower(htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
     }
 
     private function applyBeforeSearchModifiers(string $field, string $value): string
     {
         $modifier = collect($this->simpleTableComponent->beforeSearch())
-            ->filter(fn (Modify $modifier): bool => $modifier->column === $field)
+            ->filter(fn(Modify $modifier): bool => $modifier->column === $field)
             ->first();
 
         return filled($modifier) ? parserString($modifier->callback->__invoke($value)) : $value;

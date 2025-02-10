@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
@@ -15,9 +17,10 @@ use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
 use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
-class DataCollectionProcessor implements ProcessorInterface
+final class DataCollectionProcessor implements ProcessorInterface
 {
-    use HasSearch, ProcessorHelper;
+    use HasSearch;
+    use ProcessorHelper;
 
     public function __construct(protected SimpleTableComponent $simpleTableComponent) {}
 
@@ -48,9 +51,9 @@ class DataCollectionProcessor implements ProcessorInterface
         $sortDirection = $this->simpleTableComponent->sortDirection;
 
         $sorted = $collection->sortBy(
-            fn ($item) => data_get($item, $sortBy),
+            fn($item) => data_get($item, $sortBy),
             SORT_REGULAR,
-            $sortDirection === 'desc'
+            'desc' === $sortDirection,
         );
 
         $rows = $this->simpleTableComponent->paginated
@@ -81,7 +84,7 @@ class DataCollectionProcessor implements ProcessorInterface
             [
                 'path' => LengthAwarePaginator::resolveCurrentPath(),
                 'pageName' => 'page',
-            ]
+            ],
         );
     }
 }

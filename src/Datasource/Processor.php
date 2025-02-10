@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
@@ -17,7 +19,7 @@ use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
 use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
-class Processor implements ProcessorInterface
+final class Processor implements ProcessorInterface
 {
     public function __construct(protected SimpleTableComponent $simpleTableComponent) {}
 

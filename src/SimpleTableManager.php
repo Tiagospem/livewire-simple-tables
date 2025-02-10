@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables;
 
-class SimpleTableManager
+final class SimpleTableManager
 {
     public function dataModifiers(): SimpleTableModifiers
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
@@ -25,8 +27,8 @@ trait ProcessorHelper
         $columns = $this->simpleTableComponent->columns();
 
         foreach ($columns as $column) {
-            if (! $column instanceof Column) {
-                throw new InvalidColumnException;
+            if ( ! $column instanceof Column) {
+                throw new InvalidColumnException();
             }
         }
 

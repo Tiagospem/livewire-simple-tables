@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
@@ -17,9 +19,10 @@ use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
 use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
-class DataBuilderProcessor implements ProcessorInterface
+final class DataBuilderProcessor implements ProcessorInterface
 {
-    use HasSearch, ProcessorHelper;
+    use HasSearch;
+    use ProcessorHelper;
 
     public function __construct(protected SimpleTableComponent $simpleTableComponent) {}
 
@@ -47,7 +50,7 @@ class DataBuilderProcessor implements ProcessorInterface
             ->orderBy($this->simpleTableComponent->sortBy, $this->simpleTableComponent->sortDirection)
             ->when(
                 $this->simpleTableComponent->paginated,
-                fn (QueryBuilder|Builder $query) => $query->paginate($this->simpleTableComponent->perPage)
+                fn(QueryBuilder|Builder $query) => $query->paginate($this->simpleTableComponent->perPage),
             );
 
         return $this->return($rows);
