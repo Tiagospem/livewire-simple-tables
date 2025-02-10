@@ -82,7 +82,7 @@ if (! function_exists('parseStyle')) {
 if (! function_exists('mergeClass')) {
     function mergeClass(string ...$args): string
     {
-        $filteredArgs = array_filter($args, fn ($class) => is_string($class) && $class !== '');
+        $filteredArgs = array_filter($args, fn ($class): bool => is_string($class) && $class !== '');
 
         $combined = implode(' ', $filteredArgs);
 

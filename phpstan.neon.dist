@@ -1,7 +1,8 @@
 parameters:
-    level: max
+    ignoreErrors:
+        - identifier: missingType.generics
+
     paths:
         - src
 
-    reportUnmatchedIgnoredErrors: true
-    treatPhpDocTypesAsCertain: false
+    level: max
