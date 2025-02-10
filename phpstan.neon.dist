@@ -1,9 +1,7 @@
 parameters:
     ignoreErrors:
         - identifier: missingType.generics
-        - '#PHPDoc tag @(param|return) for parameter \$rows contains generic type Illuminate\\Contracts\\Pagination\\LengthAwarePaginator<.*> but interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator is not generic\.#'
-        - '#Method .*paginateCollection\(\) should return Illuminate\\Pagination\\LengthAwarePaginator&iterable<.*> but returns Illuminate\\Pagination\\LengthAwarePaginator\.#'
+
     paths:
         - src
-
     level: max
