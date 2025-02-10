@@ -37,7 +37,7 @@
                                 <x-simple-tables::tr :class="$themeTrClass">
                                     @foreach ($data['columns'] as $column)
                                         <x-simple-tables::th :class="$themeThClass">
-                                            {{ $column['title'] }}
+                                            {{ $column->getTitle() }}
                                         </x-simple-tables::th>
 
                                         @if ($loop->last && $hasActions)

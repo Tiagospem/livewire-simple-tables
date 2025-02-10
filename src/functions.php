@@ -1,5 +1,6 @@
 <?php
 
+use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
@@ -17,16 +18,15 @@ if (! function_exists('theme')) {
 
 if (! function_exists('parseData')) {
     /**
-     * @param  array<string, string>  $column
      * @param  array<string, mixed>  $theme
      * @return array<string, string>
      */
-    function parseData(SimpleTableModifiers $modifiers, array $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
+    function parseData(SimpleTableModifiers $modifiers, Column $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
     {
-        $field = $column['field'];
-        $alias = $column['alias'];
+        $field = $column->getField();
+        $alias = $column->getAlias();
 
-        $rawValue = data_get($row, $alias ?: $field);
+        $rawValue = data_get($row, $alias !== null && $alias !== '' && $alias !== '0' ? $alias : $field);
 
         $content = parserString($rawValue);
         $dynamicTdStyle = null;

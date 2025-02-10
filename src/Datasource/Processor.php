@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginator
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataBuilderProcessor;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataCollectionProcessor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
@@ -22,7 +23,7 @@ class Processor implements ProcessorInterface
 
     /**
      * @return array{
-     *      columns: Collection<int, array<string, mixed>>,
+     *      columns: array<Column>,
      *      modifiers: SimpleTableModifiers,
      *      styleModifier: SimpleTablesStyleModifiers,
      *      actions: SimpleTablesActionBuilder,

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\Interfaces\ProcessorInterface;
@@ -24,7 +25,7 @@ class DataBuilderProcessor implements ProcessorInterface
 
     /**
      * @return array{
-     *      columns: Collection<int, array<string, mixed>>,
+     *      columns: array<Column>,
      *      modifiers: SimpleTableModifiers,
      *      styleModifier: SimpleTablesStyleModifiers,
      *      actions: SimpleTablesActionBuilder,

@@ -26,6 +26,7 @@ trait HasSearch
         return $query->where(function (Builder $query) use ($columns, $search, $model, $modelTable): void {
             foreach ($columns as $column) {
                 $field = $column->getField();
+
                 $search = $this->applyBeforeSearchModifiers(field: $field, value: $search);
 
                 if (str_contains($field, '.')) {
@@ -105,7 +106,7 @@ trait HasSearch
             if ($relations !== []) {
                 $this->applyNestedWhereHas($q, $relations, $column, $search);
             } else {
-                $q->where($column, 'like', "%{$search}%");
+                $q->where($column, 'like', "%$search%");
             }
         });
     }

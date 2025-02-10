@@ -6,13 +6,13 @@ use Livewire\Wireable;
 
 final class Column implements Wireable
 {
-    public string $title = '';
+    private string $title = '';
 
-    public string $field = '';
+    private string $field = '';
 
-    public ?string $alias = null;
+    private ?string $alias = null;
 
-    public bool $searchable = true;
+    private bool $searchable = true;
 
     public static function add(string $title, string $field, ?string $alias = null): self
     {
@@ -35,6 +35,21 @@ final class Column implements Wireable
     public function getField(): string
     {
         return $this->field;
+    }
+
+    public function isSearchable(): bool
+    {
+        return $this->searchable;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
     }
 
     /**
