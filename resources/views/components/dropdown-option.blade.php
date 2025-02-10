@@ -5,6 +5,7 @@
     'clickEvent' => [],
     'iconStyle' => '',
     'buttonStyle' => '',
+    'themeDropdownOptionClass',
 ])
 <div
     @class(['py-1', 'opacity-50 pointer-events-none' => $disabled])
@@ -13,10 +14,7 @@
 >
     <a
         x-on:click="handleClick(@js($clickEvent))"
-        class="{{ mergeClass(
-            'hover:bg-gray-100 group flex items-center px-4 py-2 text-sm text-gray-700 cursor-pointer outline-none focus:outline-none',
-            $buttonStyle,
-        ) }}"
+        @class([mergeClass($themeDropdownOptionClass, $buttonStyle)])
         role="menuitem"
         tabindex="-1"
     >

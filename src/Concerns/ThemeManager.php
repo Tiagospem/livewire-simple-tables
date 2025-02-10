@@ -33,6 +33,10 @@ trait ThemeManager
 
     protected string $actionButtonStyle = '';
 
+    protected string $dropdownContentStyle = '';
+
+    protected string $dropdownOptionStyle = '';
+
     /**
      * @throws InvalidThemeException
      */

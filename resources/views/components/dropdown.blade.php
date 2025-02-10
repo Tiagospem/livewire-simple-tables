@@ -2,6 +2,8 @@
     'hasDropdown' => false,
     'dropdownOptions' => [],
     'defaultOptionIcon' => null,
+    'themeDropdownOptionClass',
+    'themeDropdownClass',
     'row',
 ])
 <div class="relative inline-block text-left">
@@ -20,7 +22,7 @@
                 x-cloak
                 x-show="dropdownOpen"
                 x-on:click.away="dropdownOpen = false"
-                class="z-40 w-56 fixed overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                @class([$themeDropdownClass])
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
@@ -73,6 +75,7 @@
                                         :$clickEvent
                                         :$iconStyle
                                         :$buttonStyle
+                                        :$themeDropdownOptionClass
                                     />
                                 @endforeach
                             </div>
@@ -84,6 +87,7 @@
                                 :$clickEvent
                                 :$iconStyle
                                 :$buttonStyle
+                                :$themeDropdownOptionClass
                             />
                         @endif
                     @endforeach
