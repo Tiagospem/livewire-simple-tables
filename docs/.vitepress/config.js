@@ -2,6 +2,8 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  ignoreDeadLinks: true,
+  base: '/livewire-simple-tables/',
   title: "Livewire Simple Tables",
   description: "A livewire package",
   themeConfig: {

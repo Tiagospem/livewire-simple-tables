@@ -1,4 +1,4 @@
-name: Deploy VitePress site to Pages
+name: VitePressWorkflow
 
 on:
   push:
@@ -38,6 +38,8 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/.vitepress/dist
+      - name: Listar conteúdo do build
+        run: ls -R docs/.vitepress/dist
 
   deploy:
     environment:
