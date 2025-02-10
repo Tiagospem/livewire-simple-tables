@@ -20,14 +20,14 @@ final class Column implements Wireable
         $column->title = $title;
         $column->field = $field;
         $column->alias = $alias;
-        $column->searchable = true;
+        $column->searchable = false;
 
         return $column;
     }
 
-    public function unsearchable(): self
+    public function searchable(): self
     {
-        $this->searchable = false;
+        $this->searchable = true;
 
         return $this;
     }

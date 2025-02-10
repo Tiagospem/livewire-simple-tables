@@ -10,7 +10,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Concerns\DataModifier;
-use TiagoSpem\SimpleTables\Concerns\SearchModifier;
+use TiagoSpem\SimpleTables\Concerns\SearchModifiers;
 use TiagoSpem\SimpleTables\Concerns\StyleModifier;
 use TiagoSpem\SimpleTables\Concerns\ThemeManager;
 use TiagoSpem\SimpleTables\Datasource\Processor;
@@ -19,7 +19,7 @@ use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 
 abstract class SimpleTableComponent extends Component
 {
-    use ActionBuilder, DataModifier, SearchModifier, StyleModifier, ThemeManager, WithPagination;
+    use ActionBuilder, DataModifier, SearchModifiers, StyleModifier, ThemeManager, WithPagination;
 
     public ?string $search = '';
 
@@ -33,8 +33,7 @@ abstract class SimpleTableComponent extends Component
 
     private function showSearch(): bool
     {
-        return collect($this->columns())
-            ->filter(fn (Column $column): bool => $column->searchable)
+        return $this->getSearchableColumns()
             ->isNotEmpty();
     }
 
