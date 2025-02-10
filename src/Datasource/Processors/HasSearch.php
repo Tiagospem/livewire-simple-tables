@@ -22,22 +22,31 @@ trait HasSearch
 
         $search = $this->sanitizeSearch($this->simpleTableComponent->search);
 
-        return $query->where(function (Builder $query) use ($columns, $search): void {
+        $model = $query->getModel();
+        $modelTable = $model->getTable();
+
+        return $query->where(function (Builder $query) use ($columns, $search, $model, $modelTable): void {
             foreach ($columns as $column) {
                 $field = $column->getField();
-
                 $search = $this->applyBeforeSearchModifiers(field: $field, value: $search);
 
                 if (str_contains($field, '.')) {
                     $parts = explode('.', $field);
                     $columnName = array_pop($parts);
-                    $relations = $parts;
 
-                    $query->orWhere(function (Builder $q) use ($relations, $columnName, $search): void {
-                        $this->applyNestedWhereHas($q, $relations, $columnName, $search);
-                    });
+                    if ($model->isRelation($parts[0])) {
+                        $query->orWhere(function (Builder $q) use ($parts, $columnName, $search): void {
+                            $this->applyNestedWhereHas($q, $parts, $columnName, $search);
+                        });
+                    } else {
+                        $qualifiedField = implode('.', $parts).".$columnName";
+
+                        $query->orWhere($qualifiedField, 'like', "%$search%");
+                    }
                 } else {
-                    $query->orWhere($field, 'like', "%{$search}%");
+                    $qualifiedField = "$modelTable.$field";
+
+                    $query->orWhere($qualifiedField, 'like', "%$search%");
                 }
             }
         });

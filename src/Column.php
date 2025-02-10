@@ -10,19 +10,22 @@ final class Column implements Wireable
 
     public string $field = '';
 
+    public ?string $alias = null;
+
     public bool $searchable = true;
 
-    public static function add(string $title, string $field, bool $searchable = true): self
+    public static function add(string $title, string $field, ?string $alias = null): self
     {
         $column = new self;
         $column->title = $title;
         $column->field = $field;
-        $column->searchable = $searchable;
+        $column->alias = $alias;
+        $column->searchable = true;
 
         return $column;
     }
 
-    public function notSearchable(): self
+    public function unsearchable(): self
     {
         $this->searchable = false;
 

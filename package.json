@@ -2,7 +2,6 @@
   "name": "simpletables",
   "version": "1.0.0",
   "description": "laravel table component",
-  "type": "module",
   "scripts": {
     "dev": "mix watch",
     "build": "mix --production",
