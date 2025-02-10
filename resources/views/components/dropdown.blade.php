@@ -1,7 +1,7 @@
 @props([
     'hasDropdown' => false,
-    'actionOptions' => [],
-    'defaultDropdownOptionIcon' => null,
+    'dropdownOptions' => [],
+    'defaultOptionIcon' => null,
     'row',
 ])
 <div class="relative inline-block text-left">
@@ -28,51 +28,62 @@
             >
                 <div class="max-h-[300px] overflow-auto custom-scrollbar">
                     @php
-                        $visibleOptions = collect($actionOptions)->filter(function ($actionOption) use ($row) {
-                            if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions())) {
-                                return !$actionOption->getIsHidden($row);
+                        $visibleOptions = collect($dropdownOptions)->filter(function ($dropdownOption) use ($row) {
+                            if ($dropdownOption->isDivider() && $dropdownOption->hasDividerOptions()) {
+                                return !$dropdownOption->isHidden($row);
                             }
-                            return !$actionOption->getIsHidden($row);
+                            return !$dropdownOption->isHidden($row);
                         });
                     @endphp
 
-                    @foreach ($visibleOptions as $actionOption)
+                    @foreach ($visibleOptions as $option)
                         @php
-                            $optionDisabled = $actionOption->getIsDisabled($row);
+                            $optionDisabled = $option->isDisabled($row);
 
                             $clickEvent = [
-                                'actionUrl' => $actionOption->getActionUrl($row),
-                                'actionTarget' => $actionOption->getActionUrlTarget(),
+                                'url' => $option->getUrl($row),
+                                'target' => $option->getTarget(),
+                                'event' => $option->getEvent($row),
                                 'disabled' => $optionDisabled,
                             ];
+
+                            $iconStyle = $option->getIconStyle();
+                            $buttonStyle = $option->getStyle();
                         @endphp
-                        @if ($actionOption->getIsDivider() && filled($actionOption->getDividerOptions()))
+                        @if ($option->isDivider() && $option->hasDividerOptions())
                             <div class="border-t border-b border-gray-100">
-                                @foreach ($actionOption->getDividerOptions() as $dividerOption)
+                                @foreach ($option->getDividerOptions() as $dividerOption)
                                     @php
-                                        $optionDividerDisabled = $dividerOption->getIsDisabled($row);
+                                        $dividerDisabled = $dividerOption->isDisabled($row);
 
                                         $clickEvent = [
-                                            'actionUrl' => $dividerOption->getActionUrl($row),
-                                            'actionTarget' => $dividerOption->getActionUrlTarget(),
-                                            'disabled' => $optionDividerDisabled,
+                                            'url' => $dividerOption->getUrl($row),
+                                            'target' => $dividerOption->getTarget(),
+                                            'event' => $dividerOption->getEvent($row),
+                                            'disabled' => $dividerDisabled,
                                         ];
 
+                                        $iconStyle = $dividerOption->getIconStyle();
+                                        $buttonStyle = $option->getStyle();
                                     @endphp
                                     <x-simple-tables::dropdown-option
                                         title="{{ $dividerOption->getName() }}"
-                                        icon="{{ $dividerOption->getIcon() ?? $defaultDropdownOptionIcon }}"
-                                        :disabled="$optionDisabled || $optionDividerDisabled"
+                                        icon="{{ $dividerOption->getIcon() ?? $defaultOptionIcon }}"
+                                        :disabled="$optionDisabled || $dividerDisabled"
                                         :$clickEvent
+                                        :$iconStyle
+                                        :$buttonStyle
                                     />
                                 @endforeach
                             </div>
                         @else
                             <x-simple-tables::dropdown-option
-                                title="{{ $actionOption->getName() }}"
-                                icon="{{ $actionOption->getIcon() ?? $defaultDropdownOptionIcon }}"
+                                title="{{ $option->getName() }}"
+                                icon="{{ $option->getIcon() ?? $defaultOptionIcon }}"
                                 :disabled="$optionDisabled"
                                 :$clickEvent
+                                :$iconStyle
+                                :$buttonStyle
                             />
                         @endif
                     @endforeach

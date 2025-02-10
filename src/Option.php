@@ -2,76 +2,30 @@
 
 namespace TiagoSpem\SimpleTables;
 
-use Closure;
+use TiagoSpem\SimpleTables\Interfaces\HasActions;
+use TiagoSpem\SimpleTables\Traits\HandleAction;
 
-final class Option
+final class Option implements HasActions
 {
-    private ?string $name = null;
-
-    private ?string $icon = null;
+    use HandleAction;
 
     private bool $isDivider = false;
-
-    private string $target = '_parent';
-
-    private Closure|bool $hidden = false;
-
-    private Closure|bool $disabled = false;
-
-    private Closure|string $href = '';
 
     /**
      * @var array<Option>
      */
     private array $dividerOptions = [];
 
-    // public string $style = '';
-
-    // public bool $disabled = false;
-
-    // public string $target = '_parent';
-
-    // public string $eventName = '';
-
-    // public array $eventParams = [];
-    public static function make(): Option
-    {
-        return new self;
-    }
-
     public static function add(string $name, ?string $icon = null): self
     {
         $option = new self;
 
-        $option->name = $name;
-        $option->icon = $icon;
+        $option->button = [
+            'icon' => $icon,
+            'name' => $name,
+        ];
 
         return $option;
-    }
-
-    public function hidden(Closure|bool $hidden = true): self
-    {
-        $this->hidden = $hidden;
-
-        return $this;
-    }
-
-    public function disabled(Closure|bool $disabled = true): self
-    {
-        $this->disabled = $disabled;
-
-        return $this;
-    }
-
-    public function href(Closure|string $href, ?string $target = null): self
-    {
-        $this->href = $href;
-
-        if ($target) {
-            $this->target = $target;
-        }
-
-        return $this;
     }
 
     /**
@@ -87,57 +41,9 @@ final class Option
         return $option;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function getIcon(): ?string
-    {
-        return $this->icon;
-    }
-
-    public function getIsDivider(): bool
+    public function isDivider(): bool
     {
         return $this->isDivider;
-    }
-
-    public function getIsHidden(mixed $row): bool
-    {
-        $closure = $this->hidden;
-
-        if ($closure instanceof Closure) {
-            return (bool) $closure($row);
-        }
-
-        return (bool) $this->hidden;
-    }
-
-    public function getIsDisabled(mixed $row): bool
-    {
-        $closure = $this->disabled;
-
-        if ($closure instanceof Closure) {
-            return (bool) $closure($row);
-        }
-
-        return (bool) $this->disabled;
-    }
-
-    public function getActionUrl(mixed $row): string
-    {
-        $closure = $this->href;
-
-        if ($closure instanceof Closure) {
-            return (string) $closure($row);
-        }
-
-        return parserString($this->href);
-    }
-
-    public function getActionUrlTarget(): string
-    {
-        return $this->target;
     }
 
     /**
@@ -146,5 +52,10 @@ final class Option
     public function getDividerOptions(): array
     {
         return $this->dividerOptions;
+    }
+
+    public function hasDividerOptions(): bool
+    {
+        return filled($this->dividerOptions);
     }
 }

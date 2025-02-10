@@ -6,10 +6,9 @@ export default () => ({
 
     handleClick(options) {
         const {
-            actionUrl = null,
-            actionTarget = '_parent',
-            eventName = null,
-            eventParams = null,
+            url = null,
+            target = '_parent',
+            event = null,
             hasDropdown = false,
             disabled = false,
         } = options;
@@ -21,7 +20,7 @@ export default () => ({
             return;
         }
 
-        this.executeAction(actionUrl, actionTarget, eventName, eventParams);
+        this.executeAction(url, target, event);
     },
 
     toggleDropdown() {
@@ -36,11 +35,11 @@ export default () => ({
         }
     },
 
-    executeAction(actionUrl, actionTarget, eventName, eventParams) {
-        if (actionUrl) {
-            this.openUrl(actionUrl, actionTarget);
-        } else if (eventName) {
-            this.dispatchEvent(eventName, eventParams);
+    executeAction(url, target, event) {
+        if (url) {
+            this.openUrl(url, target);
+        } else if (event.name) {
+            this.dispatchEvent(event.name, event.params);
         }
     },
 

@@ -25,7 +25,7 @@
 
                             $actionBuilder = $data['actions'];
 
-                            $hasActions = $actionBuilder->hasActions();
+                            $hasActions = $actionBuilder->hasAction();
                         @endphp
 
                         <x-simple-tables::table :class="$themeTableClass">
@@ -75,7 +75,7 @@
                                                 {!! $parsedData['content'] !!}
                                             </x-simple-tables::td>
 
-                                            @if ($loop->last && $hasActions && !$actionBuilder->getIsHidden($row))
+                                            @if ($loop->last && $hasActions && !$actionBuilder->isHidden($row))
                                                 <x-simple-tables::td :class="$themeThLastClass">
                                                     <x-simple-tables::action-button
                                                         :actionBuilder="$actionBuilder"

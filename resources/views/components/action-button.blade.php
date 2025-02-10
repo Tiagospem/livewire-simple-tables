@@ -1,34 +1,34 @@
 @props(['actionBuilder', 'themeButtonActionClass', 'row'])
 
-@if ($actionBuilder->hasActionView())
-    {!! $actionBuilder->getActionView($row) !!}
-@elseif($actionBuilder->hasActionButton())
+@if ($actionBuilder->hasView())
+    {!! $actionBuilder->getView($row) !!}
+@else
     <div x-data="clickEvent">
         @php
-            $hasButtonName = $actionBuilder->hasButtonName();
-            $actionDisabled = $actionBuilder->getIsActionDisabled($row);
-
+            $hasName = $actionBuilder->hasName();
+            $disabled = $actionBuilder->isDisabled($row);
             $hasDropdown = $actionBuilder->hasDropdown();
 
-            $actionOptions = $actionBuilder->getActionOptions();
+            $dropdownOptions = $actionBuilder->getActionOptions();
 
             $hasIcon = $actionBuilder->hasIcon();
 
-            $defaultDropdownOptionIcon = $actionBuilder->getDefaultDropdownOptionIcon();
+            $defaultOptionIcon = $actionBuilder->getDefaultOptionIcon();
+
+            $buttonStyle = $actionBuilder->getStyle();
 
             $clickEvent = [
-                'actionUrl' => $actionBuilder->getActionUrl($row),
-                'actionTarget' => $actionBuilder->getActionUrlTarget(),
-                'eventName' => $actionBuilder->getEventName(),
-                'eventParams' => $actionBuilder->getEventParams($row),
+                'url' => $actionBuilder->getUrl($row),
+                'target' => $actionBuilder->getTarget(),
+                'event' => $actionBuilder->getEvent($row),
                 'hasDropdown' => $hasDropdown,
-                'disabled' => $actionDisabled,
+                'disabled' => $disabled,
             ];
         @endphp
         <x-simple-tables::dropdown
             :$hasDropdown
-            :$actionOptions
-            :$defaultDropdownOptionIcon
+            :$dropdownOptions
+            :$defaultOptionIcon
             :$row
         >
             <x-slot:actionButton>
@@ -36,22 +36,23 @@
                     x-on:click="handleClick({{ json_encode($clickEvent) }})"
                     x-ref="dropdownButton"
                     @class([
-                        'gap-x-1.5' => $hasButtonName,
-                        '!pointer-events-none !opacity-50' => $actionDisabled,
+                        'gap-x-1.5' => $hasName,
+                        '!pointer-events-none !opacity-50' => $disabled,
                         $themeButtonActionClass,
+                        $buttonStyle,
                     ])
                     type="button"
                 >
                     @if ($hasIcon)
                         <x-dynamic-component
-                            :component="$actionBuilder->getButtonIcon()"
+                            :component="$actionBuilder->getIcon()"
                             @class([
-                                '-mr-0.5' => $hasButtonName,
-                                $actionBuilder->getActionIconStyle(),
+                                '-mr-0.5' => $hasName,
+                                $actionBuilder->getIconStyle(),
                             ])
                         />
                     @endif
-                    <span>{{ $actionBuilder->getButtonName() }}</span>
+                    <span>{{ $actionBuilder->getName() }}</span>
                 </button>
             </x-slot:actionButton>
         </x-simple-tables::dropdown>

@@ -2933,14 +2933,12 @@ __webpack_require__.r(__webpack_exports__);
     dropdownOpen: false,
     popperInstance: null,
     handleClick: function handleClick(options) {
-      var _options$actionUrl = options.actionUrl,
-        actionUrl = _options$actionUrl === void 0 ? null : _options$actionUrl,
-        _options$actionTarget = options.actionTarget,
-        actionTarget = _options$actionTarget === void 0 ? '_parent' : _options$actionTarget,
-        _options$eventName = options.eventName,
-        eventName = _options$eventName === void 0 ? null : _options$eventName,
-        _options$eventParams = options.eventParams,
-        eventParams = _options$eventParams === void 0 ? null : _options$eventParams,
+      var _options$url = options.url,
+        url = _options$url === void 0 ? null : _options$url,
+        _options$target = options.target,
+        target = _options$target === void 0 ? '_parent' : _options$target,
+        _options$event = options.event,
+        event = _options$event === void 0 ? null : _options$event,
         _options$hasDropdown = options.hasDropdown,
         hasDropdown = _options$hasDropdown === void 0 ? false : _options$hasDropdown,
         _options$disabled = options.disabled,
@@ -2950,7 +2948,7 @@ __webpack_require__.r(__webpack_exports__);
         this.toggleDropdown();
         return;
       }
-      this.executeAction(actionUrl, actionTarget, eventName, eventParams);
+      this.executeAction(url, target, event);
     },
     toggleDropdown: function toggleDropdown() {
       var _this = this;
@@ -2963,11 +2961,11 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     },
-    executeAction: function executeAction(actionUrl, actionTarget, eventName, eventParams) {
-      if (actionUrl) {
-        this.openUrl(actionUrl, actionTarget);
-      } else if (eventName) {
-        this.dispatchEvent(eventName, eventParams);
+    executeAction: function executeAction(url, target, event) {
+      if (url) {
+        this.openUrl(url, target);
+      } else if (event.name) {
+        this.dispatchEvent(event.name, event.params);
       }
     },
     openUrl: function openUrl(url, target) {

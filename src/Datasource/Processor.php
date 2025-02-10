@@ -10,6 +10,7 @@ use TiagoSpem\SimpleTables\Datasource\Processors\DataBuilderProcessor;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataCollectionProcessor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
+use TiagoSpem\SimpleTables\Interfaces\ProcessorInterface;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;

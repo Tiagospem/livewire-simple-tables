@@ -1,6 +1,6 @@
 <?php
 
-namespace TiagoSpem\SimpleTables\Datasource;
+namespace TiagoSpem\SimpleTables\Interfaces;
 
 interface ProcessorInterface
 {
