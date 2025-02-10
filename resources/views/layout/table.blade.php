@@ -2,11 +2,13 @@
     @if (!isset($data['columns']))
         <p>Please define the columns</p>
     @else
-        <div class="flex justify-end mt-4">
-            <div class="w-[300px]">
-                <x-simple-tables::input-search wire:model.live.debounce="search" />
+        @if($showSearch)
+            <div class="flex justify-end mt-4">
+                <div class="w-[300px]">
+                    <x-simple-tables::input-search wire:model.live.debounce="search" />
+                </div>
             </div>
-        </div>
+        @endif
 
         <div class="mt-4 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -20,6 +22,8 @@
                             $themeThClass = theme($theme, 'table.th');
                             $themeThLastClass = theme($theme, 'table.th_last');
                             $themeTdNoRecordsClass = theme($theme, 'table.td_no_records');
+                            $themeDropdownClass = theme($theme, 'dropdown.content');
+                            $themeDropdownOptionClass = theme($theme, 'dropdown.option');
 
                             $themeButtonActionClass = theme($theme, 'action.button');
 
@@ -78,9 +82,11 @@
                                             @if ($loop->last && $hasActions && !$actionBuilder->isHidden($row))
                                                 <x-simple-tables::td :class="$themeThLastClass">
                                                     <x-simple-tables::action-button
-                                                        :actionBuilder="$actionBuilder"
-                                                        :themeButtonActionClass="$themeButtonActionClass"
-                                                        :row="$row"
+                                                        :$actionBuilder
+                                                        :$themeButtonActionClass
+                                                        :$themeDropdownClass
+                                                        :$themeDropdownOptionClass
+                                                        :$row
                                                     />
                                                 </x-simple-tables::td>
                                             @endif

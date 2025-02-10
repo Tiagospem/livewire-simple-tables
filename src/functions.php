@@ -24,7 +24,10 @@ if (! function_exists('parseData')) {
     function parseData(SimpleTableModifiers $modifiers, array $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
     {
         $field = $column['field'];
-        $rawValue = data_get($row, $field);
+        $alias = $column['alias'];
+
+        $rawValue = data_get($row, $alias ?: $field);
+
         $content = parserString($rawValue);
         $dynamicTdStyle = null;
         $defaultTdStyle = theme($theme, 'table.td');
