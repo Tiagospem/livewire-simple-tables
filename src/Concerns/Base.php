@@ -52,7 +52,7 @@ trait Base
      *      modifiers: SimpleTableModifiers,
      *      styleModifier: SimpleTablesStyleModifiers,
      *      actions: SimpleTablesActionBuilder,
-     *      rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>
+     *      rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator|LengthAwarePaginatorContract
      *  }
      *
      * @throws InvalidColumnException
