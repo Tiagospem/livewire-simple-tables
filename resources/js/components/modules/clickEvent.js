@@ -38,7 +38,7 @@ export default () => ({
     executeAction(url, target, event) {
         if (url) {
             this.openUrl(url, target);
-        } else if (event.name) {
+        } else if (event?.name) {
             this.dispatchEvent(event.name, event.params);
         }
     },

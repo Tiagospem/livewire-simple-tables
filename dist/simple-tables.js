@@ -2964,7 +2964,7 @@ __webpack_require__.r(__webpack_exports__);
     executeAction: function executeAction(url, target, event) {
       if (url) {
         this.openUrl(url, target);
-      } else if (event.name) {
+      } else if (event !== null && event !== void 0 && event.name) {
         this.dispatchEvent(event.name, event.params);
       }
     },
