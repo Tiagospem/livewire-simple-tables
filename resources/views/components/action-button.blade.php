@@ -33,7 +33,7 @@
         >
             <x-slot:actionButton>
                 <button
-                    x-on:click="handleClick({{ json_encode($clickEvent) }})"
+                    x-on:click="handleClick(@js($clickEvent))"
                     x-ref="dropdownButton"
                     @class([
                         'gap-x-1.5' => $hasName,

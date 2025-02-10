@@ -12,7 +12,7 @@
     {{ $attributes }}
 >
     <a
-        x-on:click="handleClick({{ json_encode($clickEvent) }})"
+        x-on:click="handleClick(@js($clickEvent))"
         class="{{ mergeClass(
             'hover:bg-gray-100 group flex items-center px-4 py-2 text-sm text-gray-700 cursor-pointer outline-none focus:outline-none',
             $buttonStyle,
