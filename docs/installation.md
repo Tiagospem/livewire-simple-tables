@@ -10,5 +10,5 @@
 First require de Simple Tables via composer:
 
 ```bash
-composer require tiagospem/livewire-simple-tables
+composer require tiagospem/simple-tables
 ```
