@@ -2,11 +2,15 @@
   "name": "simpletables",
   "version": "1.0.0",
   "description": "laravel table component",
+  "type": "module",
   "scripts": {
     "dev": "mix watch",
     "build": "mix --production",
     "format": "blade-formatter --write resources/**/*.blade.php",
-    "feb": "npm run format && npm run build"
+    "feb": "npm run format && npm run build",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "repository": {
     "type": "git",
@@ -26,6 +30,7 @@
   },
   "devDependencies": {
     "blade-formatter": "^1.42.2",
-    "laravel-mix": "^6.0.49"
+    "laravel-mix": "^6.0.49",
+    "vitepress": "^1.6.3"
   }
 }

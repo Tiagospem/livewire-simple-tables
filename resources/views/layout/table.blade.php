@@ -20,6 +20,8 @@
                             $themeThClass = theme($theme, 'table.th');
                             $themeThLastClass = theme($theme, 'table.th_last');
                             $themeTdNoRecordsClass = theme($theme, 'table.td_no_records');
+                            $themeDropdownClass = theme($theme, 'dropdown.content');
+                            $themeDropdownOptionClass = theme($theme, 'dropdown.option');
 
                             $themeButtonActionClass = theme($theme, 'action.button');
 
@@ -78,9 +80,11 @@
                                             @if ($loop->last && $hasActions && !$actionBuilder->isHidden($row))
                                                 <x-simple-tables::td :class="$themeThLastClass">
                                                     <x-simple-tables::action-button
-                                                        :actionBuilder="$actionBuilder"
-                                                        :themeButtonActionClass="$themeButtonActionClass"
-                                                        :row="$row"
+                                                        :$actionBuilder
+                                                        :$themeButtonActionClass
+                                                        :$themeDropdownClass
+                                                        :$themeDropdownOptionClass
+                                                        :$row
                                                     />
                                                 </x-simple-tables::td>
                                             @endif
