@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataBuilderProcessor;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataCollectionProcessor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
@@ -16,13 +19,13 @@ use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
 use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
-class Processor implements ProcessorInterface
+final readonly class Processor implements ProcessorInterface
 {
-    public function __construct(protected SimpleTableComponent $simpleTableComponent) {}
+    public function __construct(private SimpleTableComponent $simpleTableComponent) {}
 
     /**
      * @return array{
-     *      columns: Collection<int, array<string, mixed>>,
+     *      columns: array<Column>,
      *      modifiers: SimpleTableModifiers,
      *      styleModifier: SimpleTablesStyleModifiers,
      *      actions: SimpleTablesActionBuilder,

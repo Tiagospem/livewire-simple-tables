@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Commands;
 
 use Illuminate\Console\Command;
 
-class CreateCommand extends Command
+final class CreateCommand extends Command
 {
     /** @var string */
     protected $signature = 'st:create {name : The name of the SimpleTable component}';
@@ -16,9 +18,9 @@ class CreateCommand extends Command
     {
         $name = parserString($this->argument('name'));
 
-        $stubPath = __DIR__.'/../../resources/stubs/table.stub';
+        $stubPath = __DIR__ . '/../../resources/stubs/table.stub';
 
-        if (! file_exists($stubPath)) {
+        if ( ! file_exists($stubPath)) {
             $this->error('stub not found');
 
             return self::FAILURE;
@@ -27,34 +29,34 @@ class CreateCommand extends Command
         $name = str_replace(['\\', '/'], '/', $name);
         $parts = explode('/', $name);
         $className = array_pop($parts);
-        $subPath = $parts === [] ? '' : implode('/', $parts).'/';
+        $subPath = [] === $parts ? '' : implode('/', $parts) . '/';
 
         $basePath = config('simple-tables.create-path');
-        $targetPath = $basePath.'/'.$subPath.$className.'.php';
+        $targetPath = $basePath . '/' . $subPath . $className . '.php';
 
         if (file_exists($targetPath)) {
-            $this->error('Component already exists: '.$targetPath);
+            $this->error('Component already exists: ' . $targetPath);
 
             return self::FAILURE;
         }
 
-        if (! is_dir(dirname($targetPath))) {
+        if ( ! is_dir(dirname($targetPath))) {
             mkdir(dirname($targetPath), 0755, true);
         }
 
         $relativePath = ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
-        $namespaceBase = 'App\\'.str_replace('/', '\\', $relativePath);
-        $namespace = $namespaceBase.($parts !== [] ? '\\'.implode('\\', $parts) : '');
+        $namespaceBase = 'App\\' . str_replace('/', '\\', $relativePath);
+        $namespace = $namespaceBase . ([] !== $parts ? '\\' . implode('\\', $parts) : '');
 
         $content = file_get_contents($stubPath) ?: '';
         $content = str_replace(
             ['{{ namespace }}', '{{ class }}'],
             [$namespace, $className],
-            $content
+            $content,
         );
 
         file_put_contents($targetPath, $content);
-        $this->info('Component created: '.$targetPath);
+        $this->info('Component created: ' . $targetPath);
 
         return self::SUCCESS;
     }

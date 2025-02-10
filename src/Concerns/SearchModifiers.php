@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Concerns;
 
 use Illuminate\Support\Collection;
@@ -24,22 +26,28 @@ trait SearchModifiers
         return [];
     }
 
+    /**
+     * @return Collection<int, Column>
+     */
     public function getSearchableColumns(): Collection
     {
         return collect($this->columns())
-            ->filter(fn (Column $column): bool => $column->searchable)
+            ->filter(fn(Column $column): bool => $column->isSearchable())
             ->merge($this->getParsedExtraColumns())
             ->unique();
     }
 
+    /**
+     * @return Collection<int, Column>
+     */
     private function getParsedExtraColumns(): Collection
     {
         $filteredColumns = array_filter(
             array_map('trim', $this->columnsToSearch()),
-            'is_string'
+            'is_string',
         );
 
         return collect($filteredColumns)
-            ->map(fn (string $field): \TiagoSpem\SimpleTables\Column => Column::add('Extra', $field)->searchable());
+            ->map(fn(string $field): Column => Column::add('Extra', $field)->searchable());
     }
 }

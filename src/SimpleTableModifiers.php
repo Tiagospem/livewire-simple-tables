@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables;
 
 use Closure;
 use Exception;
 use ReflectionFunction;
 
-class SimpleTableModifiers
+final class SimpleTableModifiers
 {
     /**
      * @var array<string, array{
@@ -30,7 +32,7 @@ class SimpleTableModifiers
         ?string $tdStyle = null,
         ?Closure $columnRule = null,
         bool $replaceStyle = false,
-        array $customParams = []
+        array $customParams = [],
     ): self {
         if (blank($callback) && blank($view)) {
             return $this;
@@ -40,7 +42,7 @@ class SimpleTableModifiers
             $callback = $this->createViewCallback(
                 view: $view,
                 rowName: $rowName,
-                customParams: $customParams
+                customParams: $customParams,
             );
         }
 
@@ -63,7 +65,7 @@ class SimpleTableModifiers
         if (isset($this->fields[$field]['customTdStyleRule'])) {
             $result = $this->fields[$field]['customTdStyleRule']->__invoke($row);
 
-            return is_string($result) || $result === null ? $result : null;
+            return is_string($result) || null === $result ? $result : null;
         }
 
         return null;
@@ -74,7 +76,7 @@ class SimpleTableModifiers
      */
     private function createViewCallback(string $view, string $rowName, array $customParams): Closure
     {
-        return fn (string $_, mixed $row) => view($view, [$rowName => $row, ...$customParams]);
+        return fn(string $_, mixed $row) => view($view, [$rowName => $row, ...$customParams]);
     }
 
     private function getNumberOfParameters(Closure $callback): int

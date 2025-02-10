@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Concerns;
 
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;

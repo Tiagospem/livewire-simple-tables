@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Datasource\Processors;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
@@ -8,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\Interfaces\ProcessorInterface;
@@ -16,15 +19,16 @@ use TiagoSpem\SimpleTables\SimpleTableModifiers;
 use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
 use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
-class DataBuilderProcessor implements ProcessorInterface
+final class DataBuilderProcessor implements ProcessorInterface
 {
-    use HasSearch, ProcessorHelper;
+    use HasSearch;
+    use ProcessorHelper;
 
     public function __construct(protected SimpleTableComponent $simpleTableComponent) {}
 
     /**
      * @return array{
-     *      columns: Collection<int, array<string, mixed>>,
+     *      columns: array<Column>,
      *      modifiers: SimpleTableModifiers,
      *      styleModifier: SimpleTablesStyleModifiers,
      *      actions: SimpleTablesActionBuilder,
@@ -46,7 +50,7 @@ class DataBuilderProcessor implements ProcessorInterface
             ->orderBy($this->simpleTableComponent->sortBy, $this->simpleTableComponent->sortDirection)
             ->when(
                 $this->simpleTableComponent->paginated,
-                fn (QueryBuilder|Builder $query) => $query->paginate($this->simpleTableComponent->perPage)
+                fn(QueryBuilder|Builder $query) => $query->paginate($this->simpleTableComponent->perPage),
             );
 
         return $this->return($rows);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables;
 
 use Closure;
@@ -8,7 +10,7 @@ use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Interfaces\HasActions;
 use TiagoSpem\SimpleTables\Traits\HandleAction;
 
-class SimpleTablesActionBuilder implements HasActions
+final class SimpleTablesActionBuilder implements HasActions
 {
     use HandleAction;
 
@@ -36,7 +38,7 @@ class SimpleTablesActionBuilder implements HasActions
      */
     public function view(string $view, string $rowName = 'row', array $params = []): self
     {
-        $this->view = fn (mixed $row) => view($view, [$rowName => $row, ...$params]);
+        $this->view = fn(mixed $row) => view($view, [$rowName => $row, ...$params]);
 
         return $this;
     }
@@ -90,7 +92,7 @@ class SimpleTablesActionBuilder implements HasActions
 
     public function hasDropdown(): bool
     {
-        return $this->dropdown !== [];
+        return [] !== $this->dropdown;
     }
 
     /**
