@@ -11,8 +11,8 @@ class {{ class }} extends SimpleTableComponent
     function columns(): array
     {
         return [
-            Column::add('Id', 'id')->unsearchable(),
-            Column::add('Email', 'email'),
+            Column::add('Id', 'id'),
+            Column::add('Email', 'email')->searchable(),
         ];
     }
 

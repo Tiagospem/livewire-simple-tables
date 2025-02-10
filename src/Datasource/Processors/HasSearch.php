@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Modify;
 
 trait HasSearch
@@ -17,8 +16,7 @@ trait HasSearch
      */
     protected function builderSearch(Builder $query): Builder
     {
-        $columns = collect($this->simpleTableComponent->columns())
-            ->filter(fn (Column $column): bool => $column->searchable);
+        $columns = $this->simpleTableComponent->getSearchableColumns();
 
         $search = $this->sanitizeSearch($this->simpleTableComponent->search);
 
@@ -64,8 +62,7 @@ trait HasSearch
             return $collection;
         }
 
-        $columns = collect($this->simpleTableComponent->columns())
-            ->filter(fn (Column $column): bool => $column->searchable);
+        $columns = $this->simpleTableComponent->getSearchableColumns();
 
         if ($columns->isEmpty()) {
             return $collection;
