@@ -26,7 +26,7 @@ class DataCollectionProcessor implements ProcessorInterface
      *      modifiers: SimpleTableModifiers,
      *      styleModifier: SimpleTablesStyleModifiers,
      *      actions: SimpleTablesActionBuilder,
-     *      rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator|LengthAwarePaginatorContract
+     *      rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>
      *  }
      *
      * @throws InvalidParametersException
