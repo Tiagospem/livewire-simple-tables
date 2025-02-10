@@ -47,7 +47,7 @@ if (! function_exists('parseData')) {
         }
 
         if ($dynamicParsedTdClass !== null && $dynamicParsedTdClass !== '' && $dynamicParsedTdClass !== '0') {
-            $dynamicTdStyle = mergeClasses($dynamicTdStyle, $dynamicParsedTdClass);
+            $dynamicTdStyle = mergeClass((string) $dynamicTdStyle, $dynamicParsedTdClass);
         }
 
         return ['content' => $content, 'dynamicTdStyle' => $dynamicTdStyle ?? $defaultTdStyle];
@@ -79,17 +79,20 @@ if (! function_exists('parseStyle')) {
     }
 }
 
-if (! function_exists('mergeClasses')) {
-    function mergeClasses(?string $classOne, ?string $classTwo): string
+if (! function_exists('mergeClass')) {
+    function mergeClass(string ...$args): string
     {
-        $classOne ??= '';
-        $classTwo ??= '';
+        $filteredArgs = array_filter($args, fn ($class): bool => is_string($class) && $class !== '');
 
-        $normalizedClasses = trim((string) preg_replace('/\s+/', ' ', $classOne.' '.$classTwo));
+        $combined = implode(' ', $filteredArgs);
 
-        $classes = array_unique(explode(' ', $normalizedClasses));
+        $normalized = trim((string) preg_replace('/\s+/', ' ', $combined));
 
-        return implode(' ', $classes);
+        $classes = explode(' ', $normalized);
+
+        $uniqueClasses = array_unique($classes);
+
+        return implode(' ', $uniqueClasses);
     }
 }
 
