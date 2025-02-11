@@ -9,34 +9,24 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Livewire\Component;
-use Livewire\WithPagination;
-use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
-use TiagoSpem\SimpleTables\Concerns\DataModifier;
-use TiagoSpem\SimpleTables\Concerns\SearchModifiers;
-use TiagoSpem\SimpleTables\Concerns\StyleModifier;
-use TiagoSpem\SimpleTables\Concerns\ThemeManager;
+use TiagoSpem\SimpleTables\Concerns\HasPagination;
+use TiagoSpem\SimpleTables\Concerns\HasPlaceholder;
+use TiagoSpem\SimpleTables\Concerns\HasSearch;
+use TiagoSpem\SimpleTables\Concerns\HasTheme;
 use TiagoSpem\SimpleTables\Datasource\Processor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 
 abstract class SimpleTableComponent extends Component
 {
-    use ActionBuilder;
-    use DataModifier;
-    use SearchModifiers;
-    use StyleModifier;
-    use ThemeManager;
-    use WithPagination;
-
-    public ?string $search = '';
+    use HasPagination;
+    use HasPlaceholder;
+    use HasSearch;
+    use HasTheme;
 
     public string $sortBy = 'id';
 
     public string $sortDirection = 'desc';
-
-    public bool $paginated = true;
-
-    public int $perPage = 10;
 
     /**
      * @return array<int, Column>
@@ -48,18 +38,19 @@ abstract class SimpleTableComponent extends Component
      */
     abstract public function datasource(): Builder|Collection;
 
-    public function updatedSearch(): void
+    public function actionBuilder(): SimpleTablesActionBuilder
     {
-        $this->resetPage();
+        return app(SimpleTablesActionBuilder::class);
     }
 
-    public function placeholder(): View
+    public function dataModifier(): SimpleTableModifiers
     {
-        return view('simple-tables::layout.skeleton', [
-            'columns'    => count($this->columns()),
-            'perPage'    => $this->perPage,
-            'showSearch' => $this->showSearch(),
-        ]);
+        return app(SimpleTableModifiers::class);
+    }
+
+    public function styleModifier(): SimpleTablesStyleModifiers
+    {
+        return app(SimpleTablesStyleModifiers::class);
     }
 
     /**
@@ -73,11 +64,5 @@ abstract class SimpleTableComponent extends Component
             'theme'      => $this->theme,
             'showSearch' => $this->showSearch(),
         ]);
-    }
-
-    private function showSearch(): bool
-    {
-        return $this->getSearchableColumns()
-            ->isNotEmpty();
     }
 }

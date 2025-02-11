@@ -8,20 +8,24 @@ use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Modify;
 
-trait SearchModifiers
+trait HasSearch
 {
+    public ?string $search = '';
+
+    /**
+     * @var array<string>
+     */
+    public array $columnsToSearch = [];
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     /**
      * @return array<int, Modify>
      */
     public function beforeSearch(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function columnsToSearch(): array
     {
         return [];
     }
@@ -33,17 +37,23 @@ trait SearchModifiers
     {
         return collect($this->columns())
             ->filter(fn(Column $column): bool => $column->isSearchable())
-            ->merge($this->getParsedExtraColumns())
+            ->merge($this->getColumnToSearch())
             ->unique();
+    }
+
+    public function showSearch(): bool
+    {
+        return $this->getSearchableColumns()
+            ->isNotEmpty();
     }
 
     /**
      * @return Collection<int, Column>
      */
-    private function getParsedExtraColumns(): Collection
+    private function getColumnToSearch(): Collection
     {
         $filteredColumns = array_filter(
-            array_map('trim', $this->columnsToSearch()),
+            array_map('trim', $this->columnsToSearch),
             'is_string',
         );
 
