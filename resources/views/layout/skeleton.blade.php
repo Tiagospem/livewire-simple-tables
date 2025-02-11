@@ -15,7 +15,7 @@
                     <thead class="bg-gray-100 animate-pulse">
                         <tr>
                             @foreach (range(0, $columns) as $ignored)
-                                <th class="px-3 py-3.5 text-sm text-white">
+                                <th class="px-3 py-2 text-sm text-white">
                                     -
                                 </th>
                             @endforeach
@@ -23,11 +23,11 @@
                     </thead>
 
                     <tbody class="divide-y divide-gray-100 bg-white">
-                        @foreach (range(0, $perPage) as $ignored)
+                        @foreach (range(1, $perPage) as $ignored)
                             <tr>
                                 @foreach (range(0, $columns) as $ignored)
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-white">
-                                        <div class="w-full h-6 bg-gray-100 animate-pulse"></div>
+                                    <td class="px-3 py-4">
+                                        <div class="w-full h-4 bg-gray-100 animate-pulse rounded-md"></div>
                                     </td>
                                 @endforeach
                             </tr>

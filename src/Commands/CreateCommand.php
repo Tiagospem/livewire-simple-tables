@@ -44,7 +44,7 @@ final class CreateCommand extends Command
             mkdir(dirname($targetPath), 0755, true);
         }
 
-        $relativePath  = ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
+        $relativePath  = mb_ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
         $namespaceBase = 'App\\' . str_replace('/', '\\', $relativePath);
         $namespace     = $namespaceBase . ([] !== $parts ? '\\' . implode('\\', $parts) : '');
 
