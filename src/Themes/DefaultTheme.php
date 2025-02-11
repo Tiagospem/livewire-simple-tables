@@ -10,10 +10,10 @@ final class DefaultTheme implements ThemeInterface
     {
         return [
             'table' => [
-                'content' => 'min-w-full divide-y divide-gray-300',
-                'tbody' => 'divide-y divide-gray-200 bg-white',
+                'content' => 'min-w-full divide-y divide-gray-200',
+                'tbody' => 'divide-y divide-gray-100 bg-white',
                 'thead' => 'bg-gray-50',
-                'tr' => '',
+                'tr' => 'even:bg-gray-50',
                 'th' => 'px-3 py-3.5 text-left text-sm font-semibold text-gray-900',
                 'th_last' => 'relative py-3.5 pl-3 pr-4 sm:pr-6',
                 'td' => 'whitespace-nowrap px-3 py-4 text-sm text-gray-500',

@@ -66,15 +66,15 @@ if ( ! function_exists('parseStyle')) {
      */
     function parseStyle(SimpleTablesStyleModifiers $styleModifier, mixed $row, array $theme): array
     {
-        $trClass = $styleModifier->getTrStyle($row);
-        $tdClass = $styleModifier->geTdStyle($row);
+        $trClass = $styleModifier->getTrStyle($row) ?: theme($theme, 'table.tr');
+        $tdClass = $styleModifier->geTdStyle($row) ?: theme($theme, 'table.td');
 
-        if ( ! $styleModifier->replaceTrStyle && $trClass) {
-            $trClass = trim(theme($theme, 'table.tr') . ' ' . $trClass);
+        if ( ! $styleModifier->replaceTrStyle) {
+            $trClass = mergeClass(theme($theme, 'table.tr'), $trClass);
         }
 
-        if ( ! $styleModifier->replaceTdStyle && $tdClass) {
-            $tdClass = theme($theme, 'table.td') . ' ' . $tdClass;
+        if ( ! $styleModifier->replaceTdStyle) {
+            $tdClass = mergeClass(theme($theme, 'table.td'), $tdClass);
         }
 
         return [
