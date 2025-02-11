@@ -4,8 +4,10 @@ namespace {{ namespace }};
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\Lazy;
 use TiagoSpem\SimpleTables\{SimpleTableComponent, Column};
 
+#[Lazy]
 class {{ class }} extends SimpleTableComponent
 {
     function columns(): array
