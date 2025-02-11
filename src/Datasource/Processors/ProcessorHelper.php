@@ -59,11 +59,11 @@ trait ProcessorHelper
         $this->validateModifiers($modifiers);
 
         return [
-            'columns' => $this->getColumns(),
-            'modifiers' => $modifiers,
+            'columns'       => $this->getColumns(),
+            'modifiers'     => $modifiers,
             'styleModifier' => $styleModifier,
-            'actions' => $actionBuilder,
-            'rows' => $rows,
+            'actions'       => $actionBuilder,
+            'rows'          => $rows,
         ];
     }
 

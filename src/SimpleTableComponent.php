@@ -56,8 +56,8 @@ abstract class SimpleTableComponent extends Component
     public function placeholder(): View
     {
         return view('simple-tables::layout.skeleton', [
-            'columns' => count($this->columns()),
-            'perPage' => $this->perPage,
+            'columns'    => count($this->columns()),
+            'perPage'    => $this->perPage,
             'showSearch' => $this->showSearch(),
         ]);
     }
@@ -69,8 +69,8 @@ abstract class SimpleTableComponent extends Component
     public function render(): View
     {
         return view('simple-tables::layout.table', [
-            'data' => (new Processor($this))->process(),
-            'theme' => $this->theme,
+            'data'       => (new Processor($this))->process(),
+            'theme'      => $this->theme,
             'showSearch' => $this->showSearch(),
         ]);
     }

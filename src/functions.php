@@ -30,7 +30,7 @@ if ( ! function_exists('parseData')) {
 
         $rawValue = data_get($row, null !== $alias && '' !== $alias && '0' !== $alias ? $alias : $field);
 
-        $content = parserString($rawValue);
+        $content        = parserString($rawValue);
         $dynamicTdStyle = null;
         $defaultTdStyle = theme($theme, 'table.td');
 
@@ -39,10 +39,10 @@ if ( ! function_exists('parseData')) {
 
             $customTdStyleRule = $modifiers->getCustomTdStyleRule($field, $row);
 
-            $callback = $modifier['callback'];
+            $callback           = $modifier['callback'];
             $numberOfParameters = $modifier['numberOfParameters'];
-            $replaceStyle = $modifier['replaceStyle'] ?? false;
-            $dynamicTdStyle = $customTdStyleRule ?? ($modifier['customTdStyle'] ?? null);
+            $replaceStyle       = $modifier['replaceStyle'] ?? false;
+            $dynamicTdStyle     = $customTdStyleRule        ?? ($modifier['customTdStyle'] ?? null);
 
             $content = $numberOfParameters > 1 ? $callback($rawValue, $row) : $callback($rawValue);
 

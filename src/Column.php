@@ -18,10 +18,10 @@ final class Column implements Wireable
 
     public static function add(string $title, string $field, ?string $alias = null): self
     {
-        $column = new self();
-        $column->title = $title;
-        $column->field = $field;
-        $column->alias = $alias;
+        $column             = new self();
+        $column->title      = $title;
+        $column->field      = $field;
+        $column->alias      = $alias;
         $column->searchable = false;
 
         return $column;

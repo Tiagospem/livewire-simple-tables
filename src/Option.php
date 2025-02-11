@@ -37,7 +37,7 @@ final class Option implements HasActions
     {
         $option = new self();
 
-        $option->isDivider = true;
+        $option->isDivider      = true;
         $option->dividerOptions = $options;
 
         return $option;

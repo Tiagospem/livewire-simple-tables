@@ -22,7 +22,7 @@ trait HasSearch
 
         $search = $this->sanitizeSearch($this->simpleTableComponent->search);
 
-        $model = $query->getModel();
+        $model      = $query->getModel();
         $modelTable = $model->getTable();
 
         return $query->where(function (Builder $query) use ($columns, $search, $model, $modelTable): void {
@@ -32,7 +32,7 @@ trait HasSearch
                 $search = $this->applyBeforeSearchModifiers(field: $field, value: $search);
 
                 if (str_contains($field, '.')) {
-                    $parts = explode('.', $field);
+                    $parts      = explode('.', $field);
                     $columnName = array_pop($parts);
 
                     if ($model->isRelation($parts[0])) {
@@ -73,9 +73,9 @@ trait HasSearch
 
         return $collection->filter(function ($item) use ($columns, $search): bool {
             foreach ($columns as $column) {
-                $field = $column->getField();
+                $field          = $column->getField();
                 $modifiedSearch = $this->applyBeforeSearchModifiers($field, $search);
-                $value = data_get($item, $field);
+                $value          = data_get($item, $field);
 
                 $value = parserString($value);
 

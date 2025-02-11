@@ -14,8 +14,8 @@ final class Modify
 
     public static function field(string $column, Closure $callback): Modify
     {
-        $modify = new self();
-        $modify->column = $column;
+        $modify           = new self();
+        $modify->column   = $column;
         $modify->callback = $callback;
 
         return $modify;
