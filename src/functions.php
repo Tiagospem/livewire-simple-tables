@@ -66,8 +66,8 @@ if ( ! function_exists('parseStyle')) {
      */
     function parseStyle(SimpleTablesStyleModifiers $styleModifier, mixed $row, array $theme): array
     {
-        $trClass = $styleModifier->getTrStyle($row) ?: theme($theme, 'table.tr');
-        $tdClass = $styleModifier->geTdStyle($row) ?: theme($theme, 'table.td');
+        $trClass = null !== $styleModifier->getTrStyle($row) && '' !== $styleModifier->getTrStyle($row) && '0' !== $styleModifier->getTrStyle($row) ? $styleModifier->getTrStyle($row) : theme($theme, 'table.tr');
+        $tdClass = null !== $styleModifier->geTdStyle($row)  && '' !== $styleModifier->geTdStyle($row) && '0' !== $styleModifier->geTdStyle($row) ? $styleModifier->geTdStyle($row) : theme($theme, 'table.td');
 
         if ( ! $styleModifier->replaceTrStyle) {
             $trClass = mergeClass(theme($theme, 'table.tr'), $trClass);
