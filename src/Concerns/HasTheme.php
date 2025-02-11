@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use TiagoSpem\SimpleTables\Exceptions\InvalidThemeException;
 use TiagoSpem\SimpleTables\Themes\ThemeInterface;
 
-trait ThemeManager
+trait HasTheme
 {
     /**
      * @var array<string, string|array<string, string>>
@@ -42,7 +42,7 @@ trait ThemeManager
     /**
      * @throws InvalidThemeException
      */
-    public function bootThemeManager(): void
+    public function bootHasTheme(): void
     {
         $themeClass = config('simple-tables.theme');
 
