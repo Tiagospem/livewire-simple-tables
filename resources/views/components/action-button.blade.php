@@ -3,7 +3,7 @@
 @if ($actionBuilder->hasView())
     {!! $actionBuilder->getView($row) !!}
 @else
-    <div x-data="clickEvent">
+    <div class="flex items-center justify-center" x-data="clickEvent">
         @php
             $hasName = $actionBuilder->hasName();
             $disabled = $actionBuilder->isDisabled($row);

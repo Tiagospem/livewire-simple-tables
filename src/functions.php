@@ -47,7 +47,7 @@ if ( ! function_exists('parseData')) {
             $content = $numberOfParameters > 1 ? $callback($rawValue, $row) : $callback($rawValue);
 
             if ( ! $replaceStyle && $dynamicTdStyle) {
-                $dynamicTdStyle = trim($defaultTdStyle . ' ' . $dynamicTdStyle);
+                $dynamicTdStyle = mb_trim($defaultTdStyle . ' ' . $dynamicTdStyle);
             }
         }
 
@@ -91,7 +91,7 @@ if ( ! function_exists('mergeClass')) {
 
         $combined = implode(' ', $filteredArgs);
 
-        $normalized = trim((string) preg_replace('/\s+/', ' ', $combined));
+        $normalized = mb_trim((string) preg_replace('/\s+/', ' ', $combined));
 
         $classes = explode(' ', $normalized);
 

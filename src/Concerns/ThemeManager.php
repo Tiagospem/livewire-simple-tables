@@ -73,7 +73,7 @@ trait ThemeManager
                 $this->theme[$section] = [];
             }
 
-            $this->theme[$section][$key] = trim(parserString($value));
+            $this->theme[$section][$key] = mb_trim(parserString($value));
         }
     }
 
@@ -83,7 +83,7 @@ trait ThemeManager
             return false;
         }
 
-        return ! blank(trim(parserString($value)));
+        return ! blank(mb_trim(parserString($value)));
     }
 
     /**
