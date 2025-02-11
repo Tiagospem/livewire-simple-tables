@@ -54,5 +54,7 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer install
 
+      - name: Check if pint.json exists
+        run: ls -la pint.json
       - name: Tests
         run: composer test

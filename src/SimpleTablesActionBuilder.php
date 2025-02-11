@@ -53,7 +53,7 @@ final class SimpleTablesActionBuilder implements HasActions
 
             if (filled($href)) {
                 $this->hrefData = [
-                    'href' => $href,
+                    'href'   => $href,
                     'target' => $target,
                 ];
             }

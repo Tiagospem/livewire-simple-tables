@@ -53,6 +53,15 @@ abstract class SimpleTableComponent extends Component
         $this->resetPage();
     }
 
+    public function placeholder(): View
+    {
+        return view('simple-tables::layout.skeleton', [
+            'columns'    => count($this->columns()),
+            'perPage'    => $this->perPage,
+            'showSearch' => $this->showSearch(),
+        ]);
+    }
+
     /**
      * @throws InvalidColumnException
      * @throws InvalidParametersException
@@ -60,8 +69,8 @@ abstract class SimpleTableComponent extends Component
     public function render(): View
     {
         return view('simple-tables::layout.table', [
-            'data' => (new Processor($this))->process(),
-            'theme' => $this->theme,
+            'data'       => (new Processor($this))->process(),
+            'theme'      => $this->theme,
             'showSearch' => $this->showSearch(),
         ]);
     }

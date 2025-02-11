@@ -50,11 +50,11 @@ final class SimpleTableModifiers
         $numberOfParameters = $this->getNumberOfParameters($callback);
 
         $this->fields[$column] = [
-            'callback' => $callback,
+            'callback'           => $callback,
             'numberOfParameters' => $numberOfParameters,
-            'customTdStyle' => $tdStyle,
-            'customTdStyleRule' => $columnRule,
-            'replaceStyle' => $replaceStyle,
+            'customTdStyle'      => $tdStyle,
+            'customTdStyleRule'  => $columnRule,
+            'replaceStyle'       => $replaceStyle,
         ];
 
         return $this;

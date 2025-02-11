@@ -47,7 +47,7 @@ final class DataCollectionProcessor implements ProcessorInterface
             $collection = $this->collectionSearch($collection);
         }
 
-        $sortBy = $this->simpleTableComponent->sortBy;
+        $sortBy        = $this->simpleTableComponent->sortBy;
         $sortDirection = $this->simpleTableComponent->sortDirection;
 
         $sorted = $collection->sortBy(
@@ -72,9 +72,9 @@ final class DataCollectionProcessor implements ProcessorInterface
      */
     private function paginateCollection(Collection $collection): LengthAwarePaginator
     {
-        $page = LengthAwarePaginator::resolveCurrentPage();
+        $page    = LengthAwarePaginator::resolveCurrentPage();
         $perPage = $this->simpleTableComponent->perPage;
-        $total = $collection->count();
+        $total   = $collection->count();
 
         return new LengthAwarePaginator(
             $collection->forPage($page, $perPage)->values(),
@@ -82,7 +82,7 @@ final class DataCollectionProcessor implements ProcessorInterface
             $perPage,
             $page,
             [
-                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'path'     => LengthAwarePaginator::resolveCurrentPath(),
                 'pageName' => 'page',
             ],
         );

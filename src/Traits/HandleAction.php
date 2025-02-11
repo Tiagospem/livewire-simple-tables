@@ -37,7 +37,7 @@ trait HandleAction
      * }
      */
     protected array $hrefData = [
-        'href' => '',
+        'href'   => '',
         'target' => Target::PARENT,
     ];
 
@@ -48,13 +48,13 @@ trait HandleAction
      * }
      */
     protected array $eventData = [
-        'name' => '',
+        'name'   => '',
         'params' => null,
     ];
 
     public function href(Closure|string $href, ?Target $target = null): self
     {
-        $this->hrefData['href'] = $href;
+        $this->hrefData['href']   = $href;
         $this->hrefData['target'] = $target ?? Target::PARENT;
 
         return $this;
@@ -63,7 +63,7 @@ trait HandleAction
     public function event(string $name, mixed $params = null): self
     {
         $this->eventData = [
-            'name' => $name,
+            'name'   => $name,
             'params' => $params,
         ];
 
@@ -159,7 +159,7 @@ trait HandleAction
         }
 
         return [
-            'name' => $this->eventData['name'],
+            'name'   => $this->eventData['name'],
             'params' => $this->eventData['params'] instanceof Closure
                 ? $this->eventData['params']($row)
                 : $this->eventData['params'],

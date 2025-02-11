@@ -26,12 +26,12 @@ final class CreateCommand extends Command
             return self::FAILURE;
         }
 
-        $name = str_replace(['\\', '/'], '/', $name);
-        $parts = explode('/', $name);
+        $name      = str_replace(['\\', '/'], '/', $name);
+        $parts     = explode('/', $name);
         $className = array_pop($parts);
-        $subPath = [] === $parts ? '' : implode('/', $parts) . '/';
+        $subPath   = [] === $parts ? '' : implode('/', $parts) . '/';
 
-        $basePath = config('simple-tables.create-path');
+        $basePath   = config('simple-tables.create-path');
         $targetPath = $basePath . '/' . $subPath . $className . '.php';
 
         if (file_exists($targetPath)) {
@@ -44,9 +44,9 @@ final class CreateCommand extends Command
             mkdir(dirname($targetPath), 0755, true);
         }
 
-        $relativePath = ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
+        $relativePath  = ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
         $namespaceBase = 'App\\' . str_replace('/', '\\', $relativePath);
-        $namespace = $namespaceBase . ([] !== $parts ? '\\' . implode('\\', $parts) : '');
+        $namespace     = $namespaceBase . ([] !== $parts ? '\\' . implode('\\', $parts) : '');
 
         $content = file_get_contents($stubPath) ?: '';
         $content = str_replace(

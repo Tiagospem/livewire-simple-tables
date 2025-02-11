@@ -1,0 +1,40 @@
+<div class="px-4">
+    @if ($showSearch)
+        <div class="flex justify-end mt-4">
+            <div class="w-[300px]">
+                <div class="h-10 bg-gray-100 animate-pulse rounded-md">
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="mt-4">
+        <div class="overflow-auto custom-scrollbar rounded-lg ring-1 min-w-full ring-black/5">
+            <div class="overflow-auto align-middle w-full">
+                <table class="min-w-full divide-y divide-gray-100">
+                    <thead class="bg-gray-100 animate-pulse">
+                        <tr>
+                            @foreach (range(0, $columns) as $ignored)
+                                <th class="px-3 py-3.5 text-sm text-white">
+                                    -
+                                </th>
+                            @endforeach
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                        @foreach (range(0, $perPage) as $ignored)
+                            <tr>
+                                @foreach (range(0, $columns) as $ignored)
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-white">
+                                        <div class="w-full h-6 bg-gray-100 animate-pulse"></div>
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

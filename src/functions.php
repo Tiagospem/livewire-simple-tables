@@ -30,7 +30,7 @@ if ( ! function_exists('parseData')) {
 
         $rawValue = data_get($row, null !== $alias && '' !== $alias && '0' !== $alias ? $alias : $field);
 
-        $content = parserString($rawValue);
+        $content        = parserString($rawValue);
         $dynamicTdStyle = null;
         $defaultTdStyle = theme($theme, 'table.td');
 
@@ -39,10 +39,10 @@ if ( ! function_exists('parseData')) {
 
             $customTdStyleRule = $modifiers->getCustomTdStyleRule($field, $row);
 
-            $callback = $modifier['callback'];
+            $callback           = $modifier['callback'];
             $numberOfParameters = $modifier['numberOfParameters'];
-            $replaceStyle = $modifier['replaceStyle'] ?? false;
-            $dynamicTdStyle = $customTdStyleRule ?? ($modifier['customTdStyle'] ?? null);
+            $replaceStyle       = $modifier['replaceStyle'] ?? false;
+            $dynamicTdStyle     = $customTdStyleRule        ?? ($modifier['customTdStyle'] ?? null);
 
             $content = $numberOfParameters > 1 ? $callback($rawValue, $row) : $callback($rawValue);
 
@@ -66,15 +66,15 @@ if ( ! function_exists('parseStyle')) {
      */
     function parseStyle(SimpleTablesStyleModifiers $styleModifier, mixed $row, array $theme): array
     {
-        $trClass = $styleModifier->getTrStyle($row);
-        $tdClass = $styleModifier->geTdStyle($row);
+        $trClass = null !== $styleModifier->getTrStyle($row) && '' !== $styleModifier->getTrStyle($row) && '0' !== $styleModifier->getTrStyle($row) ? $styleModifier->getTrStyle($row) : theme($theme, 'table.tr');
+        $tdClass = null !== $styleModifier->geTdStyle($row)  && '' !== $styleModifier->geTdStyle($row) && '0' !== $styleModifier->geTdStyle($row) ? $styleModifier->geTdStyle($row) : theme($theme, 'table.td');
 
-        if ( ! $styleModifier->replaceTrStyle && $trClass) {
-            $trClass = trim(theme($theme, 'table.tr') . ' ' . $trClass);
+        if ( ! $styleModifier->replaceTrStyle) {
+            $trClass = mergeClass(theme($theme, 'table.tr'), $trClass);
         }
 
-        if ( ! $styleModifier->replaceTdStyle && $tdClass) {
-            $tdClass = theme($theme, 'table.td') . ' ' . $tdClass;
+        if ( ! $styleModifier->replaceTdStyle) {
+            $tdClass = mergeClass(theme($theme, 'table.td'), $tdClass);
         }
 
         return [

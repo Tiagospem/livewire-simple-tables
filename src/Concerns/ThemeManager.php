@@ -55,7 +55,7 @@ trait ThemeManager
         }
 
         $themeInstance = new $themeClass();
-        $this->theme = $themeInstance->getStyles();
+        $this->theme   = $themeInstance->getStyles();
 
         $this->applyDynamicOverrides();
     }
@@ -102,7 +102,7 @@ trait ThemeManager
         $parts = explode('_', $base, 2);
 
         $section = $parts[0];
-        $key = 2 === count($parts) ? $parts[1] : 'content';
+        $key     = 2 === count($parts) ? $parts[1] : 'content';
 
         return [$section, $key];
     }

@@ -52,6 +52,9 @@
     "ordered_imports": {
       "sort_algorithm": "alpha"
     },
+    "binary_operator_spaces": {
+      "default": "align"
+    },
     "ordered_class_elements": {
       "order": [
         "use_trait",
