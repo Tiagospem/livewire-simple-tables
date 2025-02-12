@@ -21,7 +21,7 @@ final class DefaultTheme implements ThemeInterface
                 'td_no_records' => 'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center',
             ],
             'action' => [
-                'button' => 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+                'button' => 'rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
             ],
             'dropdown' => [
                 'content' => 'z-40 w-56 fixed overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none',

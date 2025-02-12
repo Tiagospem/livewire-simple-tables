@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables\Concerns;
+namespace TiagoSpem\SimpleTables\Traits;
 
 use Illuminate\Contracts\View\View;
 

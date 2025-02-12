@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use TiagoSpem\SimpleTables\Column;
-use TiagoSpem\SimpleTables\SimpleTableModifiers;
-use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
+use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 
 if ( ! function_exists('theme')) {
     /**
@@ -23,7 +23,7 @@ if ( ! function_exists('parseData')) {
      * @param  array<string, mixed>  $theme
      * @return array<string, string>
      */
-    function parseData(SimpleTableModifiers $modifiers, Column $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
+    function parseData(Modifiers $modifiers, Column $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
     {
         $field = $column->getField();
         $alias = $column->getAlias();
@@ -64,7 +64,7 @@ if ( ! function_exists('parseStyle')) {
      * @param  array<string, mixed>  $theme
      * @return array<string, string|null>
      */
-    function parseStyle(SimpleTablesStyleModifiers $styleModifier, mixed $row, array $theme): array
+    function parseStyle(StyleModifiers $styleModifier, mixed $row, array $theme): array
     {
         $trClass = null !== $styleModifier->getTrStyle($row) && '' !== $styleModifier->getTrStyle($row) && '0' !== $styleModifier->getTrStyle($row) ? $styleModifier->getTrStyle($row) : theme($theme, 'table.tr');
         $tdClass = null !== $styleModifier->geTdStyle($row)  && '' !== $styleModifier->geTdStyle($row) && '0' !== $styleModifier->geTdStyle($row) ? $styleModifier->geTdStyle($row) : theme($theme, 'table.td');

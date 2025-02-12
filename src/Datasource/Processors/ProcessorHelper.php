@@ -9,11 +9,11 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
-use TiagoSpem\SimpleTables\SimpleTableModifiers;
-use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
-use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
 trait ProcessorHelper
 {
@@ -39,9 +39,9 @@ trait ProcessorHelper
      * @param  Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>  $rows
      * @return array{
      *     columns: array<Column>,
-     *     modifiers: SimpleTableModifiers,
-     *     styleModifier: SimpleTablesStyleModifiers,
-     *     actions: SimpleTablesActionBuilder,
+     *     modifiers: Modifiers,
+     *     styleModifier: StyleModifiers,
+     *     actions: ActionBuilder,
      *     rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>
      * }
      *
@@ -70,7 +70,7 @@ trait ProcessorHelper
     /**
      * @throws InvalidParametersException
      */
-    private function validateModifiers(SimpleTableModifiers $modifiers): void
+    private function validateModifiers(Modifiers $modifiers): void
     {
         foreach ($modifiers->fields as $field => $modifier) {
             if ($modifier['numberOfParameters'] > 2) {

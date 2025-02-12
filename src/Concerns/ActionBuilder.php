@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables;
+namespace TiagoSpem\SimpleTables\Concerns;
 
 use Closure;
 use Illuminate\View\View;
 use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Interfaces\HasActions;
+use TiagoSpem\SimpleTables\Option;
 use TiagoSpem\SimpleTables\Traits\HandleAction;
 
-final class SimpleTablesActionBuilder implements HasActions
+final class ActionBuilder implements HasActions
 {
     use HandleAction;
 

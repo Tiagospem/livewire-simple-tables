@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables\Concerns;
+namespace TiagoSpem\SimpleTables\Traits;
 
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
-use TiagoSpem\SimpleTables\Modify;
+use TiagoSpem\SimpleTables\Concerns\BeforeSearch;
 
 trait HasSearch
 {
@@ -15,19 +15,16 @@ trait HasSearch
     /**
      * @var array<string>
      */
-    public array $columnsToSearch = [];
+    protected array $columnsToSearch = [];
 
     public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
-    /**
-     * @return array<int, Modify>
-     */
-    public function beforeSearch(): array
+    public function beforeSearch(): BeforeSearch
     {
-        return [];
+        return app(BeforeSearch::class);
     }
 
     /**

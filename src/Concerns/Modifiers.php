@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables;
+namespace TiagoSpem\SimpleTables\Concerns;
 
 use Closure;
 use Exception;
 use ReflectionFunction;
 
-final class SimpleTableModifiers
+final class Modifiers
 {
     /**
      * @var array<string, array{

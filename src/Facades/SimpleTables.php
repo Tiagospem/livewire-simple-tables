@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Concerns\BeforeSearch;
+use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 use TiagoSpem\SimpleTables\SimpleTableManager;
-use TiagoSpem\SimpleTables\SimpleTableModifiers;
-use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
-use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
 /**
- * @method static SimpleTableModifiers dataModifiers()
- * @method static SimpleTablesStyleModifiers styleModifiers()
- * @method static SimpleTablesActionBuilder actionBuilder()
+ * @method static Modifiers dataModifiers()
+ * @method static StyleModifiers styleModifiers()
+ * @method static ActionBuilder actionBuilder()
+ * @method static BeforeSearch beforeSearch()
  */
 final class SimpleTables extends Facade
 {

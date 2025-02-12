@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables;
+namespace TiagoSpem\SimpleTables\Concerns;
 
 use Closure;
 
-final class SimpleTablesStyleModifiers
+final class StyleModifiers
 {
     public bool $replaceTrStyle = false;
 
@@ -16,7 +16,7 @@ final class SimpleTablesStyleModifiers
 
     private ?Closure $tdCallback = null;
 
-    public static function make(): SimpleTablesStyleModifiers
+    public static function make(): StyleModifiers
     {
         return new self();
     }

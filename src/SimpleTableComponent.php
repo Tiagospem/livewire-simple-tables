@@ -9,13 +9,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Livewire\Component;
-use TiagoSpem\SimpleTables\Concerns\HasPagination;
-use TiagoSpem\SimpleTables\Concerns\HasPlaceholder;
-use TiagoSpem\SimpleTables\Concerns\HasSearch;
-use TiagoSpem\SimpleTables\Concerns\HasTheme;
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 use TiagoSpem\SimpleTables\Datasource\Processor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
+use TiagoSpem\SimpleTables\Traits\HasPagination;
+use TiagoSpem\SimpleTables\Traits\HasPlaceholder;
+use TiagoSpem\SimpleTables\Traits\HasSearch;
+use TiagoSpem\SimpleTables\Traits\HasTheme;
 
 abstract class SimpleTableComponent extends Component
 {
@@ -23,6 +26,8 @@ abstract class SimpleTableComponent extends Component
     use HasPlaceholder;
     use HasSearch;
     use HasTheme;
+
+    public string $primaryKey = 'id';
 
     public string $sortBy = 'id';
 
@@ -38,19 +43,19 @@ abstract class SimpleTableComponent extends Component
      */
     abstract public function datasource(): Builder|Collection;
 
-    public function actionBuilder(): SimpleTablesActionBuilder
+    public function actionBuilder(): ActionBuilder
     {
-        return app(SimpleTablesActionBuilder::class);
+        return app(ActionBuilder::class);
     }
 
-    public function dataModifier(): SimpleTableModifiers
+    public function dataModifier(): Modifiers
     {
-        return app(SimpleTableModifiers::class);
+        return app(Modifiers::class);
     }
 
-    public function styleModifier(): SimpleTablesStyleModifiers
+    public function styleModifier(): StyleModifiers
     {
-        return app(SimpleTablesStyleModifiers::class);
+        return app(StyleModifiers::class);
     }
 
     /**

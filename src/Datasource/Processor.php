@@ -9,15 +9,15 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataBuilderProcessor;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataCollectionProcessor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\Interfaces\ProcessorInterface;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
-use TiagoSpem\SimpleTables\SimpleTableModifiers;
-use TiagoSpem\SimpleTables\SimpleTablesActionBuilder;
-use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
 
 final readonly class Processor implements ProcessorInterface
 {
@@ -26,9 +26,9 @@ final readonly class Processor implements ProcessorInterface
     /**
      * @return array{
      *      columns: array<Column>,
-     *      modifiers: SimpleTableModifiers,
-     *      styleModifier: SimpleTablesStyleModifiers,
-     *      actions: SimpleTablesActionBuilder,
+     *      modifiers: Modifiers,
+     *      styleModifier: StyleModifiers,
+     *      actions: ActionBuilder,
      *      rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>
      *  }
      *

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use TiagoSpem\SimpleTables\Modify;
 
 trait HasSearch
 {
@@ -124,10 +123,10 @@ trait HasSearch
 
     private function applyBeforeSearchModifiers(string $field, string $value): string
     {
-        $modifier = collect($this->simpleTableComponent->beforeSearch())
-            ->filter(fn(Modify $modifier): bool => $modifier->column === $field)
+        $modifier = collect($this->simpleTableComponent->beforeSearch()->getFields())
+            ->filter(fn(array $modifier): bool => $modifier['field'] === $field)
             ->first();
 
-        return filled($modifier) ? parserString($modifier->callback->__invoke($value)) : $value;
+        return filled($modifier) ? parserString($modifier['callback']->__invoke($value)) : $value;
     }
 }
