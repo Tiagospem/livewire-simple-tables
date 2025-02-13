@@ -28,6 +28,16 @@ final class Field
         return $instance;
     }
 
+    /**
+     * @param  array<string, mixed>  $customParams
+     */
+    public function view(string $view, array $customParams = []): self
+    {
+        $this->mutation = FieldConfig::fromClosure(fn(Object $row) => view($view, ['row' => $row, ...$customParams]));
+
+        return $this;
+    }
+
     public function mutate(Closure $callback): self
     {
         $this->mutation = FieldConfig::fromClosure($callback);
@@ -64,10 +74,5 @@ final class Field
     public function getStyleRule(): FieldConfig
     {
         return $this->styleRule;
-    }
-
-    public function view(): self
-    {
-        return $this;
     }
 }

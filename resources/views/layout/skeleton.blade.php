@@ -7,7 +7,6 @@
             </div>
         </div>
     @endif
-
     <div class="mt-4">
         <div class="overflow-auto custom-scrollbar rounded-lg ring-1 min-w-full ring-black/5">
             <div class="overflow-auto align-middle w-full">
@@ -23,7 +22,7 @@
                     </thead>
 
                     <tbody class="divide-y divide-gray-100 bg-white">
-                        @foreach (range(1, $perPage) as $ignored)
+                        @foreach (range(2, $perPage) as $ignored)
                             <tr>
                                 @foreach (range(0, $columns) as $ignored)
                                     <td class="px-3 py-4">

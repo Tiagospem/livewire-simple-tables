@@ -9,12 +9,24 @@ use TiagoSpem\SimpleTables\Enum\Target;
 
 interface HasActions
 {
-    public function href(Closure $href, Target $target): self;
+    /**
+     * @param Closure(mixed): string|string $href
+     */
+    public function href(Closure|string $href, ?Target $target = null): self;
 
-    public function event(string $name, Closure $params): self;
+    /**
+     * @param mixed|null|Closure(mixed): mixed $params
+     */
+    public function event(string $name, mixed $params = null): self;
 
+    /**
+     * @param Closure(mixed): bool|bool $disabled
+     */
     public function disabled(Closure|bool $disabled = true): self;
 
+    /**
+     * @param Closure(mixed): bool|bool $hidden
+     */
     public function hidden(Closure|bool $hidden = true): self;
 
     public function iconStyle(string $style): self;
@@ -30,10 +42,7 @@ interface HasActions
     public function getIcon(): ?string;
 
     /**
-     * @return null|array{
-     *     name: string,
-     *     params?: array<string, mixed>,
-     * }
+     * @return array{name: string, params: mixed}|null
      */
     public function getEvent(mixed $row): ?array;
 
