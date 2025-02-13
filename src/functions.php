@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use TiagoSpem\SimpleTables\Column;
-use TiagoSpem\SimpleTables\Concerns\Modifiers;
 use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
+use TiagoSpem\SimpleTables\Field;
 
 if ( ! function_exists('theme')) {
     /**
@@ -20,39 +20,54 @@ if ( ! function_exists('theme')) {
 
 if ( ! function_exists('parseData')) {
     /**
+     * @param  array<string, Field>  $mutations
      * @param  array<string, mixed>  $theme
      * @return array<string, string>
      */
-    function parseData(Modifiers $modifiers, Column $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
+    function parseData(array $mutations, Column $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
     {
         $field = $column->getField();
         $alias = $column->getAlias();
 
-        $rawValue = data_get($row, null !== $alias && '' !== $alias && '0' !== $alias ? $alias : $field);
+        $fieldValue = data_get($row, null !== $alias && '' !== $alias && '0' !== $alias ? $alias : $field);
 
-        $content        = parserString($rawValue);
+        $content        = parserString($fieldValue);
         $dynamicTdStyle = null;
         $defaultTdStyle = theme($theme, 'table.td');
 
-        if ( ! empty($modifiers->fields[$field])) {
-            $modifier = $modifiers->fields[$field];
+        if ( ! empty($mutations[$field])) {
+            $mutation = $mutations[$field];
 
-            $customTdStyleRule = $modifiers->getCustomTdStyleRule($field, $row);
+            $styleMutation = $mutation->getStyleRule();
+            $dataMutation  = $mutation->getMutation();
 
-            $callback           = $modifier['callback'];
-            $numberOfParameters = $modifier['numberOfParameters'];
-            $replaceStyle       = $modifier['replaceStyle'] ?? false;
-            $dynamicTdStyle     = $customTdStyleRule        ?? ($modifier['customTdStyle'] ?? null);
+            $styleRuleCallback      = $styleMutation->callback;
+            $styleRuleParameterType = $styleMutation->parameterType;
 
-            $content = $numberOfParameters > 1 ? $callback($rawValue, $row) : $callback($rawValue);
+            if (isClassOrObject($styleRuleParameterType)) {
+                $styleRuleContent = is_callable($styleRuleCallback) ? $styleRuleCallback($row) : $content;
+            } else {
+                $styleRuleContent = is_callable($styleRuleCallback) ? $styleRuleCallback($fieldValue) : $content;
+            }
 
-            if ( ! $replaceStyle && $dynamicTdStyle) {
+            $dynamicTdStyle = $styleRuleContent  ?? $mutation->getStyle();
+
+            $mutationCallback      = $dataMutation->callback;
+            $mutationParameterType = $dataMutation->parameterType;
+
+            if (isClassOrObject($mutationParameterType)) {
+                $content =  is_callable($mutationCallback) ? $mutationCallback($row) : $content;
+            } else {
+                $content = is_callable($mutationCallback) ? $mutationCallback($fieldValue) : $content;
+            }
+
+            if ($dynamicTdStyle) {
                 $dynamicTdStyle = mb_trim($defaultTdStyle . ' ' . $dynamicTdStyle);
             }
         }
 
         if (null !== $dynamicParsedTdClass && '' !== $dynamicParsedTdClass && '0' !== $dynamicParsedTdClass) {
-            $dynamicTdStyle = mergeClass((string) $dynamicTdStyle, $dynamicParsedTdClass);
+            $dynamicTdStyle = mergeClass(parserString($dynamicTdStyle), $dynamicParsedTdClass);
         }
 
         return ['content' => $content, 'dynamicTdStyle' => $dynamicTdStyle ?? $defaultTdStyle];
@@ -105,5 +120,12 @@ if ( ! function_exists('parserString')) {
     function parserString(mixed $value): string
     {
         return is_scalar($value) || null === $value ? (string) $value : '';
+    }
+}
+
+if ( ! function_exists('isClassOrObject')) {
+    function isClassOrObject(string $parameter): bool
+    {
+        return (class_exists($parameter) || 'array' === $parameter || 'object' === $parameter);
     }
 }

@@ -6,14 +6,14 @@ namespace TiagoSpem\SimpleTables;
 
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Concerns\BeforeSearch;
-use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 
 final class SimpleTableManager
 {
-    public function dataModifiers(): Modifiers
+    public function mutation(): Mutation
     {
-        return app(Modifiers::class);
+        return app(Mutation::class);
     }
 
     public function styleModifiers(): StyleModifiers

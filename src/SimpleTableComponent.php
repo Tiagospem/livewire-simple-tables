@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
-use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 use TiagoSpem\SimpleTables\Datasource\Processor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
@@ -48,9 +48,9 @@ abstract class SimpleTableComponent extends Component
         return app(ActionBuilder::class);
     }
 
-    public function dataModifier(): Modifiers
+    public function mutation(): Mutation
     {
-        return app(Modifiers::class);
+        return app(Mutation::class);
     }
 
     public function styleModifier(): StyleModifiers

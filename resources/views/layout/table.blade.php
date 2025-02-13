@@ -50,7 +50,7 @@
 
                         <x-simple-tables::tbody :class="$themeTbodyClass">
                             @php
-                                $modifiers = $data['modifiers'];
+                                $mutations = $data['mutations'];
                                 $styleModifier = $data['styleModifier'];
                             @endphp
 
@@ -64,7 +64,7 @@
                                     @foreach ($data['columns'] as $column)
                                         @php
                                             $parsedData = parseData(
-                                                $modifiers,
+                                                $mutations,
                                                 $column,
                                                 $row,
                                                 $theme,

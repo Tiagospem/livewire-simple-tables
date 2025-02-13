@@ -10,12 +10,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
-use TiagoSpem\SimpleTables\Concerns\Modifiers;
 use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataBuilderProcessor;
 use TiagoSpem\SimpleTables\Datasource\Processors\DataCollectionProcessor;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
+use TiagoSpem\SimpleTables\Field;
 use TiagoSpem\SimpleTables\Interfaces\ProcessorInterface;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 
@@ -26,7 +26,7 @@ final readonly class Processor implements ProcessorInterface
     /**
      * @return array{
      *      columns: array<Column>,
-     *      modifiers: Modifiers,
+     *      mutations: array<Field>,
      *      styleModifier: StyleModifiers,
      *      actions: ActionBuilder,
      *      rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>

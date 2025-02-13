@@ -10,10 +10,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
-use TiagoSpem\SimpleTables\Concerns\Modifiers;
+use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
+use TiagoSpem\SimpleTables\Field;
 
 trait ProcessorHelper
 {
@@ -39,7 +40,7 @@ trait ProcessorHelper
      * @param  Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>  $rows
      * @return array{
      *     columns: array<Column>,
-     *     modifiers: Modifiers,
+     *     mutations: array<Field>,
      *     styleModifier: StyleModifiers,
      *     actions: ActionBuilder,
      *     rows: Collection<int, mixed>|QueryBuilder|LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>
@@ -50,17 +51,17 @@ trait ProcessorHelper
      */
     protected function return(Collection|QueryBuilder|LengthAwarePaginator|LengthAwarePaginatorContract $rows): array
     {
-        $modifiers = $this->simpleTableComponent->dataModifier();
+        $dataMutation = $this->simpleTableComponent->mutation();
 
         $styleModifier = $this->simpleTableComponent->styleModifier();
 
         $actionBuilder = $this->simpleTableComponent->actionBuilder();
 
-        $this->validateModifiers($modifiers);
+        $this->validateModifiers($dataMutation);
 
         return [
             'columns'       => $this->getColumns(),
-            'modifiers'     => $modifiers,
+            'mutations'     => $dataMutation->getFields(),
             'styleModifier' => $styleModifier,
             'actions'       => $actionBuilder,
             'rows'          => $rows,
@@ -70,11 +71,11 @@ trait ProcessorHelper
     /**
      * @throws InvalidParametersException
      */
-    private function validateModifiers(Modifiers $modifiers): void
+    private function validateModifiers(Mutation $mutations): void
     {
-        foreach ($modifiers->fields as $field => $modifier) {
-            if ($modifier['numberOfParameters'] > 2) {
-                throw new InvalidParametersException("The modifier for the column {$field} has more than 2 parameters.");
+        foreach ($mutations->getFields() as $field) {
+            if ($field->getMutation()->numberOfParameters > 1) {
+                throw new InvalidParametersException("The modifier for the column {$field->getField()} has more than 2 parameters.");
             }
         }
     }
