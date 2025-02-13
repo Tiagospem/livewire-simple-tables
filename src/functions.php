@@ -41,8 +41,8 @@ if ( ! function_exists('parseData')) {
             $styleMutation = $mutation->getStyleRule();
             $dataMutation  = $mutation->getMutation();
 
-            $styleRuleCallback      = $styleMutation->callback;
-            $styleRuleParameterType = $styleMutation->parameterType;
+            $styleRuleCallback      = $styleMutation->getCallback();
+            $styleRuleParameterType = $styleMutation->getParameterType();
 
             if (isClassOrObject($styleRuleParameterType)) {
                 $styleRuleContent = is_callable($styleRuleCallback) ? $styleRuleCallback($row) : $content;
@@ -52,8 +52,8 @@ if ( ! function_exists('parseData')) {
 
             $dynamicTdStyle = $styleRuleContent  ?? $mutation->getStyle();
 
-            $mutationCallback      = $dataMutation->callback;
-            $mutationParameterType = $dataMutation->parameterType;
+            $mutationCallback      = $dataMutation->getCallback();
+            $mutationParameterType = $dataMutation->getParameterType();
 
             if (isClassOrObject($mutationParameterType)) {
                 $content =  is_callable($mutationCallback) ? $mutationCallback($row) : $content;

@@ -5,77 +5,44 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables;
 
 use Closure;
-use Exception;
-use ReflectionFunction;
-use ReflectionNamedType;
+use TiagoSpem\SimpleTables\Dto\FieldConfig;
 
 final class Field
 {
     private string $field;
-
-    /**
-     * @var array{
-     *     callback: Closure|null,
-     *     numberOfParameters: int,
-     *     parameterType: string,
-     * }
-     */
-    private array $mutation = [
-        'callback'           => null,
-        'numberOfParameters' => 1,
-        'parameterType'      => '',
-    ];
-
-    /**
-     * @var array{
-     *     callback: Closure|null,
-     *     numberOfParameters: int,
-     *     parameterType: string,
-     * }
-     */
-    private array $styleRule = [
-        'callback'           => null,
-        'numberOfParameters' => 1,
-        'parameterType'      => '',
-    ];
-
+    private FieldConfig $mutation;
+    private FieldConfig $styleRule;
     private ?string $style = null;
+
+    private function __construct()
+    {
+        $this->mutation  = app(FieldConfig::class);
+        $this->styleRule = app(FieldConfig::class);
+    }
 
     public static function name(string $field): self
     {
-        $instance = new self();
-
+        $instance        = new self();
         $instance->field = $field;
 
         return $instance;
     }
 
-    /**
-     * @return $this
-     */
-    public function view(): self
-    {
-        return $this;
-    }
-
     public function mutate(Closure $callback): self
     {
-        $this->prepareCallback('mutation', $callback);
-
+        $this->mutation = FieldConfig::fromClosure($callback);
         return $this;
     }
 
     public function style(string $style): self
     {
         $this->style = $style;
-
         return $this;
     }
 
     public function styleRule(Closure $callback): self
     {
-        $this->prepareCallback('styleRule', $callback);
-
+        $this->styleRule = FieldConfig::fromClosure($callback);
         return $this;
     }
 
@@ -89,60 +56,18 @@ final class Field
         return $this->style;
     }
 
-    /**
-     * @return object{
-     *     callback: Closure|null,
-     *     numberOfParameters: int,
-     *     parameterType: string,
-     * }
-     */
-    public function getMutation(): object
+    public function getMutation(): FieldConfig
     {
-        return (object) $this->mutation;
+        return $this->mutation;
     }
 
-    /**
-     * @return object{
-     *     callback: Closure|null,
-     *     numberOfParameters: int,
-     *     parameterType: string,
-     * }
-     */
-    public function getStyleRule(): object
+    public function getStyleRule(): FieldConfig
     {
-        return (object) $this->styleRule;
+        return $this->styleRule;
     }
 
-    private function prepareCallback(string $property, Closure $callback): void
+    public function view(): self
     {
-        $this->{$property}['callback']           = $callback;
-        $this->{$property}['numberOfParameters'] = $this->getNumberOfParameters($callback);
-        $this->{$property}['parameterType']      = $this->getParameterType($callback);
-    }
-
-    private function getParameterType(Closure $callback): string
-    {
-        try {
-            $reflection = new ReflectionFunction($callback);
-            $parameters = $reflection->getParameters();
-
-            $type = $parameters[0]->getType();
-
-            return $type instanceof ReflectionNamedType ? $type->getName() : 'mixed';
-        } catch (Exception) {
-            return '';
-        }
-
-    }
-
-    private function getNumberOfParameters(Closure $callback): int
-    {
-        try {
-            $reflection = new ReflectionFunction($callback);
-
-            return $reflection->getNumberOfParameters();
-        } catch (Exception) {
-            return 1;
-        }
+        return $this;
     }
 }

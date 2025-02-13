@@ -74,7 +74,7 @@ trait ProcessorHelper
     private function validateModifiers(Mutation $mutations): void
     {
         foreach ($mutations->getFields() as $field) {
-            if ($field->getMutation()->numberOfParameters > 1) {
+            if ($field->getMutation()->getNumberOfParameters() > 1) {
                 throw new InvalidParametersException("The modifier for the column {$field->getField()} has more than 2 parameters.");
             }
         }
