@@ -1,6 +1,6 @@
-<div class="px-4">
+<div>
     @if ($showSearch)
-        <div class="flex justify-end mt-4">
+        <div class="flex justify-end">
             <div class="w-[300px]">
                 <div class="h-10 bg-gray-100 animate-pulse rounded-md">
                 </div>
@@ -22,10 +22,10 @@
                     </thead>
 
                     <tbody class="divide-y divide-gray-100 bg-white">
-                        @foreach (range(2, $perPage) as $ignored)
+                        @foreach (range(1, $perPage) as $ignored)
                             <tr>
                                 @foreach (range(0, $columns) as $ignored)
-                                    <td class="px-3 py-4">
+                                    <td class="px-3 py-3">
                                         <div class="w-full h-4 bg-gray-100 animate-pulse rounded-md"></div>
                                     </td>
                                 @endforeach

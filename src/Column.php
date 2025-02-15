@@ -8,20 +8,23 @@ use Livewire\Wireable;
 
 final class Column implements Wireable
 {
-    private string $title = '';
+    private string $title;
 
-    private string $field = '';
+    private string $key;
 
-    private ?string $alias = null;
+    private ?string $aliasKey = null;
+
+    private string $style = '';
 
     private bool $searchable = true;
 
-    public static function add(string $title, string $field, ?string $alias = null): self
+    public static function add(string $title, string $key, ?string $aliasKey = null, string $style = ''): self
     {
         $column             = new self();
         $column->title      = $title;
-        $column->field      = $field;
-        $column->alias      = $alias;
+        $column->key        = $key;
+        $column->aliasKey   = $aliasKey;
+        $column->style      = $style;
         $column->searchable = false;
 
         return $column;
@@ -32,6 +35,20 @@ final class Column implements Wireable
         return $value;
     }
 
+    public function alias(string $aliasKey): self
+    {
+        $this->aliasKey = $aliasKey;
+
+        return $this;
+    }
+
+    public function style(string $style): self
+    {
+        $this->style = $style;
+
+        return $this;
+    }
+
     public function searchable(): self
     {
         $this->searchable = true;
@@ -39,14 +56,19 @@ final class Column implements Wireable
         return $this;
     }
 
-    public function getField(): string
+    public function getRowKey(): string
     {
-        return $this->field;
+        return $this->aliasKey ?? $this->key;
     }
 
-    public function isSearchable(): bool
+    public function getRealKey(): string
     {
-        return $this->searchable;
+        return $this->key;
+    }
+
+    public function getAliasKey(): ?string
+    {
+        return $this->aliasKey;
     }
 
     public function getTitle(): string
@@ -54,9 +76,14 @@ final class Column implements Wireable
         return $this->title;
     }
 
-    public function getAlias(): ?string
+    public function getStyle(): string
     {
-        return $this->alias;
+        return $this->style;
+    }
+
+    public function isSearchable(): bool
+    {
+        return $this->searchable;
     }
 
     /**

@@ -29,7 +29,7 @@ final class Mutation
     public function getFields(): array
     {
         return collect($this->fields)
-            ->mapWithKeys(fn(Field $field) => [$field->getField() => $field])
+            ->mapWithKeys(fn(Field $field) => [$field->getRowKey() => $field])
             ->all();
     }
 }

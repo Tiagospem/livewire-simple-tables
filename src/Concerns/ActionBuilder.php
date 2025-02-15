@@ -15,6 +15,8 @@ final class ActionBuilder implements HasActions
 {
     use HandleAction;
 
+    private ?string $name = null;
+
     private ?Closure $view = null;
 
     private ?string $defaultOptionIcon = null;
@@ -67,6 +69,13 @@ final class ActionBuilder implements HasActions
         return $this;
     }
 
+    public function name(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
     public function defaultOptionIcon(string $icon): self
     {
         $this->defaultOptionIcon = $icon;
@@ -112,5 +121,10 @@ final class ActionBuilder implements HasActions
     public function getDefaultOptionIcon(): ?string
     {
         return $this->defaultOptionIcon;
+    }
+
+    public function getActionColumnName(): ?string
+    {
+        return $this->name;
     }
 }

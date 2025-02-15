@@ -10,7 +10,7 @@ trait HasPlaceholder
 {
     public function placeholder(): View
     {
-        return view('simple-tables::layout.skeleton', [
+        return view('simple-tables::table.skeleton', [
             'columns'    => count($this->columns()),
             'perPage'    => $this->perPage,
             'showSearch' => $this->showSearch(),

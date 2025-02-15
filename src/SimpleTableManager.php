@@ -7,7 +7,7 @@ namespace TiagoSpem\SimpleTables;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Concerns\BeforeSearch;
 use TiagoSpem\SimpleTables\Concerns\Mutation;
-use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
+use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
 
 final class SimpleTableManager
 {
@@ -16,9 +16,9 @@ final class SimpleTableManager
         return app(Mutation::class);
     }
 
-    public function styleModifiers(): StyleModifiers
+    public function tableRowStyle(): TableRowStyle
     {
-        return app(StyleModifiers::class);
+        return app(TableRowStyle::class);
     }
 
     public function actionBuilder(): ActionBuilder

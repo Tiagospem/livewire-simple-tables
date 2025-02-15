@@ -9,21 +9,29 @@ use TiagoSpem\SimpleTables\Dto\FieldConfig;
 
 final class Field
 {
-    private string $field;
+    private string $rowKey;
+
     private FieldConfig $mutation;
-    private FieldConfig $styleRule;
-    private ?string $style = null;
+
+    /**
+     * @var array<FieldConfig>
+     */
+    private array $styleRules = [];
+
+    /**
+     * @var array<string>
+     */
+    private array $styles = [];
 
     private function __construct()
     {
         $this->mutation  = app(FieldConfig::class);
-        $this->styleRule = app(FieldConfig::class);
     }
 
-    public static function name(string $field): self
+    public static function key(string $rowKey): self
     {
-        $instance        = new self();
-        $instance->field = $field;
+        $instance         = new self();
+        $instance->rowKey = $rowKey;
 
         return $instance;
     }
@@ -41,29 +49,32 @@ final class Field
     public function mutate(Closure $callback): self
     {
         $this->mutation = FieldConfig::fromClosure($callback);
+
         return $this;
     }
 
     public function style(string $style): self
     {
-        $this->style = $style;
+        $this->styles[] = $style;
+
         return $this;
     }
 
     public function styleRule(Closure $callback): self
     {
-        $this->styleRule = FieldConfig::fromClosure($callback);
+        $this->styleRules[] = FieldConfig::fromClosure($callback);
+
         return $this;
     }
 
-    public function getField(): string
+    public function getRowKey(): string
     {
-        return $this->field;
+        return $this->rowKey;
     }
 
-    public function getStyle(): ?string
+    public function getStyle(): string
     {
-        return $this->style;
+        return implode(' ', $this->styles);
     }
 
     public function getMutation(): FieldConfig
@@ -71,8 +82,11 @@ final class Field
         return $this->mutation;
     }
 
-    public function getStyleRule(): FieldConfig
+    /**
+     * @return array<FieldConfig>
+     */
+    public function getStyleRules(): array
     {
-        return $this->styleRule;
+        return $this->styleRules;
     }
 }

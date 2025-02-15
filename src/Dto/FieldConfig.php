@@ -43,16 +43,9 @@ final readonly class FieldConfig
         return $this->parameterType;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function toArray(): array
+    public function toObject(): FieldData
     {
-        return [
-            'callback'           => $this->callback,
-            'numberOfParameters' => $this->numberOfParameters,
-            'parameterType'      => $this->parameterType,
-        ];
+        return new FieldData($this->callback, $this->numberOfParameters, $this->parameterType);
     }
 
     private static function getFirstParameterType(ReflectionFunction $reflection): string

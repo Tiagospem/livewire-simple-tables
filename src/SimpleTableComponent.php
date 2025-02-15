@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables;
 
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Livewire\Component;
+use TiagoSpem\SimpleTables\Blade\TableRenderer;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Concerns\Mutation;
-use TiagoSpem\SimpleTables\Concerns\StyleModifiers;
-use TiagoSpem\SimpleTables\Datasource\Processor;
+use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
+use TiagoSpem\SimpleTables\Datasource\DataSourceResolver;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
-use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
 use TiagoSpem\SimpleTables\Traits\HasPagination;
 use TiagoSpem\SimpleTables\Traits\HasPlaceholder;
 use TiagoSpem\SimpleTables\Traits\HasSearch;
@@ -53,21 +52,22 @@ abstract class SimpleTableComponent extends Component
         return app(Mutation::class);
     }
 
-    public function styleModifier(): StyleModifiers
+    public function tableRowStyle(): TableRowStyle
     {
-        return app(StyleModifiers::class);
+        return app(TableRowStyle::class);
     }
 
     /**
      * @throws InvalidColumnException
-     * @throws InvalidParametersException
      */
-    public function render(): View
+    public function render(): string
     {
-        return view('simple-tables::layout.table', [
-            'data'       => (new Processor($this))->process(),
-            'theme'      => $this->theme,
-            'showSearch' => $this->showSearch(),
-        ]);
+        $processor = new DataSourceResolver($this);
+        $renderer  = app(TableRenderer::class);
+
+        return $renderer->render(
+            $processor->process(),
+            $this->theme,
+        );
     }
 }
