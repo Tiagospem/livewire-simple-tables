@@ -33,6 +33,8 @@ trait HasTheme
 
     protected string $tableTdNoRecordsStyle = '';
 
+    protected string $tableSortIconStyle = '';
+
     protected string $actionButtonStyle = '';
 
     protected string $dropdownContentStyle = '';

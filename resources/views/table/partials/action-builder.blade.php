@@ -2,7 +2,10 @@
     @if ($hasView)
         {!! $view !!}
     @else
-        <div class="flex items-center justify-center" x-data="clickEvent">
+        <div
+            class="flex items-center justify-center"
+            x-data="clickEvent"
+        >
             @php
                 $clickEvent = [
                     'url' => $buttonUrl,
@@ -37,7 +40,7 @@
                                 :component="$buttonIcon"
                                 @class([
                                     '-mr-0.5' => $hasName,
-                                    $iconStyle
+                                    $iconStyle,
                                 ])
                             />
                         @endif

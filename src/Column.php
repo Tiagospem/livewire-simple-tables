@@ -18,6 +18,8 @@ final class Column implements Wireable
 
     private bool $searchable = true;
 
+    private bool $sortable = false;
+
     public static function add(string $title, string $key, ?string $aliasKey = null, string $style = ''): self
     {
         $column             = new self();
@@ -56,6 +58,13 @@ final class Column implements Wireable
         return $this;
     }
 
+    public function sortable(): self
+    {
+        $this->sortable = true;
+
+        return $this;
+    }
+
     public function getRowKey(): string
     {
         return $this->aliasKey ?? $this->key;
@@ -79,6 +88,11 @@ final class Column implements Wireable
     public function getStyle(): string
     {
         return $this->style;
+    }
+
+    public function isSortable(): bool
+    {
+        return $this->sortable;
     }
 
     public function isSearchable(): bool

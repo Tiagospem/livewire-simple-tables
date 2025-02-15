@@ -17,6 +17,7 @@ use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Traits\HasPagination;
 use TiagoSpem\SimpleTables\Traits\HasPlaceholder;
 use TiagoSpem\SimpleTables\Traits\HasSearch;
+use TiagoSpem\SimpleTables\Traits\HasSort;
 use TiagoSpem\SimpleTables\Traits\HasTheme;
 
 abstract class SimpleTableComponent extends Component
@@ -24,13 +25,10 @@ abstract class SimpleTableComponent extends Component
     use HasPagination;
     use HasPlaceholder;
     use HasSearch;
+    use HasSort;
     use HasTheme;
 
     public string $primaryKey = 'id';
-
-    public string $sortBy = 'id';
-
-    public string $sortDirection = 'desc';
 
     /**
      * @return array<int, Column>
@@ -67,6 +65,7 @@ abstract class SimpleTableComponent extends Component
 
         return $renderer->render(
             $processor->process(),
+            $this,
             $this->theme,
         );
     }

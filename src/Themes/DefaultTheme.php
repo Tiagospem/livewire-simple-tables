@@ -14,11 +14,12 @@ final class DefaultTheme implements ThemeInterface
                 'tbody'         => 'divide-y divide-gray-100 bg-white',
                 'thead'         => 'bg-gray-50',
                 'tr'            => 'even:bg-gray-50',
-                'th'            => 'px-3 py-2 text-left text-sm font-semibold text-gray-900',
+                'th'            => 'px-3 py-2 text-sm font-semibold text-gray-900 [&>:first-child]:flex [&>:first-child]:items-center [&>:first-child]:gap-2 [&>:first-child]:justify-between',
                 'th_last'       => 'relative text-left px-3 py-2 text-center',
                 'td'            => 'whitespace-nowrap px-3 py-2 text-sm text-gray-500',
                 'td_last'       => 'px-3 py-2 text-sm text-gray-500 flex flex-column items-center justify-center gap-1',
                 'td_no_records' => 'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center',
+                'sort_icon'     => 'size-4',
             ],
             'action' => [
                 'button' => 'rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',

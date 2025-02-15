@@ -10,6 +10,10 @@ use TiagoSpem\SimpleTables\{SimpleTableComponent, Column};
 #[Lazy]
 class {{ class }} extends SimpleTableComponent
 {
+    public string $sortBy = 'id';
+
+    public string $sortDirection = 'desc';
+
     function columns(): array
     {
         return [

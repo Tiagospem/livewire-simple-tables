@@ -3,11 +3,11 @@
     <div class="overflow-auto custom-scrollbar rounded-lg shadow-sm ring-1 min-w-full ring-black/5">
         <div class="overflow-auto align-middle w-full">
             <table class="{{ $tableStyle }}">
-               <thread>
-                   {!! $header !!}
-               </thread>
+                <thread>
+                    {!! $header !!}
+                </thread>
                 <tbody class="{{ $bodyStyle }}">
-                {!! $body !!}
+                    {!! $body !!}
                 </tbody>
             </table>
         </div>

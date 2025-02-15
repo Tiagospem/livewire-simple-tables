@@ -12,16 +12,21 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Dto\TableData;
+use TiagoSpem\SimpleTables\SimpleTableComponent;
 
 final readonly class TableRenderer
 {
     /**
      * @param  array<string, array<string, string>|string>  $theme
      */
-    public function render(TableData $table, array $theme): string
+    public function render(TableData $table, SimpleTableComponent $component, array $theme): string
     {
         return View::make('simple-tables::table.table', [
-            'header'     => $this->renderHeader($table, $theme),
+            'header'     => $this->renderHeader(
+                $table,
+                $component,
+                $theme,
+            ),
             'body'       => $this->renderBody($table, $theme),
             'pagination' => $this->renderPagination($table),
             'showSearch' => $table->showSearch,
@@ -33,15 +38,19 @@ final readonly class TableRenderer
     /**
      * @param  array<string, array<string, string>|string>  $theme
      */
-    private function renderHeader(TableData $table, array $theme): string
+    private function renderHeader(TableData $table, SimpleTableComponent $component, array $theme): string
     {
         return View::make('simple-tables::table.partials.table-header', [
-            'columns'     => $table->columns,
-            'trStyle'     => theme($theme, 'table.tr'),
-            'thStyle'     => theme($theme, 'table.th'),
-            'thLastStyle' => theme($theme, 'table.th_last'),
-            'hasAction'   => $table->actionBuilder->hasActions(),
-            'actionName'  => $table->actionBuilder->getActionColumnName(),
+            'columns'       => $table->columns,
+            'sortBy'        => $component->sortBy,
+            'sortDirection' => $component->sortDirection,
+            'sortableIcons' => $component->sortableIcons(),
+            'trStyle'       => theme($theme, 'table.tr'),
+            'thStyle'       => theme($theme, 'table.th'),
+            'thLastStyle'   => theme($theme, 'table.th_last'),
+            'sortIconStyle' => theme($theme, 'table.sort_icon'),
+            'hasAction'     => $table->actionBuilder->hasActions(),
+            'actionName'    => $table->actionBuilder->getActionColumnName(),
         ])->render();
     }
 
@@ -100,7 +109,7 @@ final readonly class TableRenderer
                 'hasDropdown'              => $action->hasDropdown(),
                 'view'                     => $action->getView($row),
                 'isDisabled'               => $action->isDisabled($row),
-                'dropdownOptions'          => $action->getActionOptions(), //move callback logic from blade to a class
+                'dropdownOptions'          => $action->getActionOptions(),
                 'defaultOptionIcon'        => $action->getDefaultOptionIcon(),
                 'buttonStyle'              => $action->getStyle(),
                 'iconStyle'                => $action->getIconStyle(),
