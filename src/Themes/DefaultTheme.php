@@ -15,9 +15,9 @@ final class DefaultTheme implements ThemeInterface
                 'thead'         => 'bg-gray-50',
                 'tr'            => 'even:bg-gray-50',
                 'th'            => 'px-3 py-2 text-left text-sm font-semibold text-gray-900',
-                'th_last'       => 'relative text-left px-3 py-2',
+                'th_last'       => 'relative text-left px-3 py-2 text-center',
                 'td'            => 'whitespace-nowrap px-3 py-2 text-sm text-gray-500',
-                'td_last'       => 'px-3 py-2 text-sm text-gray-500',
+                'td_last'       => 'px-3 py-2 text-sm text-gray-500 flex flex-column items-center justify-center gap-1',
                 'td_no_records' => 'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center',
             ],
             'action' => [

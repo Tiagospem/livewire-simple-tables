@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
+use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Dto\TableData;
 
 final readonly class TableRenderer
@@ -39,7 +40,7 @@ final readonly class TableRenderer
             'trStyle'     => theme($theme, 'table.tr'),
             'thStyle'     => theme($theme, 'table.th'),
             'thLastStyle' => theme($theme, 'table.th_last'),
-            'hasAction'   => $table->actionBuilder->hasAction(),
+            'hasAction'   => $table->actionBuilder->hasActions(),
             'actionName'  => $table->actionBuilder->getActionColumnName(),
         ])->render();
     }
@@ -63,24 +64,55 @@ final readonly class TableRenderer
     {
         $rows = $this->getRowsCollection($table->rows);
 
-        return $rows->map(fn($row): string => $this->renderRow($table, $row, $theme))->implode('');
+        $hasActions = $table->actionBuilder->hasActions();
+
+        return $rows->map(fn($row): string => $this->renderRow($table, $row, $theme, $hasActions))->implode('');
     }
 
     /**
      * @param  array<string, array<string, string>|string>  $theme
      */
-    private function renderRow(TableData $table, mixed $row, array $theme): string
+    private function renderRow(TableData $table, mixed $row, array $theme, bool $hasActions): string
     {
         $contentParser = new ContentParser($table, $row, $theme);
 
-        $hasActions = $table->actionBuilder->hasAction();
-
         return View::make('simple-tables::table.partials.table-row', [
-            'rowContent' => $contentParser->mapFieldsWithContent(),
-            'action'     => $hasActions ? $this->renderActionBuilder($table, $row, $theme) : null,
-            'trStyle'    => $contentParser->getMutedRowStyle(),
-            'tdStyle'    => theme($theme, 'table.td'),
+            'rowContent'  => $contentParser->mapFieldsWithContent(),
+            'action'      => $hasActions ? $this->renderActionBuilder($table, $row, $theme) : null,
+            'trStyle'     => $contentParser->getMutedRowStyle(),
+            'tdStyle'     => theme($theme, 'table.td'),
+            'actionStyle' => mergeStyle(theme($theme, 'table.td_last'), $table->actionBuilder->getColumnStyle()),
         ])->render();
+    }
+
+    /**
+     * @param  array<string, array<string, string>|string>  $theme
+     */
+    private function renderActionBuilder(TableData $table, mixed $row, array $theme): string
+    {
+        return collect($table->actionBuilder->getActions())
+            ->map(fn(Action $action): string => View::make('simple-tables::table.partials.action-builder', [
+                'actionBuilder'            => $action,
+                'row'                      => $row,
+                'hasName'                  => $action->hasName(),
+                'hasView'                  => $action->hasView(),
+                'hasIcon'                  => $action->hasIcon(),
+                'hasDropdown'              => $action->hasDropdown(),
+                'view'                     => $action->getView($row),
+                'isDisabled'               => $action->isDisabled($row),
+                'dropdownOptions'          => $action->getActionOptions(), //move callback logic from blade to a class
+                'defaultOptionIcon'        => $action->getDefaultOptionIcon(),
+                'buttonStyle'              => $action->getStyle(),
+                'iconStyle'                => $action->getIconStyle(),
+                'buttonIcon'               => $action->getIcon(),
+                'buttonName'               => $action->getName(),
+                'buttonUrl'                => $action->getUrl($row),
+                'buttonTarget'             => $action->getTarget(),
+                'buttonEvent'              => $action->getEvent($row),
+                'themeActionButtonStyle'   => theme($theme, 'action.button'),
+                'themeDropdownOptionStyle' => theme($theme, 'dropdown.option'),
+                'themeDropdownStyle'       => theme($theme, 'dropdown.content'),
+            ])->render())->implode('');
     }
 
     /**
@@ -91,35 +123,6 @@ final readonly class TableRenderer
         return View::make('simple-tables::table.partials.table-empty-row', [
             'trStyle' => theme($theme, 'table.tr'),
             'tdStyle' => theme($theme, 'table.td_no_records'),
-        ])->render();
-    }
-
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function renderActionBuilder(TableData $table, mixed $row, array $theme): string
-    {
-        return View::make('simple-tables::table.partials.action-builder', [
-            'actionBuilder'            => $table->actionBuilder,
-            'row'                      => $row,
-            'hasName'                  => $table->actionBuilder->hasName(),
-            'hasView'                  => $table->actionBuilder->hasView(),
-            'hasIcon'                  => $table->actionBuilder->hasIcon(),
-            'hasDropdown'              => $table->actionBuilder->hasDropdown(),
-            'view'                     => $table->actionBuilder->getView($row),
-            'isDisabled'               => $table->actionBuilder->isDisabled($row),
-            'dropdownOptions'          => $table->actionBuilder->getActionOptions(), //move callback logic from blade to a class
-            'defaultOptionIcon'        => $table->actionBuilder->getDefaultOptionIcon(),
-            'buttonStyle'              => $table->actionBuilder->getStyle(),
-            'iconStyle'                => $table->actionBuilder->getIconStyle(),
-            'buttonIcon'               => $table->actionBuilder->getIcon(),
-            'buttonName'               => $table->actionBuilder->getName(),
-            'buttonUrl'                => $table->actionBuilder->getUrl($row),
-            'buttonTarget'             => $table->actionBuilder->getTarget(),
-            'buttonEvent'              => $table->actionBuilder->getEvent($row),
-            'themeActionButtonStyle'   => theme($theme, 'action.button'),
-            'themeDropdownOptionStyle' => theme($theme, 'dropdown.option'),
-            'themeDropdownStyle'       => theme($theme, 'dropdown.content'),
         ])->render();
     }
 

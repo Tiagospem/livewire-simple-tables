@@ -4,6 +4,6 @@
     @endforeach
 
     @if(filled($action))
-        <td class="{{ $tdStyle }}">{!! $action !!}</td>
+        <td class="{{ $actionStyle }}">{!! $action !!}</td>
     @endif
 </tr>

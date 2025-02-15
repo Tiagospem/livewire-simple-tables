@@ -4,127 +4,63 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables\Concerns;
 
-use Closure;
-use Illuminate\View\View;
-use TiagoSpem\SimpleTables\Enum\Target;
-use TiagoSpem\SimpleTables\Interfaces\HasActions;
-use TiagoSpem\SimpleTables\Option;
-use TiagoSpem\SimpleTables\Traits\HandleAction;
+use TiagoSpem\SimpleTables\Action;
 
-final class ActionBuilder implements HasActions
+final class ActionBuilder
 {
-    use HandleAction;
+    /**
+     * @var array<Action>
+     */
+    private array $actions = [];
 
-    private ?string $name = null;
+    private string $columnName = '';
 
-    private ?Closure $view = null;
-
-    private ?string $defaultOptionIcon = null;
+    private string $columnStyle = '';
 
     /**
-     * @var array<Option>
+     * @param  array<Action>  $action
      */
-    private array $dropdown = [];
-
-    /**
-     * @param  array<Option>  $options
-     */
-    public function dropdown(array $options): self
+    public function actions(array $action): self
     {
-        $this->dropdown = $options;
+        $this->actions = $action;
 
         return $this;
     }
 
-    /**
-     * @param  array<string, mixed>  $params
-     */
-    public function view(string $view, string $rowName = 'row', array $params = []): self
+    public function columnName(string $columnName): self
     {
-        $this->view = fn(mixed $row) => view($view, [$rowName => $row, ...$params]);
+        $this->columnName = $columnName;
 
         return $this;
     }
 
-    public function button(?string $icon = null, ?string $name = null, string|Closure|null $href = null, Target $target = Target::PARENT): self
+    public function columnStyle(string $columnStyle): self
     {
-        if (filled($icon) || filled($name)) {
-            $this->button = [
-                'icon' => $icon,
-                'name' => $name,
-            ];
-
-            if (filled($href)) {
-                $this->hrefData = [
-                    'href'   => $href,
-                    'target' => $target,
-                ];
-            }
-
-            if (filled($icon)) {
-                $this->iconStyle = 'size-4';
-            }
-        }
+        $this->columnStyle = $columnStyle;
 
         return $this;
-    }
-
-    public function name(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function defaultOptionIcon(string $icon): self
-    {
-        $this->defaultOptionIcon = $icon;
-
-        return $this;
-    }
-
-    public function hasAction(): bool
-    {
-        if ($this->hasView()) {
-            return true;
-        }
-        if ($this->hasName()) {
-            return true;
-        }
-
-        return $this->hasIcon();
-    }
-
-    public function hasView(): bool
-    {
-        return $this->view instanceof Closure;
-    }
-
-    public function hasDropdown(): bool
-    {
-        return [] !== $this->dropdown;
     }
 
     /**
-     * @return array<Option>
+     * @return array<Action>
      */
-    public function getActionOptions(): array
+    public function getActions(): array
     {
-        return $this->dropdown;
+        return $this->actions;
     }
 
-    public function getView(mixed $row): ?View
+    public function getColumnStyle(): string
     {
-        return $this->view instanceof Closure ? ($this->view)($row) : null;
+        return mergeStyle($this->columnStyle);
     }
 
-    public function getDefaultOptionIcon(): ?string
+    public function getActionColumnName(): string
     {
-        return $this->defaultOptionIcon;
+        return $this->columnName;
     }
 
-    public function getActionColumnName(): ?string
+    public function hasActions(): bool
     {
-        return $this->name;
+        return [] !== $this->actions;
     }
 }
