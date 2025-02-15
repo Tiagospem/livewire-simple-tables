@@ -16,7 +16,7 @@
         : $sortableIcons['default'];
 @endphp
 
-<div class="cursor-pointer" @click="$dispatch('sortBy', ['{{ $column }}'])">
+<div class="cursor-pointer" wire:click="sortTableBy('{{ $column }}')">
     <x-dynamic-component
         :component="$icon"
         :class="$sortIconStyle"

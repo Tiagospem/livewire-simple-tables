@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables\Traits;
 
-use Livewire\Attributes\On;
 use TiagoSpem\SimpleTables\Column;
 
 trait HasSort
@@ -25,8 +24,7 @@ trait HasSort
         ];
     }
 
-    #[On('sortBy')]
-    public function sortBy(string $sortBy): void
+    public function sortTableBy(string $sortBy): void
     {
         if ( ! in_array($sortBy, $this->getSortableColumns())) {
             return;
