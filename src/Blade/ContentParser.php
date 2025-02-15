@@ -26,22 +26,11 @@ final readonly class ContentParser
 
         return collect($this->table->columns)
             ->filter(fn(Column $column): bool => $column->isVisible())
-            ->map(function (Column $column) use ($tdStyle): object {
-                if ($column->isActionColumn()) {
-                    return $this->getColumnAction($this->table, $column, $this->row, $this->theme);
-                }
-
-                $fieldKey = $column->getRealKey();
-
-                $field = null;
-
-                if (array_key_exists($fieldKey, $this->table->mutations)) {
-                    $field = $this->table->mutations[$fieldKey];
-                }
-
-                return $this->getMutedData($column, $tdStyle, $field);
-
-            })
+            ->map(
+                fn(Column $column): object => $column->isActionColumn()
+                ? $this->getColumnAction($column)
+                : $this->getMutedData($column, $tdStyle, $this->table->mutations[$column->getRealKey()] ?? null),
+            )
             ->all();
     }
 
@@ -52,37 +41,10 @@ final readonly class ContentParser
 
     private function getMutedData(Column $column, string $tdStyle, ?Field $mutation): object
     {
-        $rowKey  = $column->getRowKey();
-
-        $rowValue = parserString(data_get($this->row, $rowKey));
-
-        $fieldStyle = '';
-
-        if ($mutation instanceof Field) {
-            $styleMutations = $mutation->getStyleRules();
-            $dataMutation   = $mutation->getMutation()->toObject();
-
-            $fieldStyle = [];
-
-            foreach ($styleMutations as $styleMutation) {
-                $styleMutation = $styleMutation->toObject();
-
-                $styleCallbackParameterCandidate = isClassOrObject($styleMutation->parameterType) ? $this->row : $rowValue;
-
-                if (is_callable($styleMutation->callback)) {
-                    $fieldStyle[] = parserString($styleMutation->callback->__invoke($styleCallbackParameterCandidate));
-                }
-            }
-
-            $fieldStyle[] = $mutation->getStyle();
-
-            $fieldStyle = implode(' ', $fieldStyle);
-
-            $dataCallbackParameterCandidate = isClassOrObject($dataMutation->parameterType) ? $this->row : $rowValue;
-
-            $rowValue = is_callable($dataMutation->callback) ?
-                parserString($dataMutation->callback->__invoke($dataCallbackParameterCandidate)) : $rowValue;
-        }
+        $rowKey     = $column->getRowKey();
+        $rowValue   = parserString(data_get($this->row, $rowKey));
+        $fieldStyle = $this->resolveFieldStyle($mutation, $rowValue);
+        $rowValue   = $this->resolveRowValue($mutation, $rowValue);
 
         return (object) [
             'content' => $rowValue,
@@ -90,46 +52,90 @@ final readonly class ContentParser
         ];
     }
 
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function getColumnAction(TableData $table, Column $column, mixed $row, array $theme): object
+    private function resolveFieldStyle(?Field $field, mixed $rowValue): string
+    {
+        if ( ! $field instanceof Field) {
+            return '';
+        }
+
+        $fieldStyles = [];
+
+        foreach ($field->getStyleRules() as $styleMutation) {
+            $mutationObject = $styleMutation->toObject();
+
+            if (is_callable($mutationObject->callback)) {
+                $fieldStyles[] = parserString(
+                    $mutationObject->callback->__invoke(
+                        $this->resolveCallbackParameter($mutationObject->parameterType, $rowValue),
+                    ),
+                );
+            }
+        }
+
+        $fieldStyles[] = $field->getStyle();
+
+        return implode(' ', array_filter($fieldStyles));
+    }
+
+    private function resolveRowValue(?Field $mutation, mixed $rowValue): mixed
+    {
+        if ($mutation instanceof Field) {
+            $dataMutation = $mutation->getMutation()->toObject();
+
+            if (is_callable($dataMutation->callback)) {
+                return parserString($dataMutation->callback->__invoke($this->resolveCallbackParameter($dataMutation->parameterType, $rowValue)));
+            }
+        }
+
+        return $rowValue;
+    }
+
+    private function resolveCallbackParameter(string $parameterType, mixed $rowValue): mixed
+    {
+        return isClassOrObject($parameterType) ? $this->row : $rowValue;
+    }
+
+    private function getColumnAction(Column $column): object
     {
         $tdStyle = theme($this->theme, 'table.td');
+        $actions = $this->getActionsData();
 
-        $actions = collect($table->actionBuilder->getActions())
+        return (object) [
+            'content' => View::make('simple-tables::table.partials.action-builder', $actions[$column->getColumnId()])->render(),
+            'style'   => $tdStyle,
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    private function getActionsData(): array
+    {
+        return collect($this->table->actionBuilder->getActions())
             ->map(fn(Action $action): array => [
                 'actionId'                 => $action->getActionId(),
                 'actionBuilder'            => $action,
-                'row'                      => $row,
+                'row'                      => $this->row,
                 'hasName'                  => $action->hasName(),
                 'hasView'                  => $action->hasView(),
                 'hasIcon'                  => $action->hasIcon(),
                 'hasDropdown'              => $action->hasDropdown(),
-                'view'                     => $action->getView($row),
-                'isDisabled'               => $action->isDisabled($row),
+                'view'                     => $action->getView($this->row),
+                'isDisabled'               => $action->isDisabled($this->row),
                 'dropdownOptions'          => $action->getActionOptions(),
                 'defaultOptionIcon'        => $action->getDefaultOptionIcon(),
                 'buttonStyle'              => $action->getStyle(),
                 'iconStyle'                => $action->getIconStyle(),
                 'buttonIcon'               => $action->getIcon(),
                 'buttonName'               => $action->getName(),
-                'buttonUrl'                => $action->getUrl($row),
+                'buttonUrl'                => $action->getUrl($this->row),
                 'buttonTarget'             => $action->getTarget(),
-                'buttonEvent'              => $action->getEvent($row),
-                'themeActionButtonStyle'   => theme($theme, 'action.button'),
-                'themeDropdownOptionStyle' => theme($theme, 'dropdown.option'),
-                'themeDropdownStyle'       => theme($theme, 'dropdown.content'),
+                'buttonEvent'              => $action->getEvent($this->row),
+                'themeActionButtonStyle'   => theme($this->theme, 'action.button'),
+                'themeDropdownOptionStyle' => theme($this->theme, 'dropdown.option'),
+                'themeDropdownStyle'       => theme($this->theme, 'dropdown.content'),
             ])
             ->keyBy(fn(array $item): string => $item['actionId'])
             ->all();
-
-        $columnAction = $actions[$column->getColumnId()];
-
-        return (object) [
-            'content' => View::make('simple-tables::table.partials.action-builder', $columnAction)->render(),
-            'style'   => $tdStyle,
-        ];
     }
-
 }
