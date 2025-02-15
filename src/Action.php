@@ -14,7 +14,7 @@ final class Action implements HasActions
 {
     use HandleAction;
 
-    private string $name;
+    private string $id;
 
     private ?Closure $view = null;
 
@@ -25,11 +25,11 @@ final class Action implements HasActions
      */
     private array $dropdown = [];
 
-    public static function name(string $name): self
+    public static function for(string $id): self
     {
         $action = new self();
 
-        $action->name = $name;
+        $action->id = $id;
 
         return $action;
     }
@@ -124,8 +124,8 @@ final class Action implements HasActions
         return $this->defaultOptionIcon;
     }
 
-    public function getActionColumnName(): ?string
+    public function getActionId(): string
     {
-        return $this->name;
+        return $this->id;
     }
 }

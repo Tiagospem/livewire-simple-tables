@@ -20,6 +20,12 @@ final class Column implements Wireable
 
     private bool $sortable = false;
 
+    private bool $isActionColumn = false;
+
+    private bool $isVisible = true;
+
+    private string $columnId;
+
     public static function add(string $title, string $key, ?string $aliasKey = null, string $style = ''): self
     {
         $column             = new self();
@@ -28,6 +34,17 @@ final class Column implements Wireable
         $column->aliasKey   = $aliasKey;
         $column->style      = $style;
         $column->searchable = false;
+
+        return $column;
+    }
+
+    public static function action(string $id, string $title, string $style = ''): self
+    {
+        $column                 = new self();
+        $column->title          = $title;
+        $column->isActionColumn = true;
+        $column->style          = $style;
+        $column->columnId       = $id;
 
         return $column;
     }
@@ -47,6 +64,13 @@ final class Column implements Wireable
     public function style(string $style): self
     {
         $this->style = $style;
+
+        return $this;
+    }
+
+    public function hide(): self
+    {
+        $this->isVisible = false;
 
         return $this;
     }
@@ -90,6 +114,11 @@ final class Column implements Wireable
         return $this->style;
     }
 
+    public function getColumnId(): string
+    {
+        return $this->columnId;
+    }
+
     public function isSortable(): bool
     {
         return $this->sortable;
@@ -98,6 +127,16 @@ final class Column implements Wireable
     public function isSearchable(): bool
     {
         return $this->searchable;
+    }
+
+    public function isActionColumn(): bool
+    {
+        return $this->isActionColumn;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->isVisible;
     }
 
     /**

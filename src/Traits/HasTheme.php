@@ -27,10 +27,6 @@ trait HasTheme
 
     protected string $tableTdStyle = '';
 
-    protected string $tableTdLastStyle = '';
-
-    protected string $tableThLastStyle = '';
-
     protected string $tableTdNoRecordsStyle = '';
 
     protected string $tableSortIconStyle = '';

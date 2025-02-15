@@ -1,16 +1,23 @@
 <tr class="{{ $trStyle }}">
     @foreach ($columns as $column)
         <th class="{{ mergeStyle($thStyle, $column->getStyle()) }}">
-            <div>
+            @if ($column->isActionColumn())
                 {{ $column->getTitle() }}
-                @if($column->isSortable())
-                    <x-simple-tables::sortable :$sortableIcons :$sortIconStyle :$sortBy :$sortDirection :column="$column->getRealKey()" />
-                @endif
-            </div>
+            @else
+                <div>
+                    <span>{{ $column->getTitle() }}</span>
+
+                    @if ($column->isSortable())
+                        <x-simple-tables::sortable
+                            :$sortableIcons
+                            :$sortIconStyle
+                            :$sortBy
+                            :$sortDirection
+                            :column="$column->getRealKey()"
+                        />
+                    @endif
+                </div>
+            @endif
         </th>
     @endforeach
-
-    @if ($hasAction)
-        <th class="{{ $thLastStyle }}">{{ $actionName }}</th>
-    @endif
 </tr>

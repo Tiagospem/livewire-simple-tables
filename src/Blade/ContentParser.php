@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables\Blade;
 
+use Illuminate\Support\Facades\View;
+use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Dto\TableData;
 use TiagoSpem\SimpleTables\Field;
@@ -23,7 +25,12 @@ final readonly class ContentParser
         $tdStyle = theme($this->theme, 'table.td');
 
         return collect($this->table->columns)
+            ->filter(fn(Column $column): bool => $column->isVisible())
             ->map(function (Column $column) use ($tdStyle): object {
+                if ($column->isActionColumn()) {
+                    return $this->getColumnAction($this->table, $column, $this->row, $this->theme);
+                }
+
                 $fieldKey = $column->getRealKey();
 
                 $field = null;
@@ -33,6 +40,7 @@ final readonly class ContentParser
                 }
 
                 return $this->getMutedData($column, $tdStyle, $field);
+
             })
             ->all();
     }
@@ -81,4 +89,47 @@ final readonly class ContentParser
             'style'   => mergeStyle($tdStyle, $fieldStyle),
         ];
     }
+
+    /**
+     * @param  array<string, array<string, string>|string>  $theme
+     */
+    private function getColumnAction(TableData $table, Column $column, mixed $row, array $theme): object
+    {
+        $tdStyle = theme($this->theme, 'table.td');
+
+        $actions = collect($table->actionBuilder->getActions())
+            ->map(fn(Action $action): array => [
+                'actionId'                 => $action->getActionId(),
+                'actionBuilder'            => $action,
+                'row'                      => $row,
+                'hasName'                  => $action->hasName(),
+                'hasView'                  => $action->hasView(),
+                'hasIcon'                  => $action->hasIcon(),
+                'hasDropdown'              => $action->hasDropdown(),
+                'view'                     => $action->getView($row),
+                'isDisabled'               => $action->isDisabled($row),
+                'dropdownOptions'          => $action->getActionOptions(),
+                'defaultOptionIcon'        => $action->getDefaultOptionIcon(),
+                'buttonStyle'              => $action->getStyle(),
+                'iconStyle'                => $action->getIconStyle(),
+                'buttonIcon'               => $action->getIcon(),
+                'buttonName'               => $action->getName(),
+                'buttonUrl'                => $action->getUrl($row),
+                'buttonTarget'             => $action->getTarget(),
+                'buttonEvent'              => $action->getEvent($row),
+                'themeActionButtonStyle'   => theme($theme, 'action.button'),
+                'themeDropdownOptionStyle' => theme($theme, 'dropdown.option'),
+                'themeDropdownStyle'       => theme($theme, 'dropdown.content'),
+            ])
+            ->keyBy(fn(array $item): string => $item['actionId'])
+            ->all();
+
+        $columnAction = $actions[$column->getColumnId()];
+
+        return (object) [
+            'content' => View::make('simple-tables::table.partials.action-builder', $columnAction)->render(),
+            'style'   => $tdStyle,
+        ];
+    }
+
 }

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
-use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Dto\TableData;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 
@@ -41,7 +40,7 @@ final readonly class TableRenderer
     private function renderHeader(TableData $table, SimpleTableComponent $component, array $theme): string
     {
         return View::make('simple-tables::table.partials.table-header', [
-            'columns'       => $table->columns,
+            'columns'       => collect($table->columns)->filter(fn($column): bool => $column->isVisible()),
             'sortBy'        => $component->sortBy,
             'sortDirection' => $component->sortDirection,
             'sortableIcons' => $component->sortableIcons(),
@@ -73,55 +72,24 @@ final readonly class TableRenderer
     {
         $rows = $this->getRowsCollection($table->rows);
 
-        $hasActions = $table->actionBuilder->hasActions();
+        $table->actionBuilder->hasActions();
 
-        return $rows->map(fn($row): string => $this->renderRow($table, $row, $theme, $hasActions))->implode('');
+        return $rows->map(fn($row): string => $this->renderRow($table, $row, $theme))->implode('');
     }
 
     /**
      * @param  array<string, array<string, string>|string>  $theme
      */
-    private function renderRow(TableData $table, mixed $row, array $theme, bool $hasActions): string
+    private function renderRow(TableData $table, mixed $row, array $theme): string
     {
         $contentParser = new ContentParser($table, $row, $theme);
 
         return View::make('simple-tables::table.partials.table-row', [
             'rowContent'  => $contentParser->mapFieldsWithContent(),
-            'action'      => $hasActions ? $this->renderActionBuilder($table, $row, $theme) : null,
             'trStyle'     => $contentParser->getMutedRowStyle(),
             'tdStyle'     => theme($theme, 'table.td'),
             'actionStyle' => mergeStyle(theme($theme, 'table.td_last'), $table->actionBuilder->getColumnStyle()),
         ])->render();
-    }
-
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function renderActionBuilder(TableData $table, mixed $row, array $theme): string
-    {
-        return collect($table->actionBuilder->getActions())
-            ->map(fn(Action $action): string => View::make('simple-tables::table.partials.action-builder', [
-                'actionBuilder'            => $action,
-                'row'                      => $row,
-                'hasName'                  => $action->hasName(),
-                'hasView'                  => $action->hasView(),
-                'hasIcon'                  => $action->hasIcon(),
-                'hasDropdown'              => $action->hasDropdown(),
-                'view'                     => $action->getView($row),
-                'isDisabled'               => $action->isDisabled($row),
-                'dropdownOptions'          => $action->getActionOptions(),
-                'defaultOptionIcon'        => $action->getDefaultOptionIcon(),
-                'buttonStyle'              => $action->getStyle(),
-                'iconStyle'                => $action->getIconStyle(),
-                'buttonIcon'               => $action->getIcon(),
-                'buttonName'               => $action->getName(),
-                'buttonUrl'                => $action->getUrl($row),
-                'buttonTarget'             => $action->getTarget(),
-                'buttonEvent'              => $action->getEvent($row),
-                'themeActionButtonStyle'   => theme($theme, 'action.button'),
-                'themeDropdownOptionStyle' => theme($theme, 'dropdown.option'),
-                'themeDropdownStyle'       => theme($theme, 'dropdown.content'),
-            ])->render())->implode('');
     }
 
     /**
