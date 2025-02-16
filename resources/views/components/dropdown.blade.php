@@ -97,6 +97,7 @@
                                 :$iconStyle
                                 :$buttonStyle
                                 :$themeDropdownOptionStyle
+                                :$isWireNavigate
                             />
                         @endif
                     @endforeach
