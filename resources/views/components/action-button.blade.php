@@ -44,7 +44,7 @@
                     target="{{ $target }}"
                     @if ($isWireNavigate) wire:navigate @endif
                 @else
-                    x-on:click="handleClick(@js($event))"
+                    x-on:click="handleClick('{{ json_encode($event) }}')"
                     @endif
                     x-ref="dropdownButton"
                     @class([

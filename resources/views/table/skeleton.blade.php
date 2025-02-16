@@ -14,7 +14,7 @@
                     <thead class="bg-gray-100 animate-pulse">
                         <tr>
                             @foreach (range(0, $columns) as $ignored)
-                                <th class="px-3 py-2 text-sm text-white">
+                                <th class="px-3 py-2 text-sm text-transparent">
                                     -
                                 </th>
                             @endforeach

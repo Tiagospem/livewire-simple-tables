@@ -15,9 +15,9 @@ interface HasActions
     public function href(Closure|string $href, bool $wireNavigate = false, ?Target $target = null): self;
 
     /**
-     * @param  mixed|null|Closure(mixed): mixed  $params
+     * @param  Closure|array<string, mixed>|int|bool|string|null  $params
      */
-    public function event(string $name, mixed $params = null): self;
+    public function event(string $name, Closure|array|int|bool|string|null $params = null): self;
 
     /**
      * @param  Closure(mixed): bool|bool  $disabled

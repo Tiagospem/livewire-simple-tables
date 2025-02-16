@@ -52,10 +52,7 @@ trait HandleAction
         return $this;
     }
 
-    /**
-     * @param  mixed|null|Closure(mixed): mixed  $params
-     */
-    public function event(string $name, mixed $params = null): self
+    public function event(string $name, Closure|array|int|bool|string|null $params = null): self
     {
         $this->eventData = [
             'name' => $name,
