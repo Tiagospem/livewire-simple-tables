@@ -29,6 +29,8 @@ interface HasActions
      */
     public function hidden(Closure|bool $hidden = true): self;
 
+    public function can(Closure|bool $can = true): self;
+
     public function iconStyle(string $style): self;
 
     public function buttonStyle(string $style): self;

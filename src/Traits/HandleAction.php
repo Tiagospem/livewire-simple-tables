@@ -83,6 +83,16 @@ trait HandleAction
         return $this;
     }
 
+    /**
+     * @param  Closure(mixed): bool|bool  $can
+     */
+    public function can(Closure|bool $can = true): self
+    {
+        $this->hidden = ! $can;
+
+        return $this;
+    }
+
     public function iconStyle(string $style): self
     {
         $this->iconStyle = $style;
