@@ -21,6 +21,9 @@ trait HandleAction
     /** @var Closure(mixed): bool|bool */
     protected Closure|bool $hidden = false;
 
+    /** @var Closure(mixed): bool|bool */
+    protected Closure|bool $can = true;
+
     protected ?string $buttonStyle = null;
 
     protected ?string $iconStyle = null;
@@ -87,7 +90,7 @@ trait HandleAction
      */
     public function can(Closure|bool $can = true): self
     {
-        $this->hidden = ! $can;
+        $this->can = $can;
 
         return $this;
     }
@@ -118,7 +121,11 @@ trait HandleAction
 
     public function isHidden(mixed $row): bool
     {
-        return $this->evaluateCondition($this->hidden, $row);
+        $isHidden = $this->evaluateCondition($this->hidden, $row);
+
+        $can = $this->evaluateCondition($this->can, $row);
+
+        return $isHidden || ! $can;
     }
 
     public function hasName(): bool
