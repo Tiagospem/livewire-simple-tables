@@ -4,29 +4,31 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables;
 
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Livewire\Component;
-use TiagoSpem\SimpleTables\Concerns\HasPagination;
-use TiagoSpem\SimpleTables\Concerns\HasPlaceholder;
-use TiagoSpem\SimpleTables\Concerns\HasSearch;
-use TiagoSpem\SimpleTables\Concerns\HasTheme;
-use TiagoSpem\SimpleTables\Datasource\Processor;
+use TiagoSpem\SimpleTables\Blade\TableRenderer;
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Concerns\Mutation;
+use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
+use TiagoSpem\SimpleTables\Datasource\DataSourceResolver;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
-use TiagoSpem\SimpleTables\Exceptions\InvalidParametersException;
+use TiagoSpem\SimpleTables\Traits\HasPagination;
+use TiagoSpem\SimpleTables\Traits\HasPlaceholder;
+use TiagoSpem\SimpleTables\Traits\HasSearch;
+use TiagoSpem\SimpleTables\Traits\HasSort;
+use TiagoSpem\SimpleTables\Traits\HasTheme;
 
 abstract class SimpleTableComponent extends Component
 {
     use HasPagination;
     use HasPlaceholder;
     use HasSearch;
+    use HasSort;
     use HasTheme;
 
-    public string $sortBy = 'id';
-
-    public string $sortDirection = 'desc';
+    public string $primaryKey = 'id';
 
     /**
      * @return array<int, Column>
@@ -38,31 +40,33 @@ abstract class SimpleTableComponent extends Component
      */
     abstract public function datasource(): Builder|Collection;
 
-    public function actionBuilder(): SimpleTablesActionBuilder
+    public function actionBuilder(): ActionBuilder
     {
-        return app(SimpleTablesActionBuilder::class);
+        return app(ActionBuilder::class);
     }
 
-    public function dataModifier(): SimpleTableModifiers
+    public function mutation(): Mutation
     {
-        return app(SimpleTableModifiers::class);
+        return app(Mutation::class);
     }
 
-    public function styleModifier(): SimpleTablesStyleModifiers
+    public function tableRowStyle(): TableRowStyle
     {
-        return app(SimpleTablesStyleModifiers::class);
+        return app(TableRowStyle::class);
     }
 
     /**
      * @throws InvalidColumnException
-     * @throws InvalidParametersException
      */
-    public function render(): View
+    public function render(): string
     {
-        return view('simple-tables::layout.table', [
-            'data'       => (new Processor($this))->process(),
-            'theme'      => $this->theme,
-            'showSearch' => $this->showSearch(),
-        ]);
+        $processor = new DataSourceResolver($this);
+        $renderer  = app(TableRenderer::class);
+
+        return $renderer->render(
+            $processor->process(),
+            $this,
+            $this->theme,
+        );
     }
 }

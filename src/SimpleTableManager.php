@@ -4,20 +4,30 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables;
 
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Concerns\BeforeSearch;
+use TiagoSpem\SimpleTables\Concerns\Mutation;
+use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
+
 final class SimpleTableManager
 {
-    public function dataModifiers(): SimpleTableModifiers
+    public function mutation(): Mutation
     {
-        return app(SimpleTableModifiers::class);
+        return app(Mutation::class);
     }
 
-    public function styleModifiers(): SimpleTablesStyleModifiers
+    public function tableRowStyle(): TableRowStyle
     {
-        return app(SimpleTablesStyleModifiers::class);
+        return app(TableRowStyle::class);
     }
 
-    public function actionBuilder(): SimpleTablesActionBuilder
+    public function actionBuilder(): ActionBuilder
     {
-        return app(SimpleTablesActionBuilder::class);
+        return app(ActionBuilder::class);
+    }
+
+    public function beforeSearch(): BeforeSearch
+    {
+        return app(BeforeSearch::class);
     }
 }

@@ -10,9 +10,11 @@ use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Interfaces\HasActions;
 use TiagoSpem\SimpleTables\Traits\HandleAction;
 
-final class SimpleTablesActionBuilder implements HasActions
+final class Action implements HasActions
 {
     use HandleAction;
+
+    private string $id;
 
     private ?Closure $view = null;
 
@@ -22,6 +24,15 @@ final class SimpleTablesActionBuilder implements HasActions
      * @var array<Option>
      */
     private array $dropdown = [];
+
+    public static function for(string $id): self
+    {
+        $action = new self();
+
+        $action->id = $id;
+
+        return $action;
+    }
 
     /**
      * @param  array<Option>  $options
@@ -111,5 +122,10 @@ final class SimpleTablesActionBuilder implements HasActions
     public function getDefaultOptionIcon(): ?string
     {
         return $this->defaultOptionIcon;
+    }
+
+    public function getActionId(): string
+    {
+        return $this->id;
     }
 }

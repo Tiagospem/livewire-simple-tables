@@ -9,57 +9,49 @@ use TiagoSpem\SimpleTables\Enum\Target;
 
 trait HandleAction
 {
-    /**
-     * @var array{
-     *     icon?: string|null,
-     *     name?: string|null,
-     *    }
-     * }
-     */
+    /** @var array{icon: string|null, name: string|null} */
     protected array $button = [
         'icon' => null,
         'name' => null,
     ];
 
+    /** @var Closure(mixed): bool|bool */
     protected Closure|bool $disabled = false;
 
+    /** @var Closure(mixed): bool|bool */
     protected Closure|bool $hidden = false;
 
     protected ?string $buttonStyle = null;
+    protected ?string $iconStyle   = null;
 
-    protected ?string $iconStyle = null;
-
-    /**
-     * @var array{
-     *     href: Closure|string,
-     *     target: Target::*,
-     *    }
-     * }
-     */
+    /** @var array{href: Closure|string, target: Target::*} */
     protected array $hrefData = [
         'href'   => '',
         'target' => Target::PARENT,
     ];
 
-    /**
-     * @var array{
-     *     name: string,
-     *     params: mixed,
-     * }
-     */
+    /** @var array{name: string, params: mixed} */
     protected array $eventData = [
         'name'   => '',
         'params' => null,
     ];
 
+    /**
+     * @param Closure(mixed): string|string $href
+     */
     public function href(Closure|string $href, ?Target $target = null): self
     {
-        $this->hrefData['href']   = $href;
-        $this->hrefData['target'] = $target ?? Target::PARENT;
+        $this->hrefData = [
+            'href'   => $href,
+            'target' => $target ?? Target::PARENT,
+        ];
 
         return $this;
     }
 
+    /**
+     * @param mixed|null|Closure(mixed): mixed $params
+     */
     public function event(string $name, mixed $params = null): self
     {
         $this->eventData = [
@@ -70,54 +62,44 @@ trait HandleAction
         return $this;
     }
 
+    /**
+     * @param Closure(mixed): bool|bool $disabled
+     */
     public function disabled(Closure|bool $disabled = true): self
     {
         $this->disabled = $disabled;
-
         return $this;
     }
 
+    /**
+     * @param Closure(mixed): bool|bool $hidden
+     */
     public function hidden(Closure|bool $hidden = true): self
     {
         $this->hidden = $hidden;
-
         return $this;
     }
 
     public function iconStyle(string $style): self
     {
         $this->iconStyle = $style;
-
         return $this;
     }
 
     public function buttonStyle(string $style): self
     {
         $this->buttonStyle = $style;
-
         return $this;
     }
 
     public function isDisabled(mixed $row): bool
     {
-        $disabled = $this->disabled;
-
-        if ($disabled instanceof Closure) {
-            return (bool) $disabled($row);
-        }
-
-        return (bool) $disabled;
+        return $this->evaluateCondition($this->disabled, $row);
     }
 
     public function isHidden(mixed $row): bool
     {
-        $hidden = $this->hidden;
-
-        if ($hidden instanceof Closure) {
-            return (bool) $hidden($row);
-        }
-
-        return (bool) $hidden;
+        return $this->evaluateCondition($this->hidden, $row);
     }
 
     public function hasName(): bool
@@ -132,25 +114,18 @@ trait HandleAction
 
     public function getUrl(mixed $row): ?string
     {
-        $href = $this->hrefData['href'];
+        $result = $this->evaluateValue($this->hrefData['href'], $row);
 
-        if ($href instanceof Closure) {
-            return (string) $href($row);
-        }
-
-        return $href ? parserString($href) : null;
+        return is_string($result) ? $result : null;
     }
 
     public function getTarget(): string
     {
-        return $this->hrefData['target']->value ?? Target::PARENT->value;
+        return $this->hrefData['target']->value;
     }
 
     /**
-     * @return null|array{
-     *     name: string,
-     *     params: mixed,
-     * }
+     * @return array{name: string, params: mixed}|null
      */
     public function getEvent(mixed $row): ?array
     {
@@ -160,20 +135,18 @@ trait HandleAction
 
         return [
             'name'   => $this->eventData['name'],
-            'params' => $this->eventData['params'] instanceof Closure
-                ? $this->eventData['params']($row)
-                : $this->eventData['params'],
+            'params' => $this->evaluateValue($this->eventData['params'], $row),
         ];
     }
 
     public function getName(): ?string
     {
-        return $this->button['name'] ?? null;
+        return $this->button['name'];
     }
 
     public function getIcon(): ?string
     {
-        return $this->button['icon'] ?? null;
+        return $this->button['icon'];
     }
 
     public function getStyle(): ?string
@@ -184,5 +157,23 @@ trait HandleAction
     public function getIconStyle(): ?string
     {
         return $this->iconStyle;
+    }
+
+    /**
+     * @param Closure(mixed): mixed|mixed $value
+     */
+    private function evaluateValue(mixed $value, mixed $row): mixed
+    {
+        return $value instanceof Closure ? $value($row) : $value;
+    }
+
+    /**
+     * @param Closure(mixed): bool|bool $condition
+     */
+    private function evaluateCondition(mixed $condition, mixed $row): bool
+    {
+        return (bool) ($condition instanceof Closure
+            ? $condition($row)
+            : $condition);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables\Concerns;
+namespace TiagoSpem\SimpleTables\Traits;
 
 use Illuminate\Support\Str;
 use TiagoSpem\SimpleTables\Exceptions\InvalidThemeException;
@@ -27,11 +27,11 @@ trait HasTheme
 
     protected string $tableTdStyle = '';
 
-    protected string $tableTdLastStyle = '';
-
-    protected string $tableThLastStyle = '';
-
     protected string $tableTdNoRecordsStyle = '';
+
+    protected string $tableSortIconStyle = '';
+
+    protected string $tableBooleanIconStyle = '';
 
     protected string $actionButtonStyle = '';
 

@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables\Datasource\Processors;
+namespace TiagoSpem\SimpleTables\Datasource\Resolvers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use TiagoSpem\SimpleTables\Modify;
 
 trait HasSearch
 {
@@ -18,16 +17,16 @@ trait HasSearch
      */
     protected function builderSearch(Builder $query): Builder
     {
-        $columns = $this->simpleTableComponent->getSearchableColumns();
+        $columns = $this->component->getSearchableColumns();
 
-        $search = $this->sanitizeSearch($this->simpleTableComponent->search);
+        $search = $this->sanitizeSearch($this->component->search);
 
         $model      = $query->getModel();
         $modelTable = $model->getTable();
 
         return $query->where(function (Builder $query) use ($columns, $search, $model, $modelTable): void {
             foreach ($columns as $column) {
-                $field = $column->getField();
+                $field = $column->getRowKey();
 
                 $search = $this->applyBeforeSearchModifiers(field: $field, value: $search);
 
@@ -59,13 +58,13 @@ trait HasSearch
      */
     protected function collectionSearch(Collection $collection): Collection
     {
-        $search = $this->sanitizeSearch($this->simpleTableComponent->search);
+        $search = $this->sanitizeSearch($this->component->search);
 
         if (blank($search)) {
             return $collection;
         }
 
-        $columns = $this->simpleTableComponent->getSearchableColumns();
+        $columns = $this->component->getSearchableColumns();
 
         if ($columns->isEmpty()) {
             return $collection;
@@ -73,7 +72,7 @@ trait HasSearch
 
         return $collection->filter(function ($item) use ($columns, $search): bool {
             foreach ($columns as $column) {
-                $field          = $column->getField();
+                $field          = $column->getRowKey();
                 $modifiedSearch = $this->applyBeforeSearchModifiers($field, $search);
                 $value          = data_get($item, $field);
 
@@ -124,10 +123,10 @@ trait HasSearch
 
     private function applyBeforeSearchModifiers(string $field, string $value): string
     {
-        $modifier = collect($this->simpleTableComponent->beforeSearch())
-            ->filter(fn(Modify $modifier): bool => $modifier->column === $field)
+        $modifier = collect($this->component->beforeSearch()->getFields())
+            ->filter(fn(array $modifier): bool => $modifier['field'] === $field)
             ->first();
 
-        return filled($modifier) ? parserString($modifier->callback->__invoke($value)) : $value;
+        return filled($modifier) ? parserString($modifier['callback']->__invoke($value)) : $value;
     }
 }

@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-use TiagoSpem\SimpleTables\Column;
-use TiagoSpem\SimpleTables\SimpleTableModifiers;
-use TiagoSpem\SimpleTables\SimpleTablesStyleModifiers;
-
 if ( ! function_exists('theme')) {
     /**
      * @param  array<string, mixed>  $theme
@@ -18,74 +14,8 @@ if ( ! function_exists('theme')) {
     }
 }
 
-if ( ! function_exists('parseData')) {
-    /**
-     * @param  array<string, mixed>  $theme
-     * @return array<string, string>
-     */
-    function parseData(SimpleTableModifiers $modifiers, Column $column, mixed $row, array $theme, ?string $dynamicParsedTdClass = null): array
-    {
-        $field = $column->getField();
-        $alias = $column->getAlias();
-
-        $rawValue = data_get($row, null !== $alias && '' !== $alias && '0' !== $alias ? $alias : $field);
-
-        $content        = parserString($rawValue);
-        $dynamicTdStyle = null;
-        $defaultTdStyle = theme($theme, 'table.td');
-
-        if ( ! empty($modifiers->fields[$field])) {
-            $modifier = $modifiers->fields[$field];
-
-            $customTdStyleRule = $modifiers->getCustomTdStyleRule($field, $row);
-
-            $callback           = $modifier['callback'];
-            $numberOfParameters = $modifier['numberOfParameters'];
-            $replaceStyle       = $modifier['replaceStyle'] ?? false;
-            $dynamicTdStyle     = $customTdStyleRule        ?? ($modifier['customTdStyle'] ?? null);
-
-            $content = $numberOfParameters > 1 ? $callback($rawValue, $row) : $callback($rawValue);
-
-            if ( ! $replaceStyle && $dynamicTdStyle) {
-                $dynamicTdStyle = mb_trim($defaultTdStyle . ' ' . $dynamicTdStyle);
-            }
-        }
-
-        if (null !== $dynamicParsedTdClass && '' !== $dynamicParsedTdClass && '0' !== $dynamicParsedTdClass) {
-            $dynamicTdStyle = mergeClass((string) $dynamicTdStyle, $dynamicParsedTdClass);
-        }
-
-        return ['content' => $content, 'dynamicTdStyle' => $dynamicTdStyle ?? $defaultTdStyle];
-    }
-}
-
-if ( ! function_exists('parseStyle')) {
-    /**
-     * @param  array<string, mixed>  $theme
-     * @return array<string, string|null>
-     */
-    function parseStyle(SimpleTablesStyleModifiers $styleModifier, mixed $row, array $theme): array
-    {
-        $trClass = null !== $styleModifier->getTrStyle($row) && '' !== $styleModifier->getTrStyle($row) && '0' !== $styleModifier->getTrStyle($row) ? $styleModifier->getTrStyle($row) : theme($theme, 'table.tr');
-        $tdClass = null !== $styleModifier->geTdStyle($row)  && '' !== $styleModifier->geTdStyle($row) && '0' !== $styleModifier->geTdStyle($row) ? $styleModifier->geTdStyle($row) : theme($theme, 'table.td');
-
-        if ( ! $styleModifier->replaceTrStyle) {
-            $trClass = mergeClass(theme($theme, 'table.tr'), $trClass);
-        }
-
-        if ( ! $styleModifier->replaceTdStyle) {
-            $tdClass = mergeClass(theme($theme, 'table.td'), $tdClass);
-        }
-
-        return [
-            'trStyle' => $trClass,
-            'tdStyle' => $tdClass,
-        ];
-    }
-}
-
-if ( ! function_exists('mergeClass')) {
-    function mergeClass(string ...$args): string
+if ( ! function_exists('mergeStyle')) {
+    function mergeStyle(?string ...$args): string
     {
         $filteredArgs = array_filter($args, fn($class): bool => is_string($class) && '' !== $class);
 
@@ -105,5 +35,12 @@ if ( ! function_exists('parserString')) {
     function parserString(mixed $value): string
     {
         return is_scalar($value) || null === $value ? (string) $value : '';
+    }
+}
+
+if ( ! function_exists('isClassOrObject')) {
+    function isClassOrObject(string $parameter): bool
+    {
+        return (class_exists($parameter) || 'array' === $parameter || 'object' === $parameter);
     }
 }
