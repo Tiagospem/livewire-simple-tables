@@ -9,6 +9,7 @@ enum ColumnType: string
     case TEXT    = 'text';
     case ACTION  = 'action';
     case BOOLEAN = 'boolean';
+    case TOGGLE  = 'toggle';
 
     public function isText(): bool
     {
@@ -23,5 +24,10 @@ enum ColumnType: string
     public function isBoolean(): bool
     {
         return self::BOOLEAN === $this;
+    }
+
+    public function isToggle(): bool
+    {
+        return self::TOGGLE === $this;
     }
 }

@@ -122,7 +122,21 @@ final readonly class ContentParser
                 'inverse' => $column->isInverse(),
                 'size'    => theme($this->theme, 'table.boolean_icon'),
             ])->render(),
-            'style'   => mergeStyle($tdStyle, '!text-center !justify-center items-center content-center align-middle'),
+            'style'   => $tdStyle,
+        ];
+    }
+
+    private function getToggleableColumn(Column $column): object
+    {
+        $tdStyle = theme($this->theme, 'table.td');
+
+        return (object) [
+            'content' => View::make('simple-tables::table.partials.toggleable', [
+                'value'   => (bool) data_get($this->row, $column->getRowKey()),
+                'inverse' => $column->isInverse(),
+                //'size'    => theme($this->theme, 'table.boolean_icon'),
+            ])->render(),
+            'style'   => $tdStyle,
         ];
     }
 
@@ -139,6 +153,10 @@ final readonly class ContentParser
             [
                 fn(Column $column): bool => $column->getColumnType()->isBoolean(),
                 fn(Column $column): object => $this->getBooleanColumn($column),
+            ],
+            [
+                fn(Column $column): bool => $column->getColumnType()->isToggle(),
+                fn(Column $column): object => $this->getToggleableColumn($column),
             ],
         ];
     }
