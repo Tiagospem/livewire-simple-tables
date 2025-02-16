@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables;
 
 use Livewire\Wireable;
+use TiagoSpem\SimpleTables\Enum\ColumnType;
 
 final class Column implements Wireable
 {
@@ -20,13 +21,15 @@ final class Column implements Wireable
 
     private bool $sortable = false;
 
-    private bool $isActionColumn = false;
+    private ColumnType $columnType;
 
     private bool $isVisible = true;
 
-    private string $columnId;
+    private string $columnId = '';
 
-    public static function add(string $title, string $key, ?string $aliasKey = null, string $style = ''): self
+    private bool $inverse = false;
+
+    public static function text(string $title, string $key, ?string $aliasKey = null, string $style = ''): self
     {
         $column             = new self();
         $column->title      = $title;
@@ -34,6 +37,20 @@ final class Column implements Wireable
         $column->aliasKey   = $aliasKey;
         $column->style      = $style;
         $column->searchable = false;
+        $column->columnType = ColumnType::TEXT;
+
+        return $column;
+    }
+
+    public static function boolean(string $title, string $key, ?string $aliasKey = null, bool $inverse = false): self
+    {
+        $column             = new self();
+        $column->title      = $title;
+        $column->key        = $key;
+        $column->aliasKey   = $aliasKey;
+        $column->searchable = false;
+        $column->columnType = ColumnType::BOOLEAN;
+        $column->inverse    = $inverse;
 
         return $column;
     }
@@ -41,10 +58,10 @@ final class Column implements Wireable
     public static function action(string $id, string $title, string $style = ''): self
     {
         $column                 = new self();
-        $column->title          = $title;
-        $column->isActionColumn = true;
-        $column->style          = $style;
         $column->columnId       = $id;
+        $column->title          = $title;
+        $column->style          = $style;
+        $column->columnType     = ColumnType::ACTION;
 
         return $column;
     }
@@ -64,6 +81,13 @@ final class Column implements Wireable
     public function style(string $style): self
     {
         $this->style = $style;
+
+        return $this;
+    }
+
+    public function centered(): self
+    {
+        $this->style = mergeStyle($this->style, '[&>:last-child]:justify-center');
 
         return $this;
     }
@@ -119,6 +143,11 @@ final class Column implements Wireable
         return $this->columnId;
     }
 
+    public function getColumnType(): ColumnType
+    {
+        return $this->columnType;
+    }
+
     public function isSortable(): bool
     {
         return $this->sortable;
@@ -129,9 +158,14 @@ final class Column implements Wireable
         return $this->searchable;
     }
 
+    public function isInverse(): bool
+    {
+        return $this->inverse;
+    }
+
     public function isActionColumn(): bool
     {
-        return $this->isActionColumn;
+        return $this->columnType->isAction();
     }
 
     public function isVisible(): bool

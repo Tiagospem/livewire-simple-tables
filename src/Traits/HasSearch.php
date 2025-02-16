@@ -55,6 +55,6 @@ trait HasSearch
         );
 
         return collect($filteredColumns)
-            ->map(fn(string $field): Column => Column::add('Extra', $field)->searchable());
+            ->map(fn(string $field): Column => Column::text('Extra', $field)->searchable());
     }
 }

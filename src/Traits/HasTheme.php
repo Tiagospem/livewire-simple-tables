@@ -31,6 +31,8 @@ trait HasTheme
 
     protected string $tableSortIconStyle = '';
 
+    protected string $tableBooleanIconStyle = '';
+
     protected string $actionButtonStyle = '';
 
     protected string $dropdownContentStyle = '';

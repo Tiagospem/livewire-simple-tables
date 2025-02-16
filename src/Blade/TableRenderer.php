@@ -72,8 +72,6 @@ final readonly class TableRenderer
     {
         $rows = $this->getRowsCollection($table->rows);
 
-        $table->actionBuilder->hasActions();
-
         return $rows->map(fn($row): string => $this->renderRow($table, $row, $theme))->implode('');
     }
 

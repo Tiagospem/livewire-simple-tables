@@ -26,11 +26,17 @@ final readonly class ContentParser
 
         return collect($this->table->columns)
             ->filter(fn(Column $column): bool => $column->isVisible())
-            ->map(
-                fn(Column $column): object => $column->isActionColumn()
-                ? $this->getColumnAction($column)
-                : $this->getMutedData($column, $tdStyle, $this->table->mutations[$column->getRealKey()] ?? null),
-            )
+            ->map(function (Column $column) use ($tdStyle) {
+                $handlers = $this->getColumnHandlers();
+
+                foreach ($handlers as [$condition, $handler]) {
+                    if ($condition($column)) {
+                        return $handler($column);
+                    }
+                }
+
+                return $this->getMutedData($column, $tdStyle, $this->table->mutations[$column->getRealKey()] ?? null);
+            })
             ->all();
     }
 
@@ -95,7 +101,7 @@ final readonly class ContentParser
         return isClassOrObject($parameterType) ? $this->row : $rowValue;
     }
 
-    private function getColumnAction(Column $column): object
+    private function getActionColumn(Column $column): object
     {
         $tdStyle = theme($this->theme, 'table.td');
         $actions = $this->getActionsData();
@@ -103,6 +109,37 @@ final readonly class ContentParser
         return (object) [
             'content' => View::make('simple-tables::table.partials.action-builder', $actions[$column->getColumnId()])->render(),
             'style'   => $tdStyle,
+        ];
+    }
+
+    private function getBooleanColumn(Column $column): object
+    {
+        $tdStyle = theme($this->theme, 'table.td');
+
+        return (object) [
+            'content' => View::make('simple-tables::table.partials.boolean', [
+                'value'   => (bool) data_get($this->row, $column->getRowKey()),
+                'inverse' => $column->isInverse(),
+                'size'    => theme($this->theme, 'table.boolean_icon'),
+            ])->render(),
+            'style'   => mergeStyle($tdStyle, '!text-center !justify-center items-center content-center align-middle'),
+        ];
+    }
+
+    /**
+     * @return array<int, array{0: callable, 1: callable}>
+     */
+    private function getColumnHandlers(): array
+    {
+        return [
+            [
+                fn(Column $column): bool => $column->getColumnType()->isAction(),
+                fn(Column $column): object => $this->getActionColumn($column),
+            ],
+            [
+                fn(Column $column): bool => $column->getColumnType()->isBoolean(),
+                fn(Column $column): object => $this->getBooleanColumn($column),
+            ],
         ];
     }
 
