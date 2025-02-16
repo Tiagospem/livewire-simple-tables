@@ -41,6 +41,10 @@ trait HasTheme
 
     protected string $dropdownOptionStyle = '';
 
+    protected string $paginationContainerStyle = '';
+
+    protected string $paginationStickyStyle = '';
+
     /**
      * @throws InvalidThemeException
      */

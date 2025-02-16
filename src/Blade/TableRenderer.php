@@ -27,8 +27,7 @@ final readonly class TableRenderer
                 $theme,
             ),
             'body' => $this->renderBody($table, $theme),
-            'pagination' => $this->renderPagination($table),
-            'stickyPagination' => $component->stickyPagination,
+            'pagination' => $this->renderPagination($table, $component, $theme),
             'showSearch' => $table->showSearch,
             'tableStyle' => theme($theme, 'table.content'),
             'bodyStyle' => theme($theme, 'table.body'),
@@ -102,11 +101,21 @@ final readonly class TableRenderer
         ])->render();
     }
 
-    private function renderPagination(TableData $table): string
+    /**
+     * @param  array<string, array<string, string>|string>  $theme
+     */
+    private function renderPagination(TableData $table, SimpleTableComponent $component, array $theme): string
     {
-        return $table->paginated && $table->rows instanceof LengthAwarePaginator
+        $paginator = $table->paginated && $table->rows instanceof LengthAwarePaginator
             ? $table->rows->links()->toHtml()
             : '';
+
+        return View::make('simple-tables::table.partials.pagination', [
+            'paginator' => $paginator,
+            'isStick' => $component->stickyPagination,
+            'stickyStyle' => theme($theme, 'pagination.sticky'),
+            'style' => theme($theme, 'pagination.container'),
+        ])->render();
     }
 
     /**

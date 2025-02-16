@@ -28,7 +28,10 @@ final class DefaultTheme implements ThemeInterface
                 'content' => 'z-40 w-56 fixed overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none',
                 'option' => 'hover:bg-gray-100 group flex items-center px-4 py-2 text-sm text-gray-700 cursor-pointer outline-none focus:outline-none',
             ],
-            'pagination' => [],
+            'pagination' => [
+                'container' => 'mt-4 w-full',
+                'sticky' => 'sticky bottom-2 flex w-full',
+            ],
         ];
     }
 }

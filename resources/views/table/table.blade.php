@@ -13,9 +13,5 @@
         </div>
     </div>
 
-    <div @class(['mt-4', 'sticky bottom-2 flex w-full' => $stickyPagination])>
-        <div class="w-full">
-            {!! $pagination !!}
-        </div>
-    </div>
+    {!! $pagination !!}
 </div>
