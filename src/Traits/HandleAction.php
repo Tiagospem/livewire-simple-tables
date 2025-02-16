@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables\Traits;
 
+use BackedEnum;
 use Closure;
 use TiagoSpem\SimpleTables\Enum\Target;
 
 trait HandleAction
 {
+    use HandlePermission;
+
     /** @var array{icon: string|null, name: string|null} */
     protected array $button = [
         'icon' => null,
@@ -21,14 +24,13 @@ trait HandleAction
     /** @var Closure(mixed): bool|bool */
     protected Closure|bool $hidden = false;
 
-    /** @var Closure(mixed): bool|bool */
-    protected Closure|bool $can = true;
+    protected mixed $can = true;
 
     protected ?string $buttonStyle = null;
 
     protected ?string $iconStyle = null;
 
-    /** @var array{href: Closure|string, target: Target::*} */
+    /** @var array{href: Closure|string, target: Target::*, wireNavigate: bool} */
     protected array $hrefData = [
         'href' => '',
         'target' => Target::PARENT,
@@ -86,11 +88,17 @@ trait HandleAction
     }
 
     /**
-     * @param  Closure(mixed): bool|bool  $can
+     * @param  bool|Closure|string|BackedEnum|array<string|BackedEnum>  $permission
      */
-    public function can(Closure|bool $can = true): self
+    public function can(mixed $permission = true): self
     {
-        $this->can = $can;
+        if (is_bool($permission)) {
+            $this->can = $permission;
+        } elseif ($permission instanceof Closure) {
+            $this->can = $permission;
+        } else {
+            $this->can = $this->resolvePermissionCheck($permission);
+        }
 
         return $this;
     }
@@ -193,9 +201,6 @@ trait HandleAction
         return $value instanceof Closure ? $value($row) : $value;
     }
 
-    /**
-     * @param  Closure(mixed): bool|bool  $condition
-     */
     private function evaluateCondition(mixed $condition, mixed $row): bool
     {
         return (bool) ($condition instanceof Closure

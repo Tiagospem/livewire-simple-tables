@@ -54,7 +54,7 @@ final class Action implements HasActions
         return $this;
     }
 
-    public function button(?string $icon = null, ?string $name = null, string|Closure|null $href = null, Target $target = Target::PARENT): self
+    public function button(?string $icon = null, ?string $name = null, string|Closure|null $href = null, bool $wireNavigate = false, Target $target = Target::PARENT): self
     {
         if (filled($icon) || filled($name)) {
             $this->button = [
@@ -66,6 +66,7 @@ final class Action implements HasActions
                 $this->hrefData = [
                     'href' => $href,
                     'target' => $target,
+                    'wireNavigate' => $wireNavigate,
                 ];
             }
 
