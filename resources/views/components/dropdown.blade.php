@@ -42,15 +42,17 @@
                         @php
                             $optionDisabled = $option->isDisabled($row);
 
-                            $clickEvent = [
-                                'url' => $option->getUrl($row),
-                                'target' => $option->getTarget(),
+                            $event = [
                                 'event' => $option->getEvent($row),
                                 'disabled' => $optionDisabled,
                             ];
 
+                            $url = $option->getUrl($row);
+                            $target = $option->getTarget();
+
                             $iconStyle = $option->getIconStyle();
                             $buttonStyle = $option->getStyle();
+                            $isWireNavigate = $option->isWireNavigate();
                         @endphp
                         @if ($option->isDivider() && $option->hasDividerOptions())
                             <div class="border-t border-b border-gray-100">
@@ -58,24 +60,29 @@
                                     @php
                                         $dividerDisabled = $dividerOption->isDisabled($row);
 
-                                        $clickEvent = [
-                                            'url' => $dividerOption->getUrl($row),
-                                            'target' => $dividerOption->getTarget(),
+                                        $event = [
                                             'event' => $dividerOption->getEvent($row),
                                             'disabled' => $dividerDisabled,
                                         ];
 
+                                        $url = $option->getUrl($row);
+                                        $target = $option->getTarget();
+
                                         $iconStyle = $dividerOption->getIconStyle();
                                         $buttonStyle = $option->getStyle();
+                                        $isWireNavigate = $option->isWireNavigate();
                                     @endphp
                                     <x-simple-tables::dropdown-option
                                         title="{{ $dividerOption->getName() }}"
                                         icon="{{ $dividerOption->getIcon() ?? $defaultOptionIcon }}"
                                         :disabled="$optionDisabled || $dividerDisabled"
-                                        :$clickEvent
+                                        :$event
+                                        :$url
+                                        :$target
                                         :$iconStyle
                                         :$buttonStyle
                                         :$themeDropdownOptionStyle
+                                        :$isWireNavigate
                                     />
                                 @endforeach
                             </div>
@@ -84,7 +91,9 @@
                                 title="{{ $option->getName() }}"
                                 icon="{{ $option->getIcon() ?? $defaultOptionIcon }}"
                                 :disabled="$optionDisabled"
-                                :$clickEvent
+                                :$event
+                                :$url
+                                :$target
                                 :$iconStyle
                                 :$buttonStyle
                                 :$themeDropdownOptionStyle

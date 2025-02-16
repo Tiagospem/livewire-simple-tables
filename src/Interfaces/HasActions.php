@@ -12,7 +12,7 @@ interface HasActions
     /**
      * @param  Closure(mixed): string|string  $href
      */
-    public function href(Closure|string $href, ?Target $target = null): self;
+    public function href(Closure|string $href, bool $wireNavigate = false, ?Target $target = null): self;
 
     /**
      * @param  mixed|null|Closure(mixed): mixed  $params
@@ -55,6 +55,8 @@ interface HasActions
     public function isHidden(mixed $row): bool;
 
     public function isDisabled(mixed $row): bool;
+
+    public function isWireNavigate(): bool;
 
     public function hasName(): bool;
 

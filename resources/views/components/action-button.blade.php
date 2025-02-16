@@ -20,13 +20,15 @@
 
             $buttonStyle = $actionBuilder->getStyle();
 
-            $clickEvent = [
-                'url' => $actionBuilder->getUrl($row),
-                'target' => $actionBuilder->getTarget(),
+            $event = [
                 'event' => $actionBuilder->getEvent($row),
                 'hasDropdown' => $hasDropdown,
                 'disabled' => $disabled,
             ];
+
+            $url = $actionBuilder->getUrl($row);
+            $target = $actionBuilder->getTarget();
+            $isWireNavigate = $actionBuilder->isWireNavigate();
         @endphp
         <x-simple-tables::dropdown
             :$hasDropdown
@@ -37,17 +39,20 @@
             :$row
         >
             <x-slot:actionButton>
-                <button
-                    x-on:click="handleClick(@js($clickEvent))"
+                <a
+                    @if (filled($url)) href="{{ $url }}"
+                    target="{{ $target }}"
+                    @if ($isWireNavigate) wire:navigate @endif
+                @else
+                    x-on:click="handleClick(@js($event))"
+                    @endif
                     x-ref="dropdownButton"
                     @class([
                         'gap-x-1.5' => $hasName,
                         '!pointer-events-none !opacity-50' => $disabled,
                         $themeButtonActionClass,
                         $buttonStyle,
-                    ])
-                    type="button"
-                >
+                    ])>
                     @if ($hasIcon)
                         <x-dynamic-component
                             :component="$actionBuilder->getIcon()"
@@ -58,7 +63,7 @@
                         />
                     @endif
                     <span>{{ $actionBuilder->getName() }}</span>
-                </button>
+                </a>
             </x-slot:actionButton>
         </x-simple-tables::dropdown>
     </div>

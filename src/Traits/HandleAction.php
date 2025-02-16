@@ -29,6 +29,7 @@ trait HandleAction
     protected array $hrefData = [
         'href' => '',
         'target' => Target::PARENT,
+        'wireNavigate' => false,
     ];
 
     /** @var array{name: string, params: mixed} */
@@ -40,11 +41,12 @@ trait HandleAction
     /**
      * @param  Closure(mixed): string|string  $href
      */
-    public function href(Closure|string $href, ?Target $target = null): self
+    public function href(Closure|string $href, bool $wireNavigate = false, ?Target $target = null): self
     {
         $this->hrefData = [
             'href' => $href,
             'target' => $target ?? Target::PARENT,
+            'wireNavigate' => $wireNavigate,
         ];
 
         return $this;
@@ -105,6 +107,11 @@ trait HandleAction
         $this->buttonStyle = $style;
 
         return $this;
+    }
+
+    public function isWireNavigate(): bool
+    {
+        return $this->hrefData['wireNavigate'];
     }
 
     public function isDisabled(mixed $row): bool
