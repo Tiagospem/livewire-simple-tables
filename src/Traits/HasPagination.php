@@ -12,5 +12,7 @@ trait HasPagination
 
     public bool $paginated = true;
 
+    public bool $stickyPagination = false;
+
     public int $perPage = 10;
 }

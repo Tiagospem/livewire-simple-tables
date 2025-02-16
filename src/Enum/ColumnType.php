@@ -6,28 +6,28 @@ namespace TiagoSpem\SimpleTables\Enum;
 
 enum ColumnType: string
 {
-    case TEXT    = 'text';
-    case ACTION  = 'action';
+    case TEXT = 'text';
+    case ACTION = 'action';
     case BOOLEAN = 'boolean';
-    case TOGGLE  = 'toggle';
+    case TOGGLE = 'toggle';
 
     public function isText(): bool
     {
-        return self::TEXT === $this;
+        return $this === self::TEXT;
     }
 
     public function isAction(): bool
     {
-        return self::ACTION === $this;
+        return $this === self::ACTION;
     }
 
     public function isBoolean(): bool
     {
-        return self::BOOLEAN === $this;
+        return $this === self::BOOLEAN;
     }
 
     public function isToggle(): bool
     {
-        return self::TOGGLE === $this;
+        return $this === self::TOGGLE;
     }
 }

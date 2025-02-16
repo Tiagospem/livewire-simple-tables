@@ -22,27 +22,28 @@ trait HandleAction
     protected Closure|bool $hidden = false;
 
     protected ?string $buttonStyle = null;
-    protected ?string $iconStyle   = null;
+
+    protected ?string $iconStyle = null;
 
     /** @var array{href: Closure|string, target: Target::*} */
     protected array $hrefData = [
-        'href'   => '',
+        'href' => '',
         'target' => Target::PARENT,
     ];
 
     /** @var array{name: string, params: mixed} */
     protected array $eventData = [
-        'name'   => '',
+        'name' => '',
         'params' => null,
     ];
 
     /**
-     * @param Closure(mixed): string|string $href
+     * @param  Closure(mixed): string|string  $href
      */
     public function href(Closure|string $href, ?Target $target = null): self
     {
         $this->hrefData = [
-            'href'   => $href,
+            'href' => $href,
             'target' => $target ?? Target::PARENT,
         ];
 
@@ -50,12 +51,12 @@ trait HandleAction
     }
 
     /**
-     * @param mixed|null|Closure(mixed): mixed $params
+     * @param  mixed|null|Closure(mixed): mixed  $params
      */
     public function event(string $name, mixed $params = null): self
     {
         $this->eventData = [
-            'name'   => $name,
+            'name' => $name,
             'params' => $params,
         ];
 
@@ -63,32 +64,36 @@ trait HandleAction
     }
 
     /**
-     * @param Closure(mixed): bool|bool $disabled
+     * @param  Closure(mixed): bool|bool  $disabled
      */
     public function disabled(Closure|bool $disabled = true): self
     {
         $this->disabled = $disabled;
+
         return $this;
     }
 
     /**
-     * @param Closure(mixed): bool|bool $hidden
+     * @param  Closure(mixed): bool|bool  $hidden
      */
     public function hidden(Closure|bool $hidden = true): self
     {
         $this->hidden = $hidden;
+
         return $this;
     }
 
     public function iconStyle(string $style): self
     {
         $this->iconStyle = $style;
+
         return $this;
     }
 
     public function buttonStyle(string $style): self
     {
         $this->buttonStyle = $style;
+
         return $this;
     }
 
@@ -134,7 +139,7 @@ trait HandleAction
         }
 
         return [
-            'name'   => $this->eventData['name'],
+            'name' => $this->eventData['name'],
             'params' => $this->evaluateValue($this->eventData['params'], $row),
         ];
     }
@@ -160,7 +165,7 @@ trait HandleAction
     }
 
     /**
-     * @param Closure(mixed): mixed|mixed $value
+     * @param  Closure(mixed): mixed|mixed  $value
      */
     private function evaluateValue(mixed $value, mixed $row): mixed
     {
@@ -168,7 +173,7 @@ trait HandleAction
     }
 
     /**
-     * @param Closure(mixed): bool|bool $condition
+     * @param  Closure(mixed): bool|bool  $condition
      */
     private function evaluateCondition(mixed $condition, mixed $row): bool
     {

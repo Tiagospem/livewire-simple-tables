@@ -21,16 +21,17 @@ final readonly class TableRenderer
     public function render(TableData $table, SimpleTableComponent $component, array $theme): string
     {
         return View::make('simple-tables::table.table', [
-            'header'     => $this->renderHeader(
+            'header' => $this->renderHeader(
                 $table,
                 $component,
                 $theme,
             ),
-            'body'       => $this->renderBody($table, $theme),
+            'body' => $this->renderBody($table, $theme),
             'pagination' => $this->renderPagination($table),
+            'stickyPagination' => $component->stickyPagination,
             'showSearch' => $table->showSearch,
             'tableStyle' => theme($theme, 'table.content'),
-            'bodyStyle'  => theme($theme, 'table.body'),
+            'bodyStyle' => theme($theme, 'table.body'),
         ])->render();
     }
 
@@ -40,16 +41,16 @@ final readonly class TableRenderer
     private function renderHeader(TableData $table, SimpleTableComponent $component, array $theme): string
     {
         return View::make('simple-tables::table.partials.table-header', [
-            'columns'       => collect($table->columns)->filter(fn($column): bool => $column->isVisible()),
-            'sortBy'        => $component->sortBy,
+            'columns' => collect($table->columns)->filter(fn ($column): bool => $column->isVisible()),
+            'sortBy' => $component->sortBy,
             'sortDirection' => $component->sortDirection,
             'sortableIcons' => $component->sortableIcons(),
-            'trStyle'       => theme($theme, 'table.tr'),
-            'thStyle'       => theme($theme, 'table.th'),
-            'thLastStyle'   => theme($theme, 'table.th_last'),
+            'trHeaderStyle' => theme($theme, 'table.tr_header'),
+            'thStyle' => theme($theme, 'table.th'),
+            'thLastStyle' => theme($theme, 'table.th_last'),
             'sortIconStyle' => theme($theme, 'table.sort_icon'),
-            'hasAction'     => $table->actionBuilder->hasActions(),
-            'actionName'    => $table->actionBuilder->getActionColumnName(),
+            'hasAction' => $table->actionBuilder->hasActions(),
+            'actionName' => $table->actionBuilder->getActionColumnName(),
         ])->render();
     }
 
@@ -72,7 +73,7 @@ final readonly class TableRenderer
     {
         $rows = $this->getRowsCollection($table->rows);
 
-        return $rows->map(fn($row): string => $this->renderRow($table, $row, $theme))->implode('');
+        return $rows->map(fn ($row): string => $this->renderRow($table, $row, $theme))->implode('');
     }
 
     /**
@@ -83,9 +84,9 @@ final readonly class TableRenderer
         $contentParser = new ContentParser($table, $row, $theme);
 
         return View::make('simple-tables::table.partials.table-row', [
-            'rowContent'  => $contentParser->mapFieldsWithContent(),
-            'trStyle'     => $contentParser->getMutedRowStyle(),
-            'tdStyle'     => theme($theme, 'table.td'),
+            'rowContent' => $contentParser->mapFieldsWithContent(),
+            'trStyle' => $contentParser->getMutedRowStyle(),
+            'tdStyle' => theme($theme, 'table.td'),
             'actionStyle' => mergeStyle(theme($theme, 'table.td_last'), $table->actionBuilder->getColumnStyle()),
         ])->render();
     }
@@ -109,7 +110,7 @@ final readonly class TableRenderer
     }
 
     /**
-     * @param  LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>|Collection<int, mixed>|Builder<Model> $rows
+     * @param  LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>|Collection<int, mixed>|Builder<Model>  $rows
      * @return Collection<int, mixed>
      */
     private function getRowsCollection(mixed $rows): Collection

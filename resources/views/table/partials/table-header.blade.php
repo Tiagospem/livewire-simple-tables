@@ -1,4 +1,4 @@
-<tr class="{{ $trStyle }}">
+<tr class="{{ $trHeaderStyle }}">
     @foreach ($columns as $column)
         <th class="{{ mergeStyle($thStyle, $column->getStyle()) }}">
             @if ($column->isActionColumn())

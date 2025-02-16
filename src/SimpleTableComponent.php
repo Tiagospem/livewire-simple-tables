@@ -61,7 +61,7 @@ abstract class SimpleTableComponent extends Component
     public function render(): string
     {
         $processor = new DataSourceResolver($this);
-        $renderer  = app(TableRenderer::class);
+        $renderer = app(TableRenderer::class);
 
         return $renderer->render(
             $processor->process(),

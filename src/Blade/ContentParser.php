@@ -25,7 +25,7 @@ final readonly class ContentParser
         $tdStyle = theme($this->theme, 'table.td');
 
         return collect($this->table->columns)
-            ->filter(fn(Column $column): bool => $column->isVisible())
+            ->filter(fn (Column $column): bool => $column->isVisible())
             ->map(function (Column $column) use ($tdStyle) {
                 $handlers = $this->getColumnHandlers();
 
@@ -47,20 +47,20 @@ final readonly class ContentParser
 
     private function getMutedData(Column $column, string $tdStyle, ?Field $mutation): object
     {
-        $rowKey     = $column->getRowKey();
-        $rowValue   = parserString(data_get($this->row, $rowKey));
+        $rowKey = $column->getRowKey();
+        $rowValue = parserString(data_get($this->row, $rowKey));
         $fieldStyle = $this->resolveFieldStyle($mutation, $rowValue);
-        $rowValue   = $this->resolveRowValue($mutation, $rowValue);
+        $rowValue = $this->resolveRowValue($mutation, $rowValue);
 
         return (object) [
             'content' => $rowValue,
-            'style'   => mergeStyle($tdStyle, $fieldStyle),
+            'style' => mergeStyle($tdStyle, $fieldStyle),
         ];
     }
 
     private function resolveFieldStyle(?Field $field, mixed $rowValue): string
     {
-        if ( ! $field instanceof Field) {
+        if (! $field instanceof Field) {
             return '';
         }
 
@@ -108,7 +108,7 @@ final readonly class ContentParser
 
         return (object) [
             'content' => View::make('simple-tables::table.partials.action-builder', $actions[$column->getColumnId()])->render(),
-            'style'   => $tdStyle,
+            'style' => $tdStyle,
         ];
     }
 
@@ -118,11 +118,11 @@ final readonly class ContentParser
 
         return (object) [
             'content' => View::make('simple-tables::table.partials.boolean', [
-                'value'   => (bool) data_get($this->row, $column->getRowKey()),
+                'value' => (bool) data_get($this->row, $column->getRowKey()),
                 'inverse' => $column->isInverse(),
-                'size'    => theme($this->theme, 'table.boolean_icon'),
+                'size' => theme($this->theme, 'table.boolean_icon'),
             ])->render(),
-            'style'   => $tdStyle,
+            'style' => $tdStyle,
         ];
     }
 
@@ -132,11 +132,11 @@ final readonly class ContentParser
 
         return (object) [
             'content' => View::make('simple-tables::table.partials.toggleable', [
-                'value'   => (bool) data_get($this->row, $column->getRowKey()),
+                'value' => (bool) data_get($this->row, $column->getRowKey()),
                 'inverse' => $column->isInverse(),
-                //'size'    => theme($this->theme, 'table.boolean_icon'),
+                // 'size'    => theme($this->theme, 'table.boolean_icon'),
             ])->render(),
-            'style'   => $tdStyle,
+            'style' => $tdStyle,
         ];
     }
 
@@ -147,16 +147,16 @@ final readonly class ContentParser
     {
         return [
             [
-                fn(Column $column): bool => $column->getColumnType()->isAction(),
-                fn(Column $column): object => $this->getActionColumn($column),
+                fn (Column $column): bool => $column->getColumnType()->isAction(),
+                fn (Column $column): object => $this->getActionColumn($column),
             ],
             [
-                fn(Column $column): bool => $column->getColumnType()->isBoolean(),
-                fn(Column $column): object => $this->getBooleanColumn($column),
+                fn (Column $column): bool => $column->getColumnType()->isBoolean(),
+                fn (Column $column): object => $this->getBooleanColumn($column),
             ],
             [
-                fn(Column $column): bool => $column->getColumnType()->isToggle(),
-                fn(Column $column): object => $this->getToggleableColumn($column),
+                fn (Column $column): bool => $column->getColumnType()->isToggle(),
+                fn (Column $column): object => $this->getToggleableColumn($column),
             ],
         ];
     }
@@ -167,30 +167,30 @@ final readonly class ContentParser
     private function getActionsData(): array
     {
         return collect($this->table->actionBuilder->getActions())
-            ->map(fn(Action $action): array => [
-                'actionId'                 => $action->getActionId(),
-                'actionBuilder'            => $action,
-                'row'                      => $this->row,
-                'hasName'                  => $action->hasName(),
-                'hasView'                  => $action->hasView(),
-                'hasIcon'                  => $action->hasIcon(),
-                'hasDropdown'              => $action->hasDropdown(),
-                'view'                     => $action->getView($this->row),
-                'isDisabled'               => $action->isDisabled($this->row),
-                'dropdownOptions'          => $action->getActionOptions(),
-                'defaultOptionIcon'        => $action->getDefaultOptionIcon(),
-                'buttonStyle'              => $action->getStyle(),
-                'iconStyle'                => $action->getIconStyle(),
-                'buttonIcon'               => $action->getIcon(),
-                'buttonName'               => $action->getName(),
-                'buttonUrl'                => $action->getUrl($this->row),
-                'buttonTarget'             => $action->getTarget(),
-                'buttonEvent'              => $action->getEvent($this->row),
-                'themeActionButtonStyle'   => theme($this->theme, 'action.button'),
+            ->map(fn (Action $action): array => [
+                'actionId' => $action->getActionId(),
+                'actionBuilder' => $action,
+                'row' => $this->row,
+                'hasName' => $action->hasName(),
+                'hasView' => $action->hasView(),
+                'hasIcon' => $action->hasIcon(),
+                'hasDropdown' => $action->hasDropdown(),
+                'view' => $action->getView($this->row),
+                'isDisabled' => $action->isDisabled($this->row),
+                'dropdownOptions' => $action->getActionOptions(),
+                'defaultOptionIcon' => $action->getDefaultOptionIcon(),
+                'buttonStyle' => $action->getStyle(),
+                'iconStyle' => $action->getIconStyle(),
+                'buttonIcon' => $action->getIcon(),
+                'buttonName' => $action->getName(),
+                'buttonUrl' => $action->getUrl($this->row),
+                'buttonTarget' => $action->getTarget(),
+                'buttonEvent' => $action->getEvent($this->row),
+                'themeActionButtonStyle' => theme($this->theme, 'action.button'),
                 'themeDropdownOptionStyle' => theme($this->theme, 'dropdown.option'),
-                'themeDropdownStyle'       => theme($this->theme, 'dropdown.content'),
+                'themeDropdownStyle' => theme($this->theme, 'dropdown.content'),
             ])
-            ->keyBy(fn(array $item): string => $item['actionId'])
+            ->keyBy(fn (array $item): string => $item['actionId'])
             ->all();
     }
 }

@@ -10,22 +10,22 @@ use TiagoSpem\SimpleTables\Enum\Target;
 interface HasActions
 {
     /**
-     * @param Closure(mixed): string|string $href
+     * @param  Closure(mixed): string|string  $href
      */
     public function href(Closure|string $href, ?Target $target = null): self;
 
     /**
-     * @param mixed|null|Closure(mixed): mixed $params
+     * @param  mixed|null|Closure(mixed): mixed  $params
      */
     public function event(string $name, mixed $params = null): self;
 
     /**
-     * @param Closure(mixed): bool|bool $disabled
+     * @param  Closure(mixed): bool|bool  $disabled
      */
     public function disabled(Closure|bool $disabled = true): self;
 
     /**
-     * @param Closure(mixed): bool|bool $hidden
+     * @param  Closure(mixed): bool|bool  $hidden
      */
     public function hidden(Closure|bool $hidden = true): self;
 

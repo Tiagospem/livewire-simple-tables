@@ -27,7 +27,7 @@ final class Action implements HasActions
 
     public static function for(string $id): self
     {
-        $action = new self();
+        $action = new self;
 
         $action->id = $id;
 
@@ -49,7 +49,7 @@ final class Action implements HasActions
      */
     public function view(string $view, string $rowName = 'row', array $params = []): self
     {
-        $this->view = fn(mixed $row) => view($view, [$rowName => $row, ...$params]);
+        $this->view = fn (mixed $row) => view($view, [$rowName => $row, ...$params]);
 
         return $this;
     }
@@ -64,7 +64,7 @@ final class Action implements HasActions
 
             if (filled($href)) {
                 $this->hrefData = [
-                    'href'   => $href,
+                    'href' => $href,
                     'target' => $target,
                 ];
             }
@@ -103,7 +103,7 @@ final class Action implements HasActions
 
     public function hasDropdown(): bool
     {
-        return [] !== $this->dropdown;
+        return $this->dropdown !== [];
     }
 
     /**

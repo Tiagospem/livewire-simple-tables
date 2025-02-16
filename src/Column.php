@@ -36,8 +36,9 @@ final class Column implements Wireable
 
     public static function action(string $id, string $title, string $style = ''): self
     {
-        $column           = new self($title, '', ColumnType::ACTION, null, $style);
+        $column = new self($title, '', ColumnType::ACTION, null, $style);
         $column->columnId = $id;
+
         return $column;
     }
 
@@ -49,36 +50,42 @@ final class Column implements Wireable
     public function alias(string $aliasKey): self
     {
         $this->aliasKey = $aliasKey;
+
         return $this;
     }
 
     public function style(string $style): self
     {
         $this->style = $style;
+
         return $this;
     }
 
     public function centered(): self
     {
         $this->style = mergeStyle($this->style, '[&>:last-child]:justify-center');
+
         return $this;
     }
 
     public function hide(): self
     {
         $this->isVisible = false;
+
         return $this;
     }
 
     public function searchable(): self
     {
         $this->searchable = true;
+
         return $this;
     }
 
     public function sortable(): self
     {
         $this->sortable = true;
+
         return $this;
     }
 
