@@ -1,12 +1,6 @@
 <tr class="{{ $trStyle }}">
     @foreach ($rowContent as $row)
-        @if ($loop->first && $detailViewEnabled)
-            <td class="{{ $tdStyle }}">
-                <a class="cursor-pointer" wire:click="toggleRowDetail({{ $rowId }})">
-                    <x-simple-tables::svg.chevron-right class="size-4" />
-                </a>
-            </td>
-        @endif
+        @includeWhen($loop->first && $detailViewEnabled, 'simple-tables::table.partials.detail-icon')
 
         <td class="{{ $row->style }}">
             {!! $row->content !!}

@@ -55,7 +55,7 @@
                             $isWireNavigate = $option->isWireNavigate();
                         @endphp
                         @if ($option->isDivider() && $option->hasDividerOptions())
-                            <div class="border-t border-b border-gray-100">
+                            <div class="border-t border-b border-slate-100">
                                 @foreach ($option->getDividerOptions() as $dividerOption)
                                     @php
                                         $dividerDisabled = $dividerOption->isDisabled($row);

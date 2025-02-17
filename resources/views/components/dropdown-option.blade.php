@@ -30,7 +30,7 @@
         @if (filled($icon))
             <x-dynamic-component
                 :component="$icon"
-                @class(['mr-3 size-5 text-gray-400', $iconStyle])
+                @class(['mr-3 size-5 text-slate-400', $iconStyle])
             />
         @endif
 
