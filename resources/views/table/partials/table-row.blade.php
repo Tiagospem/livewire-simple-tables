@@ -1,4 +1,4 @@
-<tr class="{{ $trStyle }}">
+<tr class="{{ $trStyle }}" wire:key="{{ 'id_' . $rowId }}">
     @foreach ($rowContent as $row)
         @includeWhen($loop->first && $detailViewEnabled, 'simple-tables::table.partials.detail-icon')
 
