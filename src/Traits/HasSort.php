@@ -18,9 +18,9 @@ trait HasSort
     public function sortableIcons(): array
     {
         return [
-            'default' => 'chevron-up-down',
-            'asc' => 'chevron-up',
-            'desc' => 'chevron-down',
+            'default' => 'simple-tables::svg.chevron-up-down',
+            'asc' => 'simple-tables::svg.chevron-up',
+            'desc' => 'simple-tables::svg.chevron-down',
         ];
     }
 

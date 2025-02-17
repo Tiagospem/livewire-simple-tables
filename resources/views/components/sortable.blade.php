@@ -3,11 +3,7 @@
     'sortBy',
     'sortDirection',
     'column',
-    'sortableIcons' => [
-        'default' => 'chevron-up-down',
-        'asc' => 'chevron-up',
-        'desc' => 'chevron-down',
-    ],
+    'sortableIcons' => [],
 ])
 
 @php
