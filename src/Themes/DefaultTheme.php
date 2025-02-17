@@ -22,7 +22,7 @@ final class DefaultTheme implements ThemeInterface
                 'boolean_icon' => 'size-6',
             ],
             'action' => [
-                'button' => 'rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+                'button' => 'rounded-md bg-slate-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600',
             ],
             'dropdown' => [
                 'content' => 'z-40 w-56 fixed overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none',

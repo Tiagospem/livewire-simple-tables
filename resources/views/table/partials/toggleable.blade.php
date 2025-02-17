@@ -2,7 +2,7 @@
     <button
         x-data="{ enabled: @js($value) }"
         x-on:click="enabled = !enabled"
-        :class="enabled ? 'bg-indigo-600' : 'bg-slate-200'"
+        :class="enabled ? 'bg-slate-600' : 'bg-slate-200'"
         type="button"
         class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
         role="switch"
@@ -42,7 +42,7 @@
                 aria-hidden="true"
             >
                 <svg
-                    class="size-2.5 text-indigo-600"
+                    class="size-2.5 text-slate-600"
                     fill="currentColor"
                     viewBox="0 0 12 12"
                 >
