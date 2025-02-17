@@ -18,111 +18,143 @@ final readonly class TableRenderer
     /**
      * @param  array<string, array<string, string>|string>  $theme
      */
-    public function render(TableData $table, SimpleTableComponent $component, array $theme): string
+    public function __construct(
+        private SimpleTableComponent $component,
+        private TableData $table,
+        private array $theme
+    ) {}
+
+    public function render(): string
     {
         return View::make('simple-tables::table.table', [
-            'header' => $this->renderHeader(
-                $table,
-                $component,
-                $theme,
-            ),
-            'body' => $this->renderBody($table, $theme),
-            'pagination' => $this->renderPagination($table, $component, $theme),
-            'showSearch' => $table->showSearch,
-            'tableStyle' => theme($theme, 'table.content'),
-            'bodyStyle' => theme($theme, 'table.body'),
+            'header' => $this->renderHeader(),
+            'body' => $this->renderBody(),
+            'pagination' => $this->renderPagination(),
+            'showSearch' => $this->table->showSearch,
+            'tableStyle' => theme($this->theme, 'table.content'),
+            'bodyStyle' => theme($this->theme, 'table.body'),
         ])->render();
     }
 
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function renderHeader(TableData $table, SimpleTableComponent $component, array $theme): string
+    private function renderHeader(): string
     {
         return View::make('simple-tables::table.partials.table-header', [
-            'columns' => collect($table->columns)->filter(fn ($column): bool => $column->isVisible()),
-            'sortBy' => $component->sortBy,
-            'sortDirection' => $component->sortDirection,
-            'sortableIcons' => $component->sortableIcons(),
-            'trHeaderStyle' => theme($theme, 'table.tr_header'),
-            'thStyle' => theme($theme, 'table.th'),
-            'thLastStyle' => theme($theme, 'table.th_last'),
-            'sortIconStyle' => theme($theme, 'table.sort_icon'),
-            'hasAction' => $table->actionBuilder->hasActions(),
-            'actionName' => $table->actionBuilder->getActionColumnName(),
+            'columns' => $this->getVisibleColumns(),
+            'sortBy' => $this->component->sortBy,
+            'sortDirection' => $this->component->sortDirection,
+            'sortableIcons' => $this->component->sortableIcons(),
+            'trHeaderStyle' => theme($this->theme, 'table.tr_header'),
+            'thStyle' => theme($this->theme, 'table.th'),
+            'thLastStyle' => theme($this->theme, 'table.th_last'),
+            'sortIconStyle' => theme($this->theme, 'table.sort_icon'),
+            'hasAction' => $this->table->actionBuilder->hasActions(),
+            'actionName' => $this->table->actionBuilder->getActionColumnName(),
+            'detailViewEnabled' => $this->detailViewEnabled(),
         ])->render();
     }
 
     /**
-     * @param  array<string, array<string, string>|string>  $theme
+     * @return Collection<int, mixed>
      */
-    private function renderBody(TableData $table, array $theme): string
+    private function getVisibleColumns(): Collection
     {
-        $rows = $this->getRowsCollection($table->rows);
-
-        return $rows->isEmpty()
-            ? $this->renderEmptyRow($theme)
-            : $this->renderRows($table, $theme);
+        return collect($this->table->columns)->filter(fn ($column): bool => $column->isVisible());
     }
 
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function renderRows(TableData $table, array $theme): string
+    private function renderBody(): string
     {
-        $rows = $this->getRowsCollection($table->rows);
-
-        return $rows->map(fn ($row): string => $this->renderRow($table, $row, $theme))->implode('');
+        return $this->getRowsCollection()->isEmpty()
+            ? $this->renderEmptyRow()
+            : $this->renderRows();
     }
 
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function renderRow(TableData $table, mixed $row, array $theme): string
+    private function renderRows(): string
     {
-        $contentParser = new ContentParser($table, $row, $theme);
+        return $this->getRowsCollection()->map(fn ($row): string => $this->renderRow($row))->implode('');
+    }
+
+    private function renderRow(mixed $row): string
+    {
+        $contentParser = new ContentParser($this->table, $row, $this->theme);
+        $rowId = data_get($row, $this->component->primaryKey);
+
+        $shouldShowDetail = $this->shouldShowDetail($rowId);
 
         return View::make('simple-tables::table.partials.table-row', [
             'rowContent' => $contentParser->mapFieldsWithContent(),
+            'detailViewEnabled' => $this->detailViewEnabled(),
+            'shouldShowDetail' => $shouldShowDetail,
+            'detailView' => $shouldShowDetail ? $this->renderDetailView($row) : '',
+            'rowId' => $rowId,
             'trStyle' => $contentParser->getMutedRowStyle(),
-            'tdStyle' => theme($theme, 'table.td'),
-            'actionStyle' => mergeStyle(theme($theme, 'table.td_last'), $table->actionBuilder->getColumnStyle()),
+            'tdStyle' => theme($this->theme, 'table.td'),
+            'actionStyle' => $this->getActionStyle(),
         ])->render();
     }
 
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function renderEmptyRow(array $theme): string
+    private function detailViewEnabled(): bool
+    {
+        return filled($this->component->detailView);
+    }
+
+    private function shouldShowDetail(mixed $rowId): bool
+    {
+        return $this->detailViewEnabled() && in_array($rowId, $this->component->expandedRows, true);
+    }
+
+    private function renderDetailView(mixed $row): string
+    {
+        return View::make($this->component->detailView, [
+            'row' => $row,
+        ])->render();
+    }
+
+    private function getActionStyle(): string
+    {
+        return mergeStyle(
+            theme($this->theme, 'table.td_last'),
+            $this->table->actionBuilder->getColumnStyle()
+        );
+    }
+
+    private function renderEmptyRow(): string
     {
         return View::make('simple-tables::table.partials.table-empty-row', [
-            'trStyle' => theme($theme, 'table.tr'),
-            'tdStyle' => theme($theme, 'table.td_no_records'),
+            'trStyle' => theme($this->theme, 'table.tr'),
+            'tdStyle' => theme($this->theme, 'table.td_no_records'),
         ])->render();
     }
 
-    /**
-     * @param  array<string, array<string, string>|string>  $theme
-     */
-    private function renderPagination(TableData $table, SimpleTableComponent $component, array $theme): string
+    private function renderPagination(): string
     {
-        $paginator = $table->paginated && $table->rows instanceof LengthAwarePaginator
-            ? $table->rows->links()->toHtml()
-            : '';
-
         return View::make('simple-tables::table.partials.pagination', [
-            'paginator' => $paginator,
-            'isStick' => $component->stickyPagination,
-            'stickyStyle' => theme($theme, 'pagination.sticky'),
-            'style' => theme($theme, 'pagination.container'),
+            'paginator' => $this->getPaginator(),
+            'isStick' => $this->component->stickyPagination,
+            'stickyStyle' => theme($this->theme, 'pagination.sticky'),
+            'style' => theme($this->theme, 'pagination.container'),
         ])->render();
+    }
+
+    private function getPaginator(): string
+    {
+        return ($this->table->paginated && $this->table->rows instanceof LengthAwarePaginator)
+            ? $this->table->rows->links()->toHtml()
+            : '';
+    }
+
+    /**
+     * @return Collection<int, mixed>
+     */
+    private function getRowsCollection(): Collection
+    {
+        return $this->convertRowsToCollection($this->table->rows);
     }
 
     /**
      * @param  LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>|Collection<int, mixed>|Builder<Model>  $rows
      * @return Collection<int, mixed>
      */
-    private function getRowsCollection(mixed $rows): Collection
+    private function convertRowsToCollection(mixed $rows): Collection
     {
         if ($rows instanceof Collection) {
             return $rows;

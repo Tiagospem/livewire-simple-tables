@@ -1,4 +1,10 @@
 <tr class="{{ $trHeaderStyle }}">
+    @if($detailViewEnabled)
+        <th class="{{ $thStyle }}">
+            <span class="sr-only">detail</span>
+        </th>
+    @endif
+
     @foreach ($columns as $column)
         <th class="{{ mergeStyle($thStyle, $column->getStyle()) }}">
             @if ($column->isActionColumn())
