@@ -12,8 +12,7 @@
 ])
 
 <div
-    @class(['py-1', 'opacity-50 pointer-events-none' => $disabled])
-    role="none"
+    @class(['opacity-50 pointer-events-none' => $disabled])
 >
     <a
         @if (filled($url)) href="{{ $url }}"
@@ -30,7 +29,7 @@
         @if (filled($icon))
             <x-dynamic-component
                 :component="$icon"
-                @class(['mr-3 size-5 text-slate-400', $iconStyle])
+                @class(['mr-3 size-4.5 text-slate-500', $iconStyle])
             />
         @endif
 
