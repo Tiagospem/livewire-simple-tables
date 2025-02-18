@@ -7,6 +7,12 @@ use TiagoSpem\SimpleTables\Interfaces\Filter;
 
 abstract class ListFilter implements Filter
 {
+    protected string $valueKey = 'value';
+
+    protected string $labelKey = 'label';
+
+    protected array $filterValues = [];
+
     protected ?string $defaultValue = null;
 
     protected ?string $selectedValue = null;
@@ -35,9 +41,16 @@ abstract class ListFilter implements Filter
         return $this->selectedValue;
     }
 
-    public function setSelectedValue(string $value): void
+    public function setFilterValues(array $values): void
     {
-        $this->selectedValue = $value;
+        $this->filterValues = $values;
+
+        $this->selectedValue = $this->getFilterValueById($this->getFilterId());
+    }
+
+    public function getFilterValueById(string $filterId): mixed
+    {
+        return $this->filterValues[$filterId] ?? null;
     }
 
     public function render(): string
@@ -46,6 +59,8 @@ abstract class ListFilter implements Filter
             'options' => $this->getOptions(),
             'filterId' => $this->getFilterId(),
             'label' => $this->getLabel(),
+            'valueKey' => $this->valueKey,
+            'labelKey' => $this->labelKey,
         ])->render();
     }
 }

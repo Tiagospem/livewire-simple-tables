@@ -20,7 +20,9 @@ interface Filter
 
     public function getLabel(): ?string;
 
-    public function setSelectedValue(string $value): void;
+    public function getFilterValueById(string $filterId): mixed;
+
+    public function setFilterValues(array $values): void;
 
     public function render(): string;
 }

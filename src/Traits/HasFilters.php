@@ -13,11 +13,6 @@ trait HasFilters
 {
     protected bool $persistFilters = false;
 
-    /**
-     * @var Collection<int, Filter>|null
-     */
-    protected ?Collection $filtersCache = null;
-
     public array $filterValues = [];
 
     /**
@@ -64,6 +59,7 @@ trait HasFilters
         }
 
         $cached = Cache::get($cacheKey, []);
+
         $this->filterValues[$filterId] = array_key_exists($filterId, $cached)
             ? $cached[$filterId]
             : $value;
@@ -96,20 +92,12 @@ trait HasFilters
      */
     public function getFilters(): Collection
     {
-        if ($this->filtersCache !== null) {
-            return $this->filtersCache;
-        }
-
-        $this->filtersCache = collect($this->filters())
+        return collect($this->filters())
             ->map(fn (string $filterClass) => app($filterClass))
             ->filter(fn ($instance): bool => $instance instanceof Filter)
-            ->each(function (Filter $filter) {
-                $filter->setSelectedValue(
-                    $this->filterValues[$filter->getFilterId()] ?? $filter->getDefaultValue()
-                );
+            ->each(function (Filter $filter): void {
+                $filter->setFilterValues($this->filterValues);
             })
             ->values();
-
-        return $this->filtersCache;
     }
 }
