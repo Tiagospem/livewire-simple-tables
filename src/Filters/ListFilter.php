@@ -9,6 +9,8 @@ abstract class ListFilter implements Filter
 {
     protected ?string $defaultValue = null;
 
+    protected ?string $selectedValue = null;
+
     protected ?string $label = null;
 
     protected ?string $placeholder = null;
@@ -28,12 +30,22 @@ abstract class ListFilter implements Filter
         return $this->placeholder;
     }
 
+    public function getSelectedValue(): ?string
+    {
+        return $this->selectedValue;
+    }
+
+    public function setSelectedValue(string $value): void
+    {
+        $this->selectedValue = $value;
+    }
+
     public function render(): string
     {
         return View::make('simple-tables::filters.list', [
             'options' => $this->getOptions(),
             'filterId' => $this->getFilterId(),
             'label' => $this->getLabel(),
-        ]);
+        ])->render();
     }
 }

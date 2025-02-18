@@ -12,11 +12,15 @@ interface Filter
 
     public function getQuery(Builder $query, string $value): Builder;
 
+    public function getSelectedValue(): ?string;
+
     public function getDefaultValue(): ?string;
 
     public function getPlaceholder(): ?string;
 
     public function getLabel(): ?string;
+
+    public function setSelectedValue(string $value): void;
 
     public function render(): string;
 }

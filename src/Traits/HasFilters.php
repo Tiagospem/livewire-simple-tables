@@ -33,6 +33,7 @@ trait HasFilters
 
         foreach ($this->getFilters() as $filter) {
             $filterId = $filter->getFilterId();
+
             if (! array_key_exists($filterId, $this->filterValues)) {
                 $this->filterValues[$filterId] = $filter->getDefaultValue();
             }
@@ -59,11 +60,10 @@ trait HasFilters
         $cacheKey = $this->getTableCacheKey();
 
         if ($this->persistFilters) {
-            Cache::put($cacheKey, $this->filterValues);
+            $this->updateCache();
         }
 
         $cached = Cache::get($cacheKey, []);
-
         $this->filterValues[$filterId] = array_key_exists($filterId, $cached)
             ? $cached[$filterId]
             : $value;
@@ -75,12 +75,20 @@ trait HasFilters
     private function getTableCacheKey(): string
     {
         if (! auth()->check()) {
-            throw new Exception('To use the cache feature, you must be authenticated');
+            throw new Exception('To use the cache feature, the user must be authenticated.');
         }
 
-        $class = str($this::class)->replace('\\', '_')->lower();
+        $className = strtolower(str_replace('\\', '_', static::class));
 
-        return sprintf('%s:%s:filters', $class, auth()->id());
+        return sprintf('%s:%s:filters', $className, auth()->id());
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function updateCache(): void
+    {
+        Cache::put($this->getTableCacheKey(), $this->filterValues);
     }
 
     /**
@@ -88,9 +96,20 @@ trait HasFilters
      */
     public function getFilters(): Collection
     {
-        return $this->filtersCache ??= collect($this->filters())
+        if ($this->filtersCache !== null) {
+            return $this->filtersCache;
+        }
+
+        $this->filtersCache = collect($this->filters())
             ->map(fn (string $filterClass) => app($filterClass))
             ->filter(fn ($instance): bool => $instance instanceof Filter)
+            ->each(function (Filter $filter) {
+                $filter->setSelectedValue(
+                    $this->filterValues[$filter->getFilterId()] ?? $filter->getDefaultValue()
+                );
+            })
             ->values();
+
+        return $this->filtersCache;
     }
 }
