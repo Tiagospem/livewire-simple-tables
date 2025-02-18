@@ -130,6 +130,7 @@ final readonly class TableRenderer
     {
         return View::make('simple-tables::table.partials.pagination', [
             'paginator' => $this->getPaginator(),
+            'totalRows' => $this->getRowsCollection()->count(),
             'isStick' => $this->component->stickyPagination,
             'stickyStyle' => theme($this->theme, 'pagination.sticky'),
             'style' => theme($this->theme, 'pagination.container'),

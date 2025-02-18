@@ -15,6 +15,8 @@ trait HasFilters
 
     public array $filterValues = [];
 
+    private ?string $tableCacheKey = null;
+
     /**
      * @throws Exception
      */
@@ -52,17 +54,11 @@ trait HasFilters
             return;
         }
 
-        $cacheKey = $this->getTableCacheKey();
+        $this->filterValues[$filterId] = $value;
 
         if ($this->persistFilters) {
-            $this->updateCache();
+            Cache::put($this->getTableCacheKey(), $this->filterValues);
         }
-
-        $cached = Cache::get($cacheKey, []);
-
-        $this->filterValues[$filterId] = array_key_exists($filterId, $cached)
-            ? $cached[$filterId]
-            : $value;
     }
 
     /**
@@ -70,21 +66,18 @@ trait HasFilters
      */
     private function getTableCacheKey(): string
     {
+        if ($this->tableCacheKey !== null) {
+            return $this->tableCacheKey;
+        }
+
         if (! auth()->check()) {
             throw new Exception('To use the cache feature, the user must be authenticated.');
         }
 
         $className = strtolower(str_replace('\\', '_', static::class));
+        $this->tableCacheKey = sprintf('%s:%s:filters', $className, auth()->id());
 
-        return sprintf('%s:%s:filters', $className, auth()->id());
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function updateCache(): void
-    {
-        Cache::put($this->getTableCacheKey(), $this->filterValues);
+        return $this->tableCacheKey;
     }
 
     /**
@@ -95,9 +88,7 @@ trait HasFilters
         return collect($this->filters())
             ->map(fn (string $filterClass) => app($filterClass))
             ->filter(fn ($instance): bool => $instance instanceof Filter)
-            ->each(function (Filter $filter): void {
-                $filter->setFilterValues($this->filterValues);
-            })
+            ->each(fn (Filter $filter) => $filter->setFilterValues($this->filterValues))
             ->values();
     }
 }
