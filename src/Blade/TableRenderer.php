@@ -30,6 +30,7 @@ final readonly class TableRenderer
             'header' => $this->renderHeader(),
             'body' => $this->renderBody(),
             'pagination' => $this->renderPagination(),
+            'filters' => $this->component->getFilters(),
             'showSearch' => $this->table->showSearch,
             'tableStyle' => theme($this->theme, 'table.content'),
             'bodyStyle' => theme($this->theme, 'table.body'),

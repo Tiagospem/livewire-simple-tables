@@ -61,7 +61,8 @@ final class CreateCommand extends Command
         $namespaceBase = 'App\\'.str_replace('/', '\\', $relativePath);
         $namespace = $namespaceBase.($parts === [] ? '' : '\\'.implode('\\', $parts));
         $content = file_get_contents($stubPath) ?: '';
-        $content = str_replace(['{{ namespace }}', '{{ class }}'], [$namespace, $className], $content);
+        $filterId = uniqid('filter_');
+        $content = str_replace(['{{ namespace }}', '{{ class }}', '{{ filterId }}'], [$namespace, $className, $filterId], $content);
 
         file_put_contents($targetPath, $content);
         $this->info('Component created: '.$targetPath);

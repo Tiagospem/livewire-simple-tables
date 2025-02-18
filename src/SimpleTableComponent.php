@@ -15,6 +15,7 @@ use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
 use TiagoSpem\SimpleTables\Datasource\DataSourceResolver;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Traits\HasDetail;
+use TiagoSpem\SimpleTables\Traits\HasFilters;
 use TiagoSpem\SimpleTables\Traits\HasPagination;
 use TiagoSpem\SimpleTables\Traits\HasPlaceholder;
 use TiagoSpem\SimpleTables\Traits\HasSearch;
@@ -24,6 +25,7 @@ use TiagoSpem\SimpleTables\Traits\HasTheme;
 abstract class SimpleTableComponent extends Component
 {
     use HasDetail;
+    use HasFilters;
     use HasPagination;
     use HasPlaceholder;
     use HasSearch;
