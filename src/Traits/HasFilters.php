@@ -6,6 +6,7 @@ namespace TiagoSpem\SimpleTables\Traits;
 
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use TiagoSpem\SimpleTables\Interfaces\Filter;
 
@@ -13,6 +14,9 @@ trait HasFilters
 {
     protected bool $persistFilters = false;
 
+    /**
+     * @var array<string, mixed>
+     */
     public array $filterValues = [];
 
     private ?string $tableCacheKey = null;
@@ -23,7 +27,9 @@ trait HasFilters
     public function bootHasFilters(): void
     {
         if ($this->persistFilters) {
-            $this->filterValues = Cache::get($this->getTableCacheKey(), []);
+            /** @var array<string, mixed> $cachedValues */
+            $cachedValues = Cache::get($this->getTableCacheKey(), []);
+            $this->filterValues = $cachedValues;
 
             return;
         }
@@ -70,12 +76,12 @@ trait HasFilters
             return $this->tableCacheKey;
         }
 
-        if (! auth()->check()) {
+        if (! Auth::check()) {
             throw new Exception('To use the cache feature, the user must be authenticated.');
         }
 
         $className = strtolower(str_replace('\\', '_', static::class));
-        $this->tableCacheKey = sprintf('%s:%s:filters', $className, auth()->id());
+        $this->tableCacheKey = sprintf('%s:%s:filters', $className, Auth::id());
 
         return $this->tableCacheKey;
     }
@@ -85,10 +91,16 @@ trait HasFilters
      */
     public function getFilters(): Collection
     {
-        return collect($this->filters())
+        /** @var Collection<int, Filter> $filters */
+        $filters = collect($this->filters())
             ->map(fn (string $filterClass) => app($filterClass))
             ->filter(fn ($instance): bool => $instance instanceof Filter)
-            ->each(fn (Filter $filter) => $filter->setFilterValues($this->filterValues))
             ->values();
+
+        foreach ($filters as $filter) {
+            $filter->setFilterValues($this->filterValues);
+        }
+
+        return $filters;
     }
 }

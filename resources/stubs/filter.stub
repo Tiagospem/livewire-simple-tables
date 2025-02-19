@@ -3,6 +3,7 @@
 namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use TiagoSpem\SimpleTables\Filters\ListFilter;
 
 class {{ class }} extends ListFilter
@@ -30,7 +31,7 @@ class {{ class }} extends ListFilter
         ];
     }
 
-    public function getQuery(Builder $query, string $value): Builder
+    public function getQuery(QueryBuilder|Builder $query, mixed $value): Builder
     {
         return $query->where('id', $value);
     }

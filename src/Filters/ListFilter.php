@@ -11,11 +11,14 @@ abstract class ListFilter implements Filter
 
     protected string $labelKey = 'label';
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $filterValues = [];
 
     protected ?string $defaultValue = null;
 
-    protected ?string $selectedValue = null;
+    protected mixed $selectedValue = null;
 
     protected ?string $label = null;
 
@@ -36,11 +39,14 @@ abstract class ListFilter implements Filter
         return $this->placeholder;
     }
 
-    public function getSelectedValue(): ?string
+    public function getSelectedValue(): mixed
     {
         return $this->selectedValue;
     }
 
+    /**
+     * @param  array<string, mixed>  $values
+     */
     public function setFilterValues(array $values): void
     {
         $this->filterValues = $values;
