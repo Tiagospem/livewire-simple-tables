@@ -1,4 +1,7 @@
-<tr class="{{ $trStyle }}" wire:key="{{ 'id_' . $rowId }}">
+<tr
+    class="{{ $trStyle }}"
+    wire:key="{{ 'id_' . $rowId }}"
+>
     @foreach ($rowContent as $row)
         @includeWhen($loop->first && $detailViewEnabled, 'simple-tables::table.partials.detail-icon')
 
@@ -8,9 +11,12 @@
     @endforeach
 </tr>
 
-@if($shouldShowDetail)
+@if ($shouldShowDetail)
     <tr>
-        <td colspan="999" class="border-y">
+        <td
+            colspan="999"
+            class="border-y"
+        >
             <div class="p-4 bg-white">
                 {!! $detailView !!}
             </div>

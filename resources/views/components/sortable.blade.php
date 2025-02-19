@@ -1,10 +1,4 @@
-@props([
-    'sortIconStyle',
-    'sortBy',
-    'sortDirection',
-    'column',
-    'sortableIcons' => [],
-])
+@props(['sortIconStyle', 'sortBy', 'sortDirection', 'column', 'sortableIcons' => []])
 
 @php
     $icon = $sortBy === $column ? $sortableIcons[$sortDirection] : $sortableIcons['default'];

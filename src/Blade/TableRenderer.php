@@ -31,6 +31,7 @@ final readonly class TableRenderer
             'body' => $this->renderBody(),
             'pagination' => $this->renderPagination(),
             'filters' => $this->component->getFilters(),
+            'totalFiltersSelected' => $this->component->getTotalFiltersSelected(),
             'showSearch' => $this->table->showSearch,
             'tableStyle' => theme($this->theme, 'table.content'),
             'bodyStyle' => theme($this->theme, 'table.body'),

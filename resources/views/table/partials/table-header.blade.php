@@ -1,5 +1,5 @@
 <tr class="{{ $trHeaderStyle }}">
-    @if($detailViewEnabled)
+    @if ($detailViewEnabled)
         <th class="{{ $thStyle }}">
             <span class="sr-only">detail</span>
         </th>

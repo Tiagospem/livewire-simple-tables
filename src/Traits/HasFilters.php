@@ -60,7 +60,13 @@ trait HasFilters
             return;
         }
 
-        $this->filterValues[$filterId] = $value;
+        if ($value === null || $value === '') {
+            unset($this->filterValues[$filterId]);
+        } else {
+            $this->filterValues[$filterId] = $value;
+        }
+
+        $this->filterValues = [...$this->filterValues];
 
         if ($this->persistFilters) {
             Cache::put($this->getTableCacheKey(), $this->filterValues);
@@ -102,5 +108,10 @@ trait HasFilters
         }
 
         return $filters;
+    }
+
+    public function getTotalFiltersSelected(): int
+    {
+        return collect($this->filterValues)->filter(fn ($value): bool => $value !== null)->count();
     }
 }

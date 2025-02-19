@@ -11,9 +11,7 @@
     'target' => '',
 ])
 
-<div
-    @class(['opacity-50 pointer-events-none' => $disabled])
->
+<div @class(['opacity-50 pointer-events-none' => $disabled])>
     <a
         @if (filled($url)) href="{{ $url }}"
             target="{{ $target }}"
