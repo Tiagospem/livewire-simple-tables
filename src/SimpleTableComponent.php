@@ -14,6 +14,8 @@ use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
 use TiagoSpem\SimpleTables\Datasource\DataSourceResolver;
 use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
+use TiagoSpem\SimpleTables\Traits\HasDetail;
+use TiagoSpem\SimpleTables\Traits\HasFilters;
 use TiagoSpem\SimpleTables\Traits\HasPagination;
 use TiagoSpem\SimpleTables\Traits\HasPlaceholder;
 use TiagoSpem\SimpleTables\Traits\HasSearch;
@@ -22,6 +24,8 @@ use TiagoSpem\SimpleTables\Traits\HasTheme;
 
 abstract class SimpleTableComponent extends Component
 {
+    use HasDetail;
+    use HasFilters;
     use HasPagination;
     use HasPlaceholder;
     use HasSearch;
@@ -61,12 +65,8 @@ abstract class SimpleTableComponent extends Component
     public function render(): string
     {
         $processor = new DataSourceResolver($this);
-        $renderer  = app(TableRenderer::class);
+        $renderer = new TableRenderer($this, $processor->process(), $this->theme);
 
-        return $renderer->render(
-            $processor->process(),
-            $this,
-            $this->theme,
-        );
+        return $renderer->render();
     }
 }

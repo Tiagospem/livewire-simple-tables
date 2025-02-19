@@ -20,7 +20,7 @@ final class Option implements HasActions
 
     public static function add(string $name, ?string $icon = null): self
     {
-        $option = new self();
+        $option = new self;
 
         $option->button = [
             'icon' => $icon,
@@ -35,9 +35,9 @@ final class Option implements HasActions
      */
     public static function divider(array $options): self
     {
-        $option = new self();
+        $option = new self;
 
-        $option->isDivider      = true;
+        $option->isDivider = true;
         $option->dividerOptions = $options;
 
         return $option;

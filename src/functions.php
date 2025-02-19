@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-if ( ! function_exists('theme')) {
+if (! function_exists('theme')) {
     /**
      * @param  array<string, mixed>  $theme
      */
@@ -10,14 +10,14 @@ if ( ! function_exists('theme')) {
     {
         $value = data_get($theme, $element);
 
-        return is_scalar($value) || null === $value ? (string) $value : '';
+        return is_scalar($value) || $value === null ? (string) $value : '';
     }
 }
 
-if ( ! function_exists('mergeStyle')) {
+if (! function_exists('mergeStyle')) {
     function mergeStyle(?string ...$args): string
     {
-        $filteredArgs = array_filter($args, fn($class): bool => is_string($class) && '' !== $class);
+        $filteredArgs = array_filter($args, fn ($class): bool => is_string($class) && $class !== '');
 
         $combined = implode(' ', $filteredArgs);
 
@@ -31,16 +31,20 @@ if ( ! function_exists('mergeStyle')) {
     }
 }
 
-if ( ! function_exists('parserString')) {
+if (! function_exists('parserString')) {
     function parserString(mixed $value): string
     {
-        return is_scalar($value) || null === $value ? (string) $value : '';
+        if ($value instanceof DateTime) {
+            return $value->format('Y-m-d H:i:s');
+        }
+
+        return is_scalar($value) || $value === null ? (string) $value : '';
     }
 }
 
-if ( ! function_exists('isClassOrObject')) {
+if (! function_exists('isClassOrObject')) {
     function isClassOrObject(string $parameter): bool
     {
-        return (class_exists($parameter) || 'array' === $parameter || 'object' === $parameter);
+        return class_exists($parameter) || $parameter === 'array' || $parameter === 'object';
     }
 }

@@ -9,59 +9,35 @@ use TiagoSpem\SimpleTables\Enum\ColumnType;
 
 final class Column implements Wireable
 {
-    private string $title;
-
-    private string $key;
-
-    private ?string $aliasKey = null;
-
-    private string $style = '';
-
-    private bool $searchable = true;
+    private bool $searchable = false;
 
     private bool $sortable = false;
-
-    private ColumnType $columnType;
 
     private bool $isVisible = true;
 
     private string $columnId = '';
 
-    private bool $inverse = false;
+    private function __construct(private readonly string $title, private readonly string $key, private readonly ColumnType $columnType, private ?string $aliasKey = null, private string $style = '', private readonly bool $inverse = false) {}
 
     public static function text(string $title, string $key, ?string $aliasKey = null, string $style = ''): self
     {
-        $column             = new self();
-        $column->title      = $title;
-        $column->key        = $key;
-        $column->aliasKey   = $aliasKey;
-        $column->style      = $style;
-        $column->searchable = false;
-        $column->columnType = ColumnType::TEXT;
-
-        return $column;
+        return new self($title, $key, ColumnType::TEXT, $aliasKey, $style);
     }
 
     public static function boolean(string $title, string $key, ?string $aliasKey = null, bool $inverse = false): self
     {
-        $column             = new self();
-        $column->title      = $title;
-        $column->key        = $key;
-        $column->aliasKey   = $aliasKey;
-        $column->searchable = false;
-        $column->columnType = ColumnType::BOOLEAN;
-        $column->inverse    = $inverse;
+        return new self($title, $key, ColumnType::BOOLEAN, $aliasKey, '', $inverse);
+    }
 
-        return $column;
+    public static function toggle(string $title, string $key, ?string $aliasKey = null, bool $inverse = false): self
+    {
+        return new self($title, $key, ColumnType::TOGGLE, $aliasKey, '', $inverse);
     }
 
     public static function action(string $id, string $title, string $style = ''): self
     {
-        $column                 = new self();
-        $column->columnId       = $id;
-        $column->title          = $title;
-        $column->style          = $style;
-        $column->columnType     = ColumnType::ACTION;
+        $column = new self($title, '', ColumnType::ACTION, null, $style);
+        $column->columnId = $id;
 
         return $column;
     }

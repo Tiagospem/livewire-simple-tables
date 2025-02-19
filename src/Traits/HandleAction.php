@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables\Traits;
 
+use BackedEnum;
 use Closure;
 use TiagoSpem\SimpleTables\Enum\Target;
 
 trait HandleAction
 {
+    use HandlePermission;
+
     /** @var array{icon: string|null, name: string|null} */
     protected array $button = [
         'icon' => null,
@@ -21,41 +24,43 @@ trait HandleAction
     /** @var Closure(mixed): bool|bool */
     protected Closure|bool $hidden = false;
 
-    protected ?string $buttonStyle = null;
-    protected ?string $iconStyle   = null;
+    protected mixed $can = true;
 
-    /** @var array{href: Closure|string, target: Target::*} */
+    protected ?string $buttonStyle = null;
+
+    protected ?string $iconStyle = null;
+
+    /** @var array{href: Closure|string, target: Target::*, wireNavigate: bool} */
     protected array $hrefData = [
-        'href'   => '',
+        'href' => '',
         'target' => Target::PARENT,
+        'wireNavigate' => false,
     ];
 
     /** @var array{name: string, params: mixed} */
     protected array $eventData = [
-        'name'   => '',
+        'name' => '',
         'params' => null,
     ];
 
     /**
-     * @param Closure(mixed): string|string $href
+     * @param  Closure(mixed): string|string  $href
      */
-    public function href(Closure|string $href, ?Target $target = null): self
+    public function href(Closure|string $href, bool $wireNavigate = false, ?Target $target = null): self
     {
         $this->hrefData = [
-            'href'   => $href,
+            'href' => $href,
             'target' => $target ?? Target::PARENT,
+            'wireNavigate' => $wireNavigate,
         ];
 
         return $this;
     }
 
-    /**
-     * @param mixed|null|Closure(mixed): mixed $params
-     */
-    public function event(string $name, mixed $params = null): self
+    public function event(string $name, Closure|array|int|bool|string|null $params = null): self
     {
         $this->eventData = [
-            'name'   => $name,
+            'name' => $name,
             'params' => $params,
         ];
 
@@ -63,33 +68,58 @@ trait HandleAction
     }
 
     /**
-     * @param Closure(mixed): bool|bool $disabled
+     * @param  Closure(mixed): bool|bool  $disabled
      */
     public function disabled(Closure|bool $disabled = true): self
     {
         $this->disabled = $disabled;
+
         return $this;
     }
 
     /**
-     * @param Closure(mixed): bool|bool $hidden
+     * @param  Closure(mixed): bool|bool  $hidden
      */
     public function hidden(Closure|bool $hidden = true): self
     {
         $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    /**
+     * @param  bool|Closure|string|BackedEnum|array<string|BackedEnum>  $permission
+     */
+    public function can(mixed $permission = true): self
+    {
+        if (is_bool($permission)) {
+            $this->can = $permission;
+        } elseif ($permission instanceof Closure) {
+            $this->can = $permission;
+        } else {
+            $this->can = $this->resolvePermissionCheck($permission);
+        }
+
         return $this;
     }
 
     public function iconStyle(string $style): self
     {
         $this->iconStyle = $style;
+
         return $this;
     }
 
     public function buttonStyle(string $style): self
     {
         $this->buttonStyle = $style;
+
         return $this;
+    }
+
+    public function isWireNavigate(): bool
+    {
+        return $this->hrefData['wireNavigate'];
     }
 
     public function isDisabled(mixed $row): bool
@@ -99,7 +129,11 @@ trait HandleAction
 
     public function isHidden(mixed $row): bool
     {
-        return $this->evaluateCondition($this->hidden, $row);
+        $isHidden = $this->evaluateCondition($this->hidden, $row);
+
+        $can = $this->evaluateCondition($this->can, $row);
+
+        return $isHidden || ! $can;
     }
 
     public function hasName(): bool
@@ -134,7 +168,7 @@ trait HandleAction
         }
 
         return [
-            'name'   => $this->eventData['name'],
+            'name' => $this->eventData['name'],
             'params' => $this->evaluateValue($this->eventData['params'], $row),
         ];
     }
@@ -160,16 +194,13 @@ trait HandleAction
     }
 
     /**
-     * @param Closure(mixed): mixed|mixed $value
+     * @param  Closure(mixed): mixed|mixed  $value
      */
     private function evaluateValue(mixed $value, mixed $row): mixed
     {
         return $value instanceof Closure ? $value($row) : $value;
     }
 
-    /**
-     * @param Closure(mixed): bool|bool $condition
-     */
     private function evaluateCondition(mixed $condition, mixed $row): bool
     {
         return (bool) ($condition instanceof Closure

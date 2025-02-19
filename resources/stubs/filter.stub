@@ -1,0 +1,40 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use TiagoSpem\SimpleTables\Filters\ListFilter;
+
+class {{ class }} extends ListFilter
+{
+    protected ?string $defaultValue = null;
+
+    protected ?string $label = 'Filter Label';
+
+    public function getFilterId(): string
+    {
+        return '{{ filterId }}';
+    }
+
+    public function getOptions(): array
+    {
+        return [
+            [
+                'label' => 'One',
+                'value' => '1',
+            ],
+            [
+                'label' => 'Two',
+                'value' => '2',
+            ],
+        ];
+    }
+
+    public function getQuery(QueryBuilder|Builder $query, mixed $value): Builder
+    {
+        return $query->where('id', $value);
+    }
+}
+
+
