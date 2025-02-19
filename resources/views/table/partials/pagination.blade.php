@@ -1,4 +1,4 @@
-@if($totalRows)
+@if($hasPagination)
     <div @class([$stickyStyle => $isStick])>
         <div class="{{ $style }}">
             {!! $paginator !!}

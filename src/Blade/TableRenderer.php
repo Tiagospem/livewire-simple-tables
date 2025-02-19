@@ -128,9 +128,11 @@ final readonly class TableRenderer
 
     private function renderPagination(): string
     {
+        $hasPagination = $this->getRowsCollection()->count() > $this->component->perPage;
+
         return View::make('simple-tables::table.partials.pagination', [
             'paginator' => $this->getPaginator(),
-            'totalRows' => $this->getRowsCollection()->count(),
+            'hasPagination' => $hasPagination,
             'isStick' => $this->component->stickyPagination,
             'stickyStyle' => theme($this->theme, 'pagination.sticky'),
             'style' => theme($this->theme, 'pagination.container'),
