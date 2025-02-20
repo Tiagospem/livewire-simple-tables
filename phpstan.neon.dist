@@ -4,4 +4,8 @@ parameters:
 
     paths:
         - src
+
+    excludePaths:
+        - tests/**
+
     level: max
