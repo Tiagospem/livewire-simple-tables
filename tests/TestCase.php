@@ -2,6 +2,9 @@
 
 namespace TiagoSpem\SimpleTables\Tests;
 
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use TiagoSpem\SimpleTables\Providers\SimpleTablesServiceProvider;
 
@@ -18,16 +21,25 @@ abstract class TestCase extends OrchestraTestCase
     {
         return [
             SimpleTablesServiceProvider::class,
+            LivewireServiceProvider::class,
         ];
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('database.default', 'testing');
-        $app['config']->set('database.connections.testing', [
+        /** @var Repository $config */
+        $config = $app->make('config');
+
+        $config->set('database.default', 'testing');
+        $config->set('database.connections.testing', [
             'driver' => 'sqlite',
             'database' => ':memory:',
             'prefix' => '',
         ]);
+
+        $config->set('app.key', 'base64:'.base64_encode(str_repeat('a', 32)));
     }
 }
