@@ -1,25 +1,35 @@
 <?php
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Support\Collection;
+use TiagoSpem\SimpleTables\Column;
+use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
-use TiagoSpem\SimpleTables\Tests\Dummy\Tables\BasicModelTable;
 
 use function Pest\Livewire\livewire;
 
-it('should be able to create a dummy user', function (): void {
-    $user = FakeUser::factory()->create([
-        'is_active' => true,
-    ]);
+$component = new class extends SimpleTableComponent
+{
+    public function columns(): array
+    {
+        return [
+            Column::text('User Id', 'id'),
+            Column::text('User Name', 'name'),
+            Column::text('User Email', 'email'),
+            Column::boolean('User Active', 'is_active'),
+        ];
+    }
 
-    expect($user->name)->toBe($user->name)
-        ->and($user->email)->toBe($user->email)
-        ->and($user->is_active)->toBeTrue();
-});
+    public function datasource(): Collection
+    {
+        return collect(FakeUser::all());
+    }
+};
 
-it('should render the component', function (): void {
+it('should render the component', function () use ($component): void {
     $user = FakeUser::factory()->create();
 
-    livewire(BasicModelTable::class)
+    livewire($component::class)
         ->assertSeeInOrder([
             'User Id',
             'User Name',
@@ -34,7 +44,7 @@ it('should render the component', function (): void {
         ->assertOk();
 });
 
-it('should be able to search only when has columns to search', function (): void {
+it('should be able to search only when has columns to search', function () use ($component): void {
     $userOne = FakeUser::factory()->create([
         'name' => 'John Doe',
     ]);
@@ -43,7 +53,7 @@ it('should be able to search only when has columns to search', function (): void
         'name' => 'Jane Doe',
     ]);
 
-    livewire(BasicModelTable::class)
+    livewire($component::class)
         ->assertSee($userOne->name)
         ->assertSee($userTwo->name)
         ->set('search', 'John')
@@ -63,20 +73,20 @@ it('should be able to search only when has columns to search', function (): void
         ->assertOk();
 });
 
-it('should be able to see the search input only when has columns to search', function (): void {
+it('should be able to see the search input only when has columns to search', function () use ($component): void {
     FakeUser::factory()->create();
 
-    livewire(BasicModelTable::class)
+    livewire($component::class)
         ->assertDontSeeHtml('id="search-input"')
         ->set('columnsToSearch', ['name'])
         ->assertSeeHtml('id="search-input"')
         ->assertOk();
 });
 
-it('should be able to sort the table', function (): void {
+it('should be able to sort the table', function () use ($component): void {
     FakeUser::factory(5)->create();
 
-    livewire(BasicModelTable::class)
+    livewire($component::class)
         ->set('sortBy', 'id')
         ->set('sortDirection', 'asc')
         ->assertSeeInOrder(['1', '2', '3', '4', '5'])
@@ -85,7 +95,7 @@ it('should be able to sort the table', function (): void {
         ->assertOk();
 });
 
-it('should be able to paginate the table', function (): void {
+it('should be able to paginate the table', function () use ($component): void {
     FakeUser::factory(5)
         ->state(new Sequence(
             ['name' => 'Amon Doe'],
@@ -96,7 +106,7 @@ it('should be able to paginate the table', function (): void {
         ))
         ->create();
 
-    livewire(BasicModelTable::class)
+    livewire($component::class)
         ->set('sortBy', 'name')
         ->set('sortDirection', 'asc')
         ->set('perPage', 1)
@@ -107,10 +117,10 @@ it('should be able to paginate the table', function (): void {
         ->assertOk();
 });
 
-it('should be able to override theme style', function (): void {
+it('should be able to override theme style', function () use ($component): void {
     FakeUser::factory()->create();
 
-    livewire(BasicModelTable::class, [
+    livewire($component::class, [
         'tableContentStyle' => 'table-content-style',
         'tableTrStyle' => 'table-tr-style',
         'tableTbodyStyle' => 'table-tbody-style',
