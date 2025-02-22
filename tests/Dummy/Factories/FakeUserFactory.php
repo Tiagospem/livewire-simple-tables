@@ -24,7 +24,6 @@ final class FakeUserFactory extends Factory
             'name'       => fake()->name(),
             'email'      => fake()->unique()->safeEmail(),
             'is_active'  => fake()->boolean(),
-            'country_id' => FakeCountry::factory(),
         ];
     }
 
@@ -38,18 +37,34 @@ final class FakeUserFactory extends Factory
         return $this->state(fn(array $attributes): array => ['is_active' => true]);
     }
 
-    public function withCountry(FakeCountry $country): self
+    public function hasCar(?string $model = null, ?string $color = null): self
     {
-        return $this->state(fn(array $attributes): array => ['country_id' => $country]);
-    }
+        return $this->afterCreating(function (FakeUser $user) use ($model, $color): void {
 
-    public function hasCar(): self
-    {
-        return $this->afterCreating(function (FakeUser $user): void {
-
-            $car = FakeCar::factory()->for($user)->create();
+            $car = FakeCar::factory()->for($user)->create(
+                array_filter([
+                    'model' => $model,
+                    'color' => $color,
+                ]),
+            );
 
             $user->car()->save($car);
+        });
+    }
+
+    public function hasCountry(?string $name = null): self
+    {
+        return $this->afterCreating(function (FakeUser $user) use ($name): void {
+
+            $fakeCountry = FakeCountry::factory()->create(
+                array_filter([
+                    'name' => $name,
+                ]),
+            );
+
+            $user->country_id = $fakeCountry->id;
+
+            $user->save();
         });
     }
 }

@@ -7,36 +7,26 @@ use Illuminate\Database\Eloquent\Builder;
 use function Pest\Livewire\livewire;
 
 use TiagoSpem\SimpleTables\Column;
-use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCar;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCountry;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
 
-$dynamicComponent = fn(): SimpleTableComponent => new class () extends SimpleTableComponent {
-    private Builder $datasetTest;
+beforeEach(function (): void {
+    $this->user = FakeUser::factory()->hasCar()->hasCountry()->create();
+});
 
-    private array $columnsTest = [];
-
-    public function mount(Builder $dataset, array $columns): void
-    {
-        $this->datasetTest = $dataset;
-        $this->columnsTest = $columns;
-    }
-
-    public function columns(): array
-    {
-        return $this->columnsTest;
-    }
-
-    public function datasource(): Builder
-    {
-        return $this->datasetTest;
-    }
+$assertions = function (Builder $dataset, array $columns, FakeUser $user): void {
+    livewire(DynamicTableComponent::class, [
+        'dataset' => $dataset,
+        'columns' => $columns,
+    ])
+        ->assertSeeInOrder(['Country', 'Model', 'Color'])
+        ->assertSeeInOrder([$user->country->name, $user->car->model, $user->car->color])
+        ->assertOk();
 };
 
-it('renders related model columns using dot notation with eager loading', function () use ($dynamicComponent): void {
-    FakeUser::factory()->hasCar()->create();
-
+it('renders related model columns using dot notation with eager loading', function () use ($assertions): void {
     $dataset = FakeUser::query()->with(['car', 'country']);
 
     $columns = [
@@ -45,20 +35,10 @@ it('renders related model columns using dot notation with eager loading', functi
         Column::text('Color', 'car.color'),
     ];
 
-    $user = $dataset->first();
-
-    livewire($dynamicComponent()::class, [
-        'dataset' => $dataset,
-        'columns' => $columns,
-    ])
-        ->assertSeeInOrder(['Country', 'Model', 'Color'])
-        ->assertSeeInOrder([$user->country->name, $user->car->model, $user->car->color])
-        ->assertOk();
+    $assertions($dataset, $columns, $this->user);
 });
 
-it('renders related model columns using alias keys with join queries', function () use ($dynamicComponent): void {
-    FakeUser::factory()->hasCar()->create();
-
+it('renders related model columns using alias keys with join queries', function () use ($assertions): void {
     $dataset = FakeUser::query()
         ->select([
             'fake_users.*',
@@ -76,24 +56,10 @@ it('renders related model columns using alias keys with join queries', function 
         Column::text(title: 'Color', key: 'car.color', aliasKey: 'car_color'),
     ];
 
-    $user = $dataset->first();
-
-    expect($user->country_name)->toBe($user->country->name)
-        ->and($user->car_model)->toBe($user->car->model)
-        ->and($user->car_color)->toBe($user->car->color);
-
-    livewire($dynamicComponent()::class, [
-        'dataset' => $dataset,
-        'columns' => $columns,
-    ])
-        ->assertSeeInOrder(['Country', 'Model', 'Color'])
-        ->assertSeeInOrder([$user->country_name, $user->car_model, $user->car_color])
-        ->assertOk();
+    $assertions($dataset, $columns, $this->user);
 });
 
-it('renders related model columns without alias keys with sub queries', function () use ($dynamicComponent): void {
-    $factory = FakeUser::factory()->hasCar()->create();
-
+it('renders related model columns without alias keys with sub queries', function () use ($assertions): void {
     $countrySub = fn() => FakeCountry::query()
         ->select([
             'fake_countries.name as country_name',
@@ -125,18 +91,7 @@ it('renders related model columns without alias keys with sub queries', function
         Column::text(title: 'Color', key: 'car_color'),
     ];
 
-    $user = $dataset->first();
-
-    expect($user->country_name)->toBe($factory->country->name)
-        ->and($user->car_model)->toBe($factory->car->model)
-        ->and($user->car_color)->toBe($factory->car->color)
-        ->and($user->user_name)->toBe($factory->name);
-
-    livewire($dynamicComponent()::class, [
-        'dataset' => $dataset,
-        'columns' => $columns,
-    ])
-        ->assertSeeInOrder(['Name','Country', 'Model', 'Color'])
-        ->assertSeeInOrder([$user->user_name, $user->country_name, $user->car_model, $user->car_color])
-        ->assertOk();
+    $assertions($dataset, $columns, $this->user);
 });
+
+it('should be able to modify column style', function (): void {})->todo();

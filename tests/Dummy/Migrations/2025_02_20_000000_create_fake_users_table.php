@@ -14,7 +14,7 @@ return new class () extends Migration {
             $table->string('name');
             $table->string('email')->unique();
             $table->boolean('is_active')->default(false);
-            $table->foreignId('country_id')->constrained('fake_countries');
+            $table->foreignId('country_id')->nullable()->constrained('fake_countries');
             $table->timestamps();
         });
     }

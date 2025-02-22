@@ -81,46 +81,6 @@ trait HasSearch
             return false;
         });
     }
-    //    /**
-    //     * @param  Builder<Model>  $query
-    //     * @return Builder<Model>
-    //     */
-    //    protected function builderSearch(Builder $query): Builder
-    //    {
-    //        $columns = $this->component->getSearchableColumns();
-    //
-    //        $search = $this->sanitizeSearch($this->component->search);
-    //
-    //        $model = $query->getModel();
-    //        $modelTable = $model->getTable();
-    //
-    //        return $query->where(function (Builder $query) use ($columns, $search, $model, $modelTable): void {
-    //            foreach ($columns as $column) {
-    //                $field = $column->getRowKey();
-    //
-    //                $search = $this->applyBeforeSearchModifiers(field: $field, value: $search);
-    //
-    //                if (str_contains($field, '.')) {
-    //                    $parts = explode('.', $field);
-    //                    $columnName = array_pop($parts);
-    //
-    //                    if ($model->isRelation($parts[0])) {
-    //                        $query->orWhere(function (Builder $q) use ($parts, $columnName, $search): void {
-    //                            $this->applyNestedWhereHas($q, $parts, $columnName, $search);
-    //                        });
-    //                    } else {
-    //                        $qualifiedField = implode('.', $parts).".{$columnName}";
-    //
-    //                        $query->orWhere($qualifiedField, 'like', "%{$search}%");
-    //                    }
-    //                } else {
-    //                    $qualifiedField = "{$modelTable}.{$field}";
-    //
-    //                    $query->orWhere($qualifiedField, 'like', "%{$search}%");
-    //                }
-    //            }
-    //        });
-    //    }
 
     private function modelHasColumn(Model $model, string $column): bool
     {
