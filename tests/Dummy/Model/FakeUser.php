@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Tests\Dummy\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +16,7 @@ use TiagoSpem\SimpleTables\Tests\Dummy\Factories\FakeUserFactory;
  * @property string $created_at
  * @property string $updated_at
  */
-class FakeUser extends Model
+final class FakeUser extends Model
 {
     /** @use HasFactory<FakeUserFactory> */
     use HasFactory;

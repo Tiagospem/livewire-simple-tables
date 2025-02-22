@@ -61,6 +61,6 @@ final class ActionBuilder
 
     public function hasActions(): bool
     {
-        return $this->actions !== [];
+        return [] !== $this->actions;
     }
 }

@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
+
+use function Pest\Livewire\livewire;
+
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
 
-use function Pest\Livewire\livewire;
-
-$component = new class extends SimpleTableComponent
-{
+$component = new class () extends SimpleTableComponent {
     public function columns(): array
     {
         return [
@@ -131,21 +133,21 @@ it('should be able to override theme style', function () use ($component): void 
     FakeUser::factory()->create();
 
     livewire($component::class, [
-        'tableContentStyle' => 'table-content-style',
-        'tableTrStyle' => 'table-tr-style',
-        'tableTbodyStyle' => 'table-tbody-style',
-        'tableTheadStyle' => 'table-thead-style',
-        'tableThStyle' => 'table-th-style',
-        'tableTdStyle' => 'table-td-style',
-        'tableTdNoRecordsStyle' => 'table-td-no-records-style',
-        'tableTrHeaderStyle' => 'table-tr-header-style',
-        'tableSortIconStyle' => 'table-sort-icon-style',
-        'tableBooleanIconStyle' => 'table-boolean-icon-style',
-        'actionButtonStyle' => 'action-button-style',
-        'dropdownContentStyle' => 'dropdown-content-style',
-        'dropdownOptionStyle' => 'dropdown-option-style',
+        'tableContentStyle'        => 'table-content-style',
+        'tableTrStyle'             => 'table-tr-style',
+        'tableTbodyStyle'          => 'table-tbody-style',
+        'tableTheadStyle'          => 'table-thead-style',
+        'tableThStyle'             => 'table-th-style',
+        'tableTdStyle'             => 'table-td-style',
+        'tableTdNoRecordsStyle'    => 'table-td-no-records-style',
+        'tableTrHeaderStyle'       => 'table-tr-header-style',
+        'tableSortIconStyle'       => 'table-sort-icon-style',
+        'tableBooleanIconStyle'    => 'table-boolean-icon-style',
+        'actionButtonStyle'        => 'action-button-style',
+        'dropdownContentStyle'     => 'dropdown-content-style',
+        'dropdownOptionStyle'      => 'dropdown-option-style',
         'paginationContainerStyle' => 'pagination-container-style',
-        'paginationStickyStyle' => 'pagination-sticky-style',
+        'paginationStickyStyle'    => 'pagination-sticky-style',
     ])
         ->assertSeeHtml('table-content-style')
         ->assertSeeHtml('table-tr-style')

@@ -52,14 +52,14 @@ final readonly class FieldConfig
     {
         $parameters = $reflection->getParameters();
 
-        if ($parameters === []) {
+        if ([] === $parameters) {
             return 'mixed';
         }
 
         $firstParam = $parameters[0];
-        $type = $firstParam->getType();
+        $type       = $firstParam->getType();
 
-        if (! $type instanceof ReflectionNamedType) {
+        if ( ! $type instanceof ReflectionNamedType) {
             return 'mixed';
         }
 

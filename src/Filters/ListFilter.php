@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Filters;
 
 use Illuminate\Support\Facades\View;
@@ -62,9 +64,9 @@ abstract class ListFilter implements Filter
     public function render(): string
     {
         return View::make('simple-tables::filters.list', [
-            'options' => $this->getOptions(),
+            'options'  => $this->getOptions(),
             'filterId' => $this->getFilterId(),
-            'label' => $this->getLabel(),
+            'label'    => $this->getLabel(),
             'valueKey' => $this->valueKey,
             'labelKey' => $this->labelKey,
         ])->render();

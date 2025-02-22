@@ -32,14 +32,14 @@ trait HandleAction
 
     /** @var array{href: Closure|string, target: Target::*, wireNavigate: bool} */
     protected array $hrefData = [
-        'href' => '',
-        'target' => Target::PARENT,
+        'href'         => '',
+        'target'       => Target::PARENT,
         'wireNavigate' => false,
     ];
 
     /** @var array{name: string, params: mixed} */
     protected array $eventData = [
-        'name' => '',
+        'name'   => '',
         'params' => null,
     ];
 
@@ -49,8 +49,8 @@ trait HandleAction
     public function href(Closure|string $href, bool $wireNavigate = false, ?Target $target = null): self
     {
         $this->hrefData = [
-            'href' => $href,
-            'target' => $target ?? Target::PARENT,
+            'href'         => $href,
+            'target'       => $target ?? Target::PARENT,
             'wireNavigate' => $wireNavigate,
         ];
 
@@ -60,7 +60,7 @@ trait HandleAction
     public function event(string $name, Closure|array|int|bool|string|null $params = null): self
     {
         $this->eventData = [
-            'name' => $name,
+            'name'   => $name,
             'params' => $params,
         ];
 
@@ -168,7 +168,7 @@ trait HandleAction
         }
 
         return [
-            'name' => $this->eventData['name'],
+            'name'   => $this->eventData['name'],
             'params' => $this->evaluateValue($this->eventData['params'], $row),
         ];
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Enum\ColumnType;
 
@@ -107,7 +109,7 @@ it('should convert the value to Livewire format correctly', function (): void {
     $normalized = [];
 
     foreach ($livewireData as $key => $value) {
-        $parts = explode("\0", $key);
+        $parts                   = explode("\0", $key);
         $normalized[end($parts)] = $value;
     }
 

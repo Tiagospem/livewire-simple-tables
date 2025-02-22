@@ -33,7 +33,7 @@ trait HasSearch
     public function getSearchableColumns(): Collection
     {
         return collect($this->columns())
-            ->filter(fn (Column $column): bool => $column->isSearchable())
+            ->filter(fn(Column $column): bool => $column->isSearchable())
             ->merge($this->getColumnToSearch())
             ->unique();
     }
@@ -63,6 +63,6 @@ trait HasSearch
         );
 
         return collect($filteredColumns)
-            ->map(fn (string $field): Column => Column::text('Extra', $field)->searchable());
+            ->map(fn(string $field): Column => Column::text('Extra', $field)->searchable());
     }
 }

@@ -36,7 +36,7 @@ final class Column implements Wireable
 
     public static function action(string $id, string $title, string $style = ''): self
     {
-        $column = new self($title, '', ColumnType::ACTION, null, $style);
+        $column           = new self($title, '', ColumnType::ACTION, null, $style);
         $column->columnId = $id;
 
         return $column;

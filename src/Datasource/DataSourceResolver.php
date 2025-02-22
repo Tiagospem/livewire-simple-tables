@@ -22,7 +22,7 @@ final readonly class DataSourceResolver implements ProcessorInterface
     public function process(): TableData
     {
         $datasource = $this->component->datasource();
-        $processor = $this->resolveProcessor($datasource);
+        $processor  = $this->resolveProcessor($datasource);
 
         return $processor->process();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Option;
 
@@ -36,7 +38,7 @@ it('should sets href on option and returns the correct URL, target, and wireNavi
 
 it('should sets event on option and returns the correct event data', function (): void {
     $option = Option::add('Event Option')
-        ->event('optionEvent', fn ($row) => $row['id']);
+        ->event('optionEvent', fn($row) => $row['id']);
 
     $event = $option->getEvent(['id' => 123]);
 
@@ -50,7 +52,7 @@ it('should sets disabled flag on option as boolean and using a closure', functio
 
     expect($option->isDisabled([]))->toBeTrue();
 
-    $option = Option::add('Disabled Option')->disabled(fn ($row): mixed => $row['disable']);
+    $option = Option::add('Disabled Option')->disabled(fn($row): mixed => $row['disable']);
 
     expect($option->isDisabled(['disable' => true]))->toBeTrue()
         ->and($option->isDisabled(['disable' => false]))->toBeFalse();
@@ -69,7 +71,7 @@ it('should sets hidden flag on option as boolean and using a closure, respecting
 
     expect($option->isHidden([]))->toBeTrue();
 
-    $option = Option::add('Hidden Option')->hidden(fn ($row): mixed => $row['hidden']);
+    $option = Option::add('Hidden Option')->hidden(fn($row): mixed => $row['hidden']);
 
     expect($option->isHidden(['hidden' => true]))->toBeTrue()
         ->and($option->isHidden(['hidden' => false]))->toBeFalse();

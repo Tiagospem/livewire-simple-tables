@@ -65,7 +65,7 @@ abstract class SimpleTableComponent extends Component
     public function render(): string
     {
         $processor = new DataSourceResolver($this);
-        $renderer = new TableRenderer($this, $processor->process(), $this->theme);
+        $renderer  = new TableRenderer($this, $processor->process(), $this->theme);
 
         return $renderer->render();
     }

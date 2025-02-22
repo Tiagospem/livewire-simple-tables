@@ -51,8 +51,8 @@ abstract class AbstractResolver
     private function validateColumns(): void
     {
         foreach ($this->component->columns() as $column) {
-            if (! $column instanceof Column) {
-                throw new InvalidColumnException;
+            if ( ! $column instanceof Column) {
+                throw new InvalidColumnException();
             }
         }
     }

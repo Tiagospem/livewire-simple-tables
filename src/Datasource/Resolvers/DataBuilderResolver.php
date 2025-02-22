@@ -30,7 +30,7 @@ final class DataBuilderResolver extends AbstractResolver
         foreach ($this->component->filterValues as $filterId => $value) {
             if (filled($value)) {
                 $filter = $this->component->getFilters()
-                    ->first(fn (Filter $f): bool => $f->getFilterId() === $filterId);
+                    ->first(fn(Filter $f): bool => $f->getFilterId() === $filterId);
 
                 if ($filter) {
                     $query = $filter->getQuery($query, $value);

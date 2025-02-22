@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\View\View;
 use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Enum\Target;
@@ -104,7 +106,7 @@ it('should sets href with a string and returns the URL, default target, and wire
 
 it('should sets href with a closure and returns the evaluated URL, true wireNavigate, and custom target', function (): void {
     $action = Action::for('test')
-        ->href(fn ($row): string => 'url-'.$row['id'], true, Target::NONE);
+        ->href(fn($row): string => 'url-' . $row['id'], true, Target::NONE);
 
     $url = $action->getUrl(['id' => 42]);
 
@@ -114,7 +116,7 @@ it('should sets href with a closure and returns the evaluated URL, true wireNavi
 });
 
 it('should sets event and returns correct event data with closure for params', function (): void {
-    $action = Action::for('test')->event('testEvent', fn ($row) => $row['value']);
+    $action = Action::for('test')->event('testEvent', fn($row) => $row['value']);
 
     $eventData = $action->getEvent(['value' => 'data']);
 
@@ -141,7 +143,7 @@ it('should sets disabled flag as boolean and returns correct disabled status', f
 
 it('should sets disabled flag with closure and returns evaluated disabled status', function (): void {
     $action = Action::for('test')
-        ->disabled(fn ($row): mixed => $row['disable']);
+        ->disabled(fn($row): mixed => $row['disable']);
 
     expect($action->isDisabled(['disable' => true]))->toBeTrue()
         ->and($action->isDisabled(['disable' => false]))->toBeFalse();
@@ -163,7 +165,7 @@ it('should sets hidden flag as boolean and respects the "can" condition', functi
 
 it('should sets hidden flag with closure and returns evaluated hidden status', function (): void {
     $action = Action::for('test')
-        ->hidden(fn ($row): mixed => $row['hidden']);
+        ->hidden(fn($row): mixed => $row['hidden']);
 
     expect($action->isHidden(['hidden' => true]))->toBeTrue()
         ->and($action->isHidden(['hidden' => false]))->toBeFalse();
@@ -189,7 +191,7 @@ it('should sets event data with a non-closure parameter and returns it', functio
 });
 
 it('should sets event data with a closure parameter and returns evaluated value', function (): void {
-    $action = Action::for('test')->event('eventName', fn ($row): string => 'value-'.$row['id']);
+    $action = Action::for('test')->event('eventName', fn($row): string => 'value-' . $row['id']);
 
     $eventData = $action->getEvent(['id' => 7]);
 

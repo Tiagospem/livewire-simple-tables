@@ -12,12 +12,11 @@ use TiagoSpem\SimpleTables\Interfaces\Filter;
 
 trait HasFilters
 {
-    protected bool $persistFilters = false;
-
     /**
      * @var array<string, mixed>
      */
-    public array $filterValues = [];
+    public array $filterValues     = [];
+    protected bool $persistFilters = false;
 
     private ?string $tableCacheKey = null;
 
@@ -28,7 +27,7 @@ trait HasFilters
     {
         if ($this->persistFilters) {
             /** @var array<string, mixed> $cachedValues */
-            $cachedValues = Cache::get($this->getTableCacheKey(), []);
+            $cachedValues       = Cache::get($this->getTableCacheKey(), []);
             $this->filterValues = $cachedValues;
 
             return;
@@ -37,18 +36,10 @@ trait HasFilters
         foreach ($this->getFilters() as $filter) {
             $filterId = $filter->getFilterId();
 
-            if (! array_key_exists($filterId, $this->filterValues)) {
+            if ( ! array_key_exists($filterId, $this->filterValues)) {
                 $this->filterValues[$filterId] = $filter->getDefaultValue();
             }
         }
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    protected function filters(): array
-    {
-        return [];
     }
 
     /**
@@ -56,11 +47,11 @@ trait HasFilters
      */
     public function updatedFilterValues(mixed $value, string $filterId): void
     {
-        if (! array_key_exists($filterId, $this->filterValues)) {
+        if ( ! array_key_exists($filterId, $this->filterValues)) {
             return;
         }
 
-        if ($value === null || $value === '') {
+        if (null === $value || '' === $value) {
             unset($this->filterValues[$filterId]);
         } else {
             $this->filterValues[$filterId] = $value;
@@ -74,33 +65,14 @@ trait HasFilters
     }
 
     /**
-     * @throws Exception
-     */
-    private function getTableCacheKey(): string
-    {
-        if ($this->tableCacheKey !== null) {
-            return $this->tableCacheKey;
-        }
-
-        if (! Auth::check()) {
-            throw new Exception('To use the cache feature, the user must be authenticated.');
-        }
-
-        $className = strtolower(str_replace('\\', '_', static::class));
-        $this->tableCacheKey = sprintf('%s:%s:filters', $className, Auth::id());
-
-        return $this->tableCacheKey;
-    }
-
-    /**
      * @return Collection<int, Filter>
      */
     public function getFilters(): Collection
     {
         /** @var Collection<int, Filter> $filters */
         $filters = collect($this->filters())
-            ->map(fn (string $filterClass) => app($filterClass))
-            ->filter(fn ($instance): bool => $instance instanceof Filter)
+            ->map(fn(string $filterClass) => app($filterClass))
+            ->filter(fn($instance): bool => $instance instanceof Filter)
             ->values();
 
         foreach ($filters as $filter) {
@@ -112,6 +84,33 @@ trait HasFilters
 
     public function getTotalFiltersSelected(): int
     {
-        return collect($this->filterValues)->filter(fn ($value): bool => $value !== null)->count();
+        return collect($this->filterValues)->filter(fn($value): bool => null !== $value)->count();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function filters(): array
+    {
+        return [];
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getTableCacheKey(): string
+    {
+        if (null !== $this->tableCacheKey) {
+            return $this->tableCacheKey;
+        }
+
+        if ( ! Auth::check()) {
+            throw new Exception('To use the cache feature, the user must be authenticated.');
+        }
+
+        $className           = mb_strtolower(str_replace('\\', '_', static::class));
+        $this->tableCacheKey = sprintf('%s:%s:filters', $className, Auth::id());
+
+        return $this->tableCacheKey;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Tests;
 
 use Illuminate\Contracts\Config\Repository;
@@ -14,7 +16,7 @@ abstract class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__.'/Dummy/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/Dummy/Migrations');
     }
 
     protected function getPackageProviders($app): array
@@ -35,11 +37,11 @@ abstract class TestCase extends OrchestraTestCase
 
         $config->set('database.default', 'testing');
         $config->set('database.connections.testing', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
 
-        $config->set('app.key', 'base64:'.base64_encode(str_repeat('a', 32)));
+        $config->set('app.key', 'base64:' . base64_encode(str_repeat('a', 32)));
     }
 }

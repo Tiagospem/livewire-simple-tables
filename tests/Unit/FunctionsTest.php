@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 it('should returns the correct theme value for a scalar value', function (): void {
-    $theme = ['color' => 'red'];
+    $theme  = ['color' => 'red'];
     $result = theme($theme, 'color');
     expect($result)->toBe('red');
 });
 
 it('should returns an empty string if the theme element is not scalar', function (): void {
-    $theme = ['layout' => ['header' => 'fixed']];
+    $theme  = ['layout' => ['header' => 'fixed']];
     $result = theme($theme, 'layout');
     expect($result)->toBe('');
 });
 
 it('should returns an empty string if the theme element does not exist', function (): void {
-    $theme = ['color' => 'blue'];
+    $theme  = ['color' => 'blue'];
     $result = theme($theme, 'nonexistent');
     expect($result)->toBe('');
 });

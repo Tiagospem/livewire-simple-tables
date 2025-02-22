@@ -11,8 +11,8 @@ trait HasPlaceholder
     public function placeholder(): View
     {
         return view('simple-tables::table.skeleton', [
-            'columns' => count($this->columns()),
-            'perPage' => $this->perPage,
+            'columns'    => count($this->columns()),
+            'perPage'    => $this->perPage,
             'showSearch' => $this->showSearch(),
         ]);
     }

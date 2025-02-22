@@ -14,63 +14,63 @@ final class CreateCommand extends Command
 
     public function handle(): int
     {
-        $type = strtolower(parserString($this->argument('type')));
+        $type = mb_strtolower(parserString($this->argument('type')));
 
-        if (! in_array($type, ['table', 'filter'], true)) {
+        if ( ! in_array($type, ['table', 'filter'], true)) {
             $this->error('Invalid component type. Allowed values: table, filter');
 
             return self::FAILURE;
         }
 
-        $name = parserString($this->argument('name'));
-        $stubFileName = $type === 'filter' ? 'filter.stub' : 'table.stub';
-        $stubPath = __DIR__.'/../../resources/stubs/'.$stubFileName;
+        $name         = parserString($this->argument('name'));
+        $stubFileName = 'filter' === $type ? 'filter.stub' : 'table.stub';
+        $stubPath     = __DIR__ . '/../../resources/stubs/' . $stubFileName;
 
-        if (! file_exists($stubPath)) {
+        if ( ! file_exists($stubPath)) {
             $this->error('Stub not found');
 
             return self::FAILURE;
         }
 
-        $name = str_replace(['\\', '/'], '/', $name);
-        $parts = explode('/', $name);
+        $name      = str_replace(['\\', '/'], '/', $name);
+        $parts     = explode('/', $name);
         $className = array_pop($parts);
 
-        if ($type === 'table' && ! str_ends_with($className, 'Table')) {
+        if ('table' === $type && ! str_ends_with($className, 'Table')) {
             $className .= 'Table';
         }
 
-        $subPath = $parts === [] ? '' : implode('/', $parts).'/';
+        $subPath = [] === $parts ? '' : implode('/', $parts) . '/';
 
-        $basePath = $type === 'filter'
+        $basePath = 'filter' === $type
             ? config('simple-tables.filter-path')
             : config('simple-tables.create-path');
-        if (! is_string($basePath)) {
+        if ( ! is_string($basePath)) {
             $this->error('Invalid base path configuration');
 
             return self::FAILURE;
         }
-        $targetPath = $basePath.'/'.$subPath.$className.'.php';
+        $targetPath = $basePath . '/' . $subPath . $className . '.php';
 
         if (file_exists($targetPath)) {
-            $this->error('Component already exists: '.$targetPath);
+            $this->error('Component already exists: ' . $targetPath);
 
             return self::FAILURE;
         }
 
-        if (! is_dir(dirname($targetPath))) {
+        if ( ! is_dir(dirname($targetPath))) {
             mkdir(dirname($targetPath), 0755, true);
         }
 
-        $relativePath = mb_ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
-        $namespaceBase = 'App\\'.str_replace('/', '\\', $relativePath);
-        $namespace = $namespaceBase.($parts === [] ? '' : '\\'.implode('\\', $parts));
-        $content = file_get_contents($stubPath) ?: '';
-        $filterId = uniqid('filter_');
-        $content = str_replace(['{{ namespace }}', '{{ class }}', '{{ filterId }}'], [$namespace, $className, $filterId], $content);
+        $relativePath  = mb_ltrim(str_replace(app_path(), '', parserString($basePath)), '\\/');
+        $namespaceBase = 'App\\' . str_replace('/', '\\', $relativePath);
+        $namespace     = $namespaceBase . ([] === $parts ? '' : '\\' . implode('\\', $parts));
+        $content       = file_get_contents($stubPath) ?: '';
+        $filterId      = uniqid('filter_');
+        $content       = str_replace(['{{ namespace }}', '{{ class }}', '{{ filterId }}'], [$namespace, $className, $filterId], $content);
 
         file_put_contents($targetPath, $content);
-        $this->info('Component created: '.$targetPath);
+        $this->info('Component created: ' . $targetPath);
 
         return self::SUCCESS;
     }

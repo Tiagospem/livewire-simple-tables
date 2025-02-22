@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\View\View;
 use TiagoSpem\SimpleTables\Dto\FieldConfig;
 use TiagoSpem\SimpleTables\Field;
@@ -34,7 +36,7 @@ it('should sets view callback correctly and returns a view instance when mutatio
 
 it('should sets mutate callback correctly and returns the expected result when mutation is invoked', function (): void {
     $field = Field::key('test_key')
-        ->mutate(fn ($row): string => 'mutated:'.$row->name);
+        ->mutate(fn($row): string => 'mutated:' . $row->name);
 
     /** @var Closure $mutation */
     $mutation = $field->getMutation()->getCallback();
@@ -58,7 +60,7 @@ it('should appends styles correctly and returns them concatenated', function ():
 
 it('should adds style rules correctly as FieldConfig instances', function (): void {
     $field = Field::key('test_key')
-        ->styleRule(fn ($row): string => $row->active ? 'active' : 'inactive');
+        ->styleRule(fn($row): string => $row->active ? 'active' : 'inactive');
 
     $rules = $field->getStyleRules();
 

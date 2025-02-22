@@ -55,9 +55,9 @@
     },
     "scripts": {
         "refacto": "rector",
-        "lint": "pint --config pint.js",
+        "lint": "pint --config=pint.json",
         "test:refacto": "rector --dry-run",
-        "test:lint": "pint --test --config pint.js",
+        "test:lint": "pint --test --config=pint.json",
         "test:types": "phpstan analyse --ansi",
         "test:unit": "pest --colors=always --coverage --parallel --min=100",
         "test:pest": "pest --colors=always --parallel --min=100",

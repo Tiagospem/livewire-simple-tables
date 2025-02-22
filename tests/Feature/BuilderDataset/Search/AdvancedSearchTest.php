@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Eloquent\Builder;
+
+use function Pest\Livewire\livewire;
+
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
 
-use function Pest\Livewire\livewire;
-
-$dynamicComponent = fn (): SimpleTableComponent => new class extends SimpleTableComponent
-{
+$dynamicComponent = fn(): SimpleTableComponent => new class () extends SimpleTableComponent {
     private Builder $datasetTest;
 
     private array $columnsTest = [];
 
     public function mount(Builder $dataset, array $columns, array $columnsToSearch = []): void
     {
-        $this->datasetTest = $dataset;
-        $this->columnsTest = $columns;
+        $this->datasetTest     = $dataset;
+        $this->columnsTest     = $columns;
         $this->columnsToSearch = $columnsToSearch;
     }
 
