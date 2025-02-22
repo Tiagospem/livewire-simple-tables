@@ -2,7 +2,7 @@ name: VitePressWorkflow
 
 on:
   push:
-    branches: [master]
+    branches: [releases/**]
 
 jobs:
   build:
