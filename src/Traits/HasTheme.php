@@ -15,35 +15,35 @@ trait HasTheme
      */
     public array $theme = [];
 
-    protected string $tableContentStyle = '';
+    public string $tableContentStyle = '';
 
-    protected string $tableTrStyle = '';
+    public string $tableTrStyle = '';
 
-    protected string $tableTbodyStyle = '';
+    public string $tableTbodyStyle = '';
 
-    protected string $tableTheadStyle = '';
+    public string $tableTheadStyle = '';
 
-    protected string $tableThStyle = '';
+    public string $tableThStyle = '';
 
-    protected string $tableTdStyle = '';
+    public string $tableTdStyle = '';
 
-    protected string $tableTdNoRecordsStyle = '';
+    public string $tableTdNoRecordsStyle = '';
 
-    protected string $tableTrHeaderStyle = '';
+    public string $tableTrHeaderStyle = '';
 
-    protected string $tableSortIconStyle = '';
+    public string $tableSortIconStyle = '';
 
-    protected string $tableBooleanIconStyle = '';
+    public string $tableBooleanIconStyle = '';
 
-    protected string $actionButtonStyle = '';
+    public string $actionButtonStyle = '';
 
-    protected string $dropdownContentStyle = '';
+    public string $dropdownContentStyle = '';
 
-    protected string $dropdownOptionStyle = '';
+    public string $dropdownOptionStyle = '';
 
-    protected string $paginationContainerStyle = '';
+    public string $paginationContainerStyle = '';
 
-    protected string $paginationStickyStyle = '';
+    public string $paginationStickyStyle = '';
 
     /**
      * @throws InvalidThemeException
@@ -89,7 +89,7 @@ trait HasTheme
             return false;
         }
 
-        return ! blank(mb_trim(parserString($value)));
+        return ! blank((parserString($value)));
     }
 
     /**

@@ -15,7 +15,7 @@ trait HasSearch
     /**
      * @var array<string>
      */
-    protected array $columnsToSearch = [];
+    public array $columnsToSearch = [];
 
     public function updatedSearch(): void
     {

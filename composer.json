@@ -16,7 +16,9 @@
     "require-dev": {
         "laravel/framework": "^11.0",
         "laravel/pint": "^1.20.0",
+        "orchestra/testbench": "^9.9",
         "pestphp/pest": "^3.7.4",
+        "pestphp/pest-plugin-livewire": "^3.0",
         "pestphp/pest-plugin-type-coverage": "^3.3.0",
         "phpstan/phpstan": "^1.12.17",
         "rector/rector": "^1.2.10",
@@ -58,10 +60,12 @@
         "test:lint": "pint --test --config pint.js",
         "test:types": "phpstan analyse --ansi",
         "test:unit": "pest --colors=always --coverage --parallel --min=100",
+        "test:pest": "pest --colors=always --parallel --min=100",
         "test": [
             "@test:refacto",
             "@test:lint",
-            "@test:types"
+            "@test:types",
+            "@test:pest"
         ]
     }
 }

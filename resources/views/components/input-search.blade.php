@@ -6,7 +6,7 @@
         },
         clear() {
             this.search = '';
-    
+
             $wire.set('search', '');
         }
     }"
@@ -17,6 +17,7 @@
     </div>
 
     <input
+        id="search-input"
         type="text"
         name="search"
         x-model="search"
