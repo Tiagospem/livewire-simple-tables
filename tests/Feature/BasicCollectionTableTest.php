@@ -2,24 +2,14 @@
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
-use TiagoSpem\SimpleTables\Tests\Dummy\Tables\BasicTable;
+use TiagoSpem\SimpleTables\Tests\Dummy\Tables\BasicCollectionTable;
 
 use function Pest\Livewire\livewire;
-
-it('should be able to create a dummy user', function (): void {
-    $user = FakeUser::factory()->create([
-        'is_active' => true,
-    ]);
-
-    expect($user->name)->toBe($user->name)
-        ->and($user->email)->toBe($user->email)
-        ->and($user->is_active)->toBeTrue();
-});
 
 it('should render the component', function (): void {
     $user = FakeUser::factory()->create();
 
-    livewire(BasicTable::class)
+    livewire(BasicCollectionTable::class)
         ->assertSeeInOrder([
             'User Id',
             'User Name',
@@ -43,7 +33,7 @@ it('should be able to search only when has columns to search', function (): void
         'name' => 'Jane Doe',
     ]);
 
-    livewire(BasicTable::class)
+    livewire(BasicCollectionTable::class)
         ->assertSee($userOne->name)
         ->assertSee($userTwo->name)
         ->set('search', 'John')
@@ -66,7 +56,7 @@ it('should be able to search only when has columns to search', function (): void
 it('should be able to see the search input only when has columns to search', function (): void {
     FakeUser::factory()->create();
 
-    livewire(BasicTable::class)
+    livewire(BasicCollectionTable::class)
         ->assertDontSeeHtml('id="search-input"')
         ->set('columnsToSearch', ['name'])
         ->assertSeeHtml('id="search-input"')
@@ -76,7 +66,7 @@ it('should be able to see the search input only when has columns to search', fun
 it('should be able to sort the table', function (): void {
     FakeUser::factory(5)->create();
 
-    livewire(BasicTable::class)
+    livewire(BasicCollectionTable::class)
         ->set('sortBy', 'id')
         ->set('sortDirection', 'asc')
         ->assertSeeInOrder(['1', '2', '3', '4', '5'])
@@ -96,7 +86,7 @@ it('should be able to paginate the table', function (): void {
         ))
         ->create();
 
-    livewire(BasicTable::class)
+    livewire(BasicCollectionTable::class)
         ->set('sortBy', 'name')
         ->set('sortDirection', 'asc')
         ->set('perPage', 1)
@@ -110,7 +100,7 @@ it('should be able to paginate the table', function (): void {
 it('should be able to override theme style', function (): void {
     FakeUser::factory()->create();
 
-    livewire(BasicTable::class, [
+    livewire(BasicCollectionTable::class, [
         'tableContentStyle' => 'table-content-style',
         'tableTrStyle' => 'table-tr-style',
         'tableTbodyStyle' => 'table-tbody-style',

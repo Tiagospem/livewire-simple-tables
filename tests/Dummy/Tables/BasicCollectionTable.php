@@ -2,12 +2,12 @@
 
 namespace TiagoSpem\SimpleTables\Tests\Dummy\Tables;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
 
-class BasicTable extends SimpleTableComponent
+class BasicCollectionTable extends SimpleTableComponent
 {
     public function columns(): array
     {
@@ -19,8 +19,8 @@ class BasicTable extends SimpleTableComponent
         ];
     }
 
-    public function datasource(): Builder
+    public function datasource(): Collection
     {
-        return FakeUser::query();
+        return collect(FakeUser::all());
     }
 }
