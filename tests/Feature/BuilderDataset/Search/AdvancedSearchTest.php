@@ -34,13 +34,13 @@ $dynamicComponent = fn(): SimpleTableComponent => new class () extends SimpleTab
 };
 
 it('should be able to search using join', function () use ($dynamicComponent): void {
-    FakeUser::factory(10)->create();
+    FakeUser::factory()->hasCar()->create();
 
-    $dataset = FakeUser::query();
+    $dataset = FakeUser::query()->with(['car', 'country']);
 
     $columns = [
-        Column::text('Id', 'id'),
-        Column::text('Email', 'email')->searchable(),
+        Column::text('Country', 'country.name')->searchable(),
+        Column::text('Car', 'car.name')->searchable(),
     ];
 
     livewire($dynamicComponent()::class, [
