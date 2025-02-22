@@ -2,7 +2,9 @@
 
 namespace TiagoSpem\SimpleTables\Tests\Dummy\Model;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use TiagoSpem\SimpleTables\Tests\Dummy\Factories\FakeUserFactory;
 
 /**
  * @property int $id
@@ -14,6 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class FakeUser extends Model
 {
+    /** @use HasFactory<FakeUserFactory> */
+    use HasFactory;
+
     protected $table = 'fake_users';
 
     protected $fillable = [
@@ -24,4 +29,9 @@ class FakeUser extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected static function newFactory(): FakeUserFactory
+    {
+        return FakeUserFactory::new();
+    }
 }

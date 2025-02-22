@@ -129,7 +129,11 @@ final readonly class TableRenderer
 
     private function renderPagination(): string
     {
-        $hasPagination = $this->getRowsCollection()->count() > $this->component->perPage;
+        $rows = $this->table->rows;
+
+        $totalRows = $rows instanceof LengthAwarePaginatorContract ? $rows->total() : $rows->count();
+
+        $hasPagination = $totalRows > $this->component->perPage;
 
         return View::make('simple-tables::table.partials.pagination', [
             'paginator' => $this->getPaginator(),
