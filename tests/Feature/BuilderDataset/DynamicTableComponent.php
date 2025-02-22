@@ -18,10 +18,9 @@ final class DynamicTableComponent extends SimpleTableComponent
 
     public array $eagerLoadsTesting = [];
 
-    public function mount(Builder $dataset, array $columns, array $columnsToSearch = []): void
+    public function mount(Builder $dataset, array $columns): void
     {
         $this->datasetTesting    = serialize($dataset->toRawSql());
-        $this->columnsToSearch   = $columnsToSearch;
         $this->eagerLoadsTesting = array_keys($dataset->getEagerLoads());
 
         $this->columnsTesting  = array_map(fn(Column $column): array => [
@@ -29,16 +28,22 @@ final class DynamicTableComponent extends SimpleTableComponent
             'key'        => $column->getRowKey(),
             'searchable' => $column->isSearchable(),
             'aliasKey'   => $column->getAliasKey(),
+            'isVisible'  => $column->isVisible(),
+            'style'      => $column->getStyle(),
         ], $columns);
     }
 
     public function columns(): array
     {
         return array_map(function (array $column): Column {
-            $columnInstance = Column::text($column['title'], $column['key'], $column['aliasKey']);
+            $columnInstance = Column::text($column['title'], $column['key'], $column['aliasKey'], $column['style']);
 
             if ($column['searchable']) {
                 $columnInstance->searchable();
+            }
+
+            if ( ! $column['isVisible']) {
+                $columnInstance->hide();
             }
 
             return $columnInstance;

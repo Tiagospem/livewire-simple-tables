@@ -11,6 +11,7 @@ use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCar;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCountry;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
 use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
+use TiagoSpem\SimpleTables\Themes\DefaultTheme;
 
 beforeEach(function (): void {
     $this->user = FakeUser::factory()->hasCar()->hasCountry()->create();
@@ -94,4 +95,73 @@ it('renders related model columns without alias keys with sub queries', function
     $assertions($dataset, $columns, $this->user);
 });
 
-it('should be able to modify column style', function (): void {})->todo();
+it('should be able to hide column', function (): void {
+    $dataset = FakeUser::query()->with(['car', 'country']);
+
+    $columns = [
+        Column::text('Country', 'country.name'),
+        Column::text('Model', 'car.model')->hide(),
+    ];
+
+    livewire(DynamicTableComponent::class, [
+        'dataset' => $dataset,
+        'columns' => $columns,
+    ])
+        ->assertSee('Country')
+        ->assertDontSee('Model')
+        ->assertSee($this->user->country->name)
+        ->assertDontSee($this->user->car->model)
+        ->assertOk();
+});
+
+it('should be able to modify column style', function (): void {
+    $dataset = FakeUser::query();
+
+    $theme = new DefaultTheme();
+
+    $columns = [
+        Column::text('Name', 'name')->style('text-center'),
+    ];
+
+    $thClass = theme($theme->getStyles(), 'table.th');
+
+    $mergedStyle = mergeStyle($thClass, 'text-center');
+
+    $expect = '<th class="' . htmlspecialchars($mergedStyle) . '">';
+
+    livewire(DynamicTableComponent::class, [
+        'dataset' => $dataset,
+        'columns' => $columns,
+    ])
+        ->assertSeeHtml($expect)
+        ->assertOk();
+});
+
+it('should be able to center th elements', function (): void {
+    $dataset = FakeUser::query();
+
+    $theme = new DefaultTheme();
+
+    $columns = [
+        Column::text('Name', 'name')->centered(),
+    ];
+
+    $thClass = theme($theme->getStyles(), 'table.th');
+
+    $mergedStyle = mergeStyle($thClass, '[&>:last-child]:justify-center');
+
+    $expect = '<th class="' . htmlspecialchars($mergedStyle) . '">';
+
+    livewire(DynamicTableComponent::class, [
+        'dataset' => $dataset,
+        'columns' => $columns,
+    ])
+        ->assertSeeHtml($expect)
+        ->assertOk();
+});
+
+it('create test for boolean column', function (): void {})->todo();
+
+it('create test for toggleable column', function (): void {})->todo();
+
+it('create test for action column', function (): void {})->todo();

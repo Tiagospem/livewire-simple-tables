@@ -120,3 +120,36 @@ it('should be able to search columns without alias keys with sub queries', funct
 
     $assertions($dataset, $columns);
 });
+
+it('should be able to search fields that is not set in the columns', function (): void {
+    $dataset = FakeUser::query()->with(['car', 'country']);
+
+    $columns = [
+        Column::text('Country', 'country.name')->searchable(),
+    ];
+
+    livewire(DynamicTableComponent::class, [
+        'dataset' => $dataset,
+        'columns' => $columns,
+    ])
+        ->set('columnsToSearch', ['car.model', 'car.color'])
+        ->set('search', 'Country 1')
+        ->assertSee('Country 1')
+        ->assertDontSee('Country 2')
+        ->set('search', 'Country 2')
+        ->assertSee('Country 2')
+        ->assertDontSee('Country 1')
+        ->set('search', 'Model 1')
+        ->assertSee('Country 1')
+        ->assertDontSee('Country 2')
+        ->assertDontSee('Model 2')
+        ->set('search', 'Model 2')
+        ->assertSee('Country 2')
+        ->assertDontSee('Country 1')
+        ->set('search', 'Color 1')
+        ->assertSee('Country 1')
+        ->assertDontSee('Country 2')
+        ->set('search', 'Color 2')
+        ->assertSee('Country 2')
+        ->assertDontSee('Country 1');
+});
