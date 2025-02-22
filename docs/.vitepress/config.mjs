@@ -11,6 +11,7 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Installation', link: '/installation' },
+      { text: 'Configuration', link: '/configuration' },
     ],
 
     sidebar: [
@@ -18,7 +19,7 @@ export default defineConfig({
         text: 'Getting Started',
         items: [
           { text: 'Installation', link: '/installation' },
-          //{ text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Configuration', link: '/configuration' },
         ]
       }
     ],

@@ -1,7 +1,8 @@
 {
   "name": "simpletables",
   "version": "1.0.0",
-  "description": "laravel table component",
+  "description": "a livewire table component",
+  "type": "module",
   "scripts": {
     "dev": "mix watch",
     "build": "mix --production",
