@@ -56,7 +56,7 @@ final class SimpleTablesServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../../config/simple-tables.php' => config_path($this->packageName.'.php'),
-        ], 'simple-table-config');
+        ], $this->packageName.'-config');
 
         $this->publishes([__DIR__.'/../../resources/lang' => lang_path('vendor/'.$this->packageName)], $this->packageName.'-lang');
     }

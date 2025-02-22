@@ -35,6 +35,11 @@ final class CreateCommand extends Command
         $name = str_replace(['\\', '/'], '/', $name);
         $parts = explode('/', $name);
         $className = array_pop($parts);
+
+        if ($type === 'table' && ! str_ends_with($className, 'Table')) {
+            $className .= 'Table';
+        }
+
         $subPath = $parts === [] ? '' : implode('/', $parts).'/';
 
         $basePath = $type === 'filter'

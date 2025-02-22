@@ -6,7 +6,7 @@
         },
         clear() {
             this.search = '';
-
+    
             $wire.set('search', '');
         }
     }"
