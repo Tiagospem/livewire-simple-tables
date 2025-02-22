@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Commands;
 
 use Illuminate\Console\Command;
+use TiagoSpem\SimpleTables\Services\StubService;
 
 final class CreateCommand extends Command
 {
     protected $signature = 'st:create {type : The component type (table|filter)} {name : The name of the component}';
 
     protected $description = 'Make a new SimpleTable or SimpleFilter component.';
+    public function __construct(private readonly StubService $stubService)
+    {
+        parent::__construct();
+    }
 
     public function handle(): int
     {
@@ -24,7 +29,7 @@ final class CreateCommand extends Command
 
         $name         = parserString($this->argument('name'));
         $stubFileName = 'filter' === $type ? 'filter.stub' : 'table.stub';
-        $stubPath     = __DIR__ . '/../../resources/stubs/' . $stubFileName;
+        $stubPath     = $this->stubService->getStubPath($stubFileName);
 
         if ( ! file_exists($stubPath)) {
             $this->error('Stub not found');
@@ -45,11 +50,13 @@ final class CreateCommand extends Command
         $basePath = 'filter' === $type
             ? config('simple-tables.filter-path')
             : config('simple-tables.create-path');
+
         if ( ! is_string($basePath)) {
             $this->error('Invalid base path configuration');
 
             return self::FAILURE;
         }
+
         $targetPath = $basePath . '/' . $subPath . $className . '.php';
 
         if (file_exists($targetPath)) {
@@ -70,6 +77,7 @@ final class CreateCommand extends Command
         $content       = str_replace(['{{ namespace }}', '{{ class }}', '{{ filterId }}'], [$namespace, $className, $filterId], $content);
 
         file_put_contents($targetPath, $content);
+
         $this->info('Component created: ' . $targetPath);
 
         return self::SUCCESS;

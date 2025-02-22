@@ -23,6 +23,7 @@ it('should sets dropdown options correctly', function (): void {
     $dropdownOptions = $action->getActionOptions();
 
     expect($dropdownOptions)->toBeArray()
+        ->and($action->hasDropdown())->toBeTrue()
         ->and($dropdownOptions)->toHaveLength(1)
         ->and($dropdownOptions[0])->toBeInstanceOf(Option::class)
         ->and($dropdownOptions[0]->getName())->toBe('Option 1')

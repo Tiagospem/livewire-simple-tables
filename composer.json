@@ -56,6 +56,7 @@
     "scripts": {
         "refacto": "rector",
         "lint": "pint --config=pint.json",
+        "coverage": "pest --coverage",
         "test:refacto": "rector --dry-run",
         "test:lint": "pint --test --config=pint.json",
         "test:types": "phpstan analyse --ansi",
