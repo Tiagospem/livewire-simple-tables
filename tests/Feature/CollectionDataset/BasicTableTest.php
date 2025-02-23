@@ -123,21 +123,21 @@ it('should be able to override theme style', function () use ($component): void 
     FakeUser::factory()->create();
 
     livewire($component::class, [
-        'tableContentStyle'        => 'table-content-style',
-        'tableTrStyle'             => 'table-tr-style',
-        'tableTbodyStyle'          => 'table-tbody-style',
-        'tableTheadStyle'          => 'table-thead-style',
-        'tableThStyle'             => 'table-th-style',
-        'tableTdStyle'             => 'table-td-style',
-        'tableTdNoRecordsStyle'    => 'table-td-no-records-style',
-        'tableTrHeaderStyle'       => 'table-tr-header-style',
-        'tableSortIconStyle'       => 'table-sort-icon-style',
-        'tableBooleanIconStyle'    => 'table-boolean-icon-style',
-        'actionButtonStyle'        => 'action-button-style',
-        'dropdownContentStyle'     => 'dropdown-content-style',
-        'dropdownOptionStyle'      => 'dropdown-option-style',
-        'paginationContainerStyle' => 'pagination-container-style',
-        'paginationStickyStyle'    => 'pagination-sticky-style',
+        'tableContent_Stl'        => 'table-content-style',
+        'tableTr_Stl'             => 'table-tr-style',
+        'tableTbody_Stl'          => 'table-tbody-style',
+        'tableThead_Stl'          => 'table-thead-style',
+        'tableTh_Stl'             => 'table-th-style',
+        'tableTd_Stl'             => 'table-td-style',
+        'tableTdNoRecords_Stl'    => 'table-td-no-records-style',
+        'tableTrHeader_Stl'       => 'table-tr-header-style',
+        'tableSortIcon_Stl'       => 'table-sort-icon-style',
+        'tableBooleanIcon_Stl'    => 'table-boolean-icon-style',
+        'actionButton_Stl'        => 'action-button-style',
+        'dropdownContent_Stl'     => 'dropdown-content-style',
+        'dropdownOption_Stl'      => 'dropdown-option-style',
+        'paginationContainer_Stl' => 'pagination-container-style',
+        'paginationSticky_Stl'    => 'pagination-sticky-style',
     ])
         ->assertSeeHtml('table-content-style')
         ->assertSeeHtml('table-tr-style')

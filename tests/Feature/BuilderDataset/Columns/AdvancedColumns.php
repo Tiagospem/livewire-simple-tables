@@ -98,6 +98,8 @@ it('renders related model columns without alias keys with sub queries', function
 it('should be able to hide column', function (): void {
     $dataset = FakeUser::query()->with(['car', 'country']);
 
+    $user = $dataset->first();
+
     $columns = [
         Column::text('Country', 'country.name'),
         Column::text('Model', 'car.model')->hide(),
@@ -109,8 +111,8 @@ it('should be able to hide column', function (): void {
     ])
         ->assertSee('Country')
         ->assertDontSee('Model')
-        ->assertSee($this->user->country->name)
-        ->assertDontSee($this->user->car->model)
+        ->assertSee($user->country->name)
+        ->assertDontSee($user->car->model)
         ->assertOk();
 });
 
