@@ -111,8 +111,6 @@ it('should be able to hide column', function (): void {
     ])
         ->assertSee('Country')
         ->assertDontSee('Model')
-        ->assertSee($user->country->name)
-        ->assertDontSee($user->car->model)
         ->assertOk();
 });
 

@@ -29,21 +29,26 @@ it('configures the view callback correctly and returns a view with expected cont
         ->and($viewInstance)->toContain('999');
 });
 
-it('configures the mutate callback correctly and returns the expected mutation result when invoked', function (): void {
-    $field = Field::key('test_key')
-        ->mutate(fn($row): string => 'mutated:' . $row->name);
-
-    /** @var Closure $mutation */
-    $mutation = $field->getMutation()->getCallback();
-
-    expect($mutation)->toBeInstanceOf(Closure::class);
-
+it('configures the mutate callback correctly and returns expected results', function (): void {
     $dummyRow = (object) ['name' => 'Alice'];
 
-    $result = $mutation($dummyRow);
+    $mutation = Field::key('test_key')
+        ->mutate(fn($row): string => 'mutated:' . $row->name)
+        ->getMutation()
+        ->getCallback();
 
-    expect($result)->toBe('mutated:Alice');
+    expect($mutation)->toBeInstanceOf(Closure::class)
+        ->and($mutation($dummyRow))->toBe('mutated:Alice');
+
+    $mutation = Field::key('test_key')
+        ->mutate(fn(): string => 'mutated')
+        ->getMutation()
+        ->getCallback();
+
+    expect($mutation)->toBeInstanceOf(Closure::class)
+        ->and($mutation($dummyRow))->toBe('mutated');
 });
+
 
 it('appends multiple styles correctly and returns them concatenated', function (): void {
     $field = Field::key('test_key')

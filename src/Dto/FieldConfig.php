@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Dto;
 
 use Closure;
-use Exception;
+use ReflectionException;
 use ReflectionFunction;
 use ReflectionNamedType;
 
@@ -16,31 +16,23 @@ final readonly class FieldConfig
     public static function fromClosure(Closure $callback): self
     {
         try {
-            $reflection = new ReflectionFunction($callback);
-
+            $reflection         = new ReflectionFunction($callback);
             $numberOfParameters = $reflection->getNumberOfParameters();
-
-            $parameterType = self::getFirstParameterType($reflection);
-
-            return new self($callback, $numberOfParameters, $parameterType);
-        } catch (Exception) {
-            return new self($callback, 1, 'mixed');
+            $parameterType      = self::getFirstParameterType($reflection);
         }
+        // @codeCoverageIgnoreStart
+        catch (ReflectionException) {
+            $numberOfParameters = 1;
+            $parameterType      = 'mixed';
+        }
+        // @codeCoverageIgnoreEnd
+
+        return new self($callback, $numberOfParameters, $parameterType);
     }
 
     public function getCallback(): ?Closure
     {
         return $this->callback;
-    }
-
-    public function getNumberOfParameters(): int
-    {
-        return $this->numberOfParameters;
-    }
-
-    public function getParameterType(): string
-    {
-        return $this->parameterType;
     }
 
     public function toObject(): FieldData
