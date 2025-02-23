@@ -1,1 +1,1 @@
-this is a action dummy
+{{ $foo }} - {{ $row->id }} - {{ $row->name }}

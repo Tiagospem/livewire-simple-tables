@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\View\View;
 use TiagoSpem\SimpleTables\Dto\FieldConfig;
 use TiagoSpem\SimpleTables\Field;
 
@@ -21,17 +20,13 @@ it('should sets view callback correctly and returns a view instance when mutatio
 
     expect($mutation)->toBeInstanceOf(Closure::class);
 
-    $dummyRow = (object) ['id' => 1, 'name' => 'Test Row'];
+    $dummyRow = (object) ['id' => 999, 'name' => 'Test Row'];
 
     $viewInstance = $mutation($dummyRow);
 
-    expect($viewInstance)->toBeInstanceOf(View::class);
-
-    $data = $viewInstance->getData();
-    expect($data)->toHaveKey('row')
-        ->and($data['row'])->toBe($dummyRow)
-        ->and($data)->toHaveKey('foo')
-        ->and($data['foo'])->toBe('bar');
+    expect($viewInstance)->toContain('Test Row')
+        ->and($viewInstance)->toContain('bar')
+        ->and($viewInstance)->toContain('999');
 });
 
 it('should sets mutate callback correctly and returns the expected result when mutation is invoked', function (): void {
