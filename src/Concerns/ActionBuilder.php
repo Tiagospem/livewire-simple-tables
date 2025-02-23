@@ -13,10 +13,6 @@ final class ActionBuilder
      */
     private array $actions = [];
 
-    private string $columnName = '';
-
-    private string $columnStyle = '';
-
     /**
      * @param  array<Action>  $action
      */
@@ -27,36 +23,12 @@ final class ActionBuilder
         return $this;
     }
 
-    public function columnName(string $columnName): self
-    {
-        $this->columnName = $columnName;
-
-        return $this;
-    }
-
-    public function columnStyle(string $columnStyle): self
-    {
-        $this->columnStyle = $columnStyle;
-
-        return $this;
-    }
-
     /**
      * @return array<Action>
      */
     public function getActions(): array
     {
         return $this->actions;
-    }
-
-    public function getColumnStyle(): string
-    {
-        return mergeStyle($this->columnStyle);
-    }
-
-    public function getActionColumnName(): string
-    {
-        return $this->columnName;
     }
 
     public function hasActions(): bool

@@ -50,7 +50,6 @@ final readonly class TableRenderer
             'thLastStyle'       => theme($this->theme, 'table.th_last'),
             'sortIconStyle'     => theme($this->theme, 'table.sort_icon'),
             'hasAction'         => $this->table->actionBuilder->hasActions(),
-            'actionName'        => $this->table->actionBuilder->getActionColumnName(),
             'detailViewEnabled' => $this->detailViewEnabled(),
         ])->render();
     }
@@ -90,7 +89,6 @@ final readonly class TableRenderer
             'rowId'             => $rowId,
             'trStyle'           => $contentParser->getMutedRowStyle(),
             'tdStyle'           => theme($this->theme, 'table.td'),
-            'actionStyle'       => $this->getActionStyle(),
         ])->render();
     }
 
@@ -109,14 +107,6 @@ final readonly class TableRenderer
         return View::make($this->component->detailView, [
             'row' => $row,
         ])->render();
-    }
-
-    private function getActionStyle(): string
-    {
-        return mergeStyle(
-            theme($this->theme, 'table.td_last'),
-            $this->table->actionBuilder->getColumnStyle(),
-        );
     }
 
     private function renderEmptyRow(): string
