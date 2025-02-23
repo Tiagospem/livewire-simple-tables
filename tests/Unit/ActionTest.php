@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\View\View;
 use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Option;
 
-it('should creates an action instance with the correct id using for()', function (): void {
+it('creates an Action instance with the correct id using the for() method', function (): void {
     $action = Action::for('action-1');
 
     expect($action->getActionId())->toBe('action-1');
 });
 
-it('should sets dropdown options correctly', function (): void {
+it('assigns dropdown options correctly', function (): void {
     $action = Action::for('action-dropdown');
 
     $option = Option::add('Option 1', 'icon-1');
@@ -30,7 +31,7 @@ it('should sets dropdown options correctly', function (): void {
         ->and($dropdownOptions[0]->getIcon())->toBe('icon-1');
 });
 
-it('should sets view callback and returns a view instance', function (): void {
+it('configures a view callback and returns a valid view instance with expected data', function (): void {
     $action = Action::for('action-3')
         ->view('simple-tables::tests.action-dummy', 'customRow', ['foo' => 'bar']);
 
@@ -51,7 +52,7 @@ it('should sets view callback and returns a view instance', function (): void {
         ->and($data['foo'])->toBe('bar');
 });
 
-it('should sets button parameters correctly', function (): void {
+it('configures button parameters and returns expected values', function (): void {
     $action = Action::for('action-4')
         ->button('icon-btn', 'Button Name', 'https://example.com', true, Target::NONE);
 
@@ -63,41 +64,41 @@ it('should sets button parameters correctly', function (): void {
         ->and($action->getIconStyle())->toBe('size-4');
 });
 
-it('should sets default option icon correctly', function (): void {
+it('sets the default option icon correctly', function (): void {
     $action = Action::for('action-5')
         ->defaultOptionIcon('default-icon');
 
     expect($action->getDefaultOptionIcon())->toBe('default-icon');
 });
 
-it('should returns true for hasAction when view is set', function (): void {
+it('returns true for hasAction when a view is set', function (): void {
     $action = Action::for('action-6')
         ->view('simple-tables::tests.action-dummy');
 
     expect($action->hasAction())->toBeTrue();
 });
 
-it('should returns true for hasAction when button name is set', function (): void {
+it('returns true for hasAction when a button name is set', function (): void {
     $action = Action::for('action-7')
         ->button(null, 'Button');
 
     expect($action->hasAction())->toBeTrue();
 });
 
-it('should returns true for hasAction when button icon is set', function (): void {
+it('returns true for hasAction when a button icon is set', function (): void {
     $action = Action::for('action-8')
         ->button('icon');
 
     expect($action->hasAction())->toBeTrue();
 });
 
-it('should returns false for hasAction when no view, name, or icon is set', function (): void {
+it('returns false for hasAction when no view, name, or icon is configured', function (): void {
     $action = Action::for('action-9');
 
     expect($action->hasAction())->toBeFalse();
 });
 
-it('should sets href with a string and returns the URL, default target, and wireNavigate false', function (): void {
+it('configures href with a string, returning the correct URL, default target, and wireNavigate as false', function (): void {
     $action = Action::for('test')->href('https://example.com');
 
     expect($action->getUrl([]))->toBe('https://example.com')
@@ -105,7 +106,7 @@ it('should sets href with a string and returns the URL, default target, and wire
         ->and($action->getTarget())->toBe(Target::PARENT->value);
 });
 
-it('should sets href with a closure and returns the evaluated URL, true wireNavigate, and custom target', function (): void {
+it('configures href with a closure, returning evaluated URL, wireNavigate as true, and a custom target', function (): void {
     $action = Action::for('test')
         ->href(fn($row): string => 'url-' . $row['id'], true, Target::NONE);
 
@@ -116,7 +117,7 @@ it('should sets href with a closure and returns the evaluated URL, true wireNavi
         ->and($action->getTarget())->toBe(Target::NONE->value);
 });
 
-it('should sets event and returns correct event data with closure for params', function (): void {
+it('assigns event data using a closure for parameters and returns the correct event structure', function (): void {
     $action = Action::for('test')->event('testEvent', fn($row) => $row['value']);
 
     $eventData = $action->getEvent(['value' => 'data']);
@@ -126,13 +127,13 @@ it('should sets event and returns correct event data with closure for params', f
         ->and($eventData)->toHaveKey('params', 'data');
 });
 
-it('should returns null for event when no event name is set', function (): void {
+it('returns null for event when no event name is defined', function (): void {
     $action = Action::for('test');
 
     expect($action->getEvent([]))->toBeNull();
 });
 
-it('should sets disabled flag as boolean and returns correct disabled status', function (): void {
+it('sets the disabled flag as a boolean and returns the expected disabled status', function (): void {
     $action = Action::for('test')->disabled();
 
     expect($action->isDisabled([]))->toBeTrue();
@@ -142,7 +143,7 @@ it('should sets disabled flag as boolean and returns correct disabled status', f
     expect($action->isDisabled([]))->toBeFalse();
 });
 
-it('should sets disabled flag with closure and returns evaluated disabled status', function (): void {
+it('sets the disabled flag using a closure and returns the evaluated status', function (): void {
     $action = Action::for('test')
         ->disabled(fn($row): mixed => $row['disable']);
 
@@ -150,7 +151,7 @@ it('should sets disabled flag with closure and returns evaluated disabled status
         ->and($action->isDisabled(['disable' => false]))->toBeFalse();
 });
 
-it('should sets hidden flag as boolean and respects the "can" condition', function (): void {
+it('sets the hidden flag as a boolean and respects the "can" condition', function (): void {
     $action = Action::for('test')->hidden()->can();
 
     expect($action->isHidden([]))->toBeTrue();
@@ -164,7 +165,24 @@ it('should sets hidden flag as boolean and respects the "can" condition', functi
     expect($action->isHidden([]))->toBeTrue();
 });
 
-it('should sets hidden flag with closure and returns evaluated hidden status', function (): void {
+it('sets the hidden flag using a callback for the "can" condition and returns hidden status correctly', function (): void {
+    $action = Action::for('test')->can(fn(): false => false);
+
+    expect($action->isHidden([]))->toBeTrue();
+});
+
+it('sets the hidden flag based on user permission via "can" and returns visible status appropriately', function (): void {
+    $user = Mockery::mock(Authorizable::class);
+    $user->shouldReceive('can')->with('delete')->andReturn(true);
+
+    Auth::shouldReceive('user')->andReturn($user);
+
+    $action = Action::for('test')->can('delete');
+
+    expect($action->isHidden([]))->toBeFalse();
+});
+
+it('sets the hidden flag using a closure and returns the evaluated hidden status', function (): void {
     $action = Action::for('test')
         ->hidden(fn($row): mixed => $row['hidden']);
 
@@ -172,18 +190,18 @@ it('should sets hidden flag with closure and returns evaluated hidden status', f
         ->and($action->isHidden(['hidden' => false]))->toBeFalse();
 });
 
-it('should sets iconStyle correctly and returns it', function (): void {
+it('sets and returns the correct icon style', function (): void {
     $action = Action::for('test')->iconStyle('my-icon-style');
     expect($action->getIconStyle())->toBe('my-icon-style');
 });
 
-it('should sets buttonStyle correctly and returns it', function (): void {
+it('sets and returns the correct button style', function (): void {
     $action = Action::for('test')->buttonStyle('my-button-style');
 
     expect($action->getStyle())->toBe('my-button-style');
 });
 
-it('should sets event data with a non-closure parameter and returns it', function (): void {
+it('assigns event data using a non-closure parameter and returns it correctly', function (): void {
     $action = Action::for('test')->event('eventName', ['foo' => 'baz']);
 
     $eventData = $action->getEvent([]);
@@ -191,7 +209,7 @@ it('should sets event data with a non-closure parameter and returns it', functio
     expect($eventData['params'])->toBe(['foo' => 'baz']);
 });
 
-it('should sets event data with a closure parameter and returns evaluated value', function (): void {
+it('assigns event data using a closure parameter and returns the evaluated value', function (): void {
     $action = Action::for('test')->event('eventName', fn($row): string => 'value-' . $row['id']);
 
     $eventData = $action->getEvent(['id' => 7]);

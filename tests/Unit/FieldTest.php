@@ -5,13 +5,13 @@ declare(strict_types=1);
 use TiagoSpem\SimpleTables\Dto\FieldConfig;
 use TiagoSpem\SimpleTables\Field;
 
-it('should creates a field instance with the given key', function (): void {
+it('creates a Field instance with the specified key', function (): void {
     $field = Field::key('test_key');
 
     expect($field->getRowKey())->toBe('test_key');
 });
 
-it('should sets view callback correctly and returns a view instance when mutation is invoked', function (): void {
+it('configures the view callback correctly and returns a view with expected content when invoked', function (): void {
     $field = Field::key('test_key')
         ->view('simple-tables::tests.action-dummy', ['foo' => 'bar']);
 
@@ -29,7 +29,7 @@ it('should sets view callback correctly and returns a view instance when mutatio
         ->and($viewInstance)->toContain('999');
 });
 
-it('should sets mutate callback correctly and returns the expected result when mutation is invoked', function (): void {
+it('configures the mutate callback correctly and returns the expected mutation result when invoked', function (): void {
     $field = Field::key('test_key')
         ->mutate(fn($row): string => 'mutated:' . $row->name);
 
@@ -45,7 +45,7 @@ it('should sets mutate callback correctly and returns the expected result when m
     expect($result)->toBe('mutated:Alice');
 });
 
-it('should appends styles correctly and returns them concatenated', function (): void {
+it('appends multiple styles correctly and returns them concatenated', function (): void {
     $field = Field::key('test_key')
         ->style('class1')
         ->style('class2');
@@ -53,7 +53,7 @@ it('should appends styles correctly and returns them concatenated', function ():
     expect($field->getStyle())->toBe('class1 class2');
 });
 
-it('should adds style rules correctly as FieldConfig instances', function (): void {
+it('adds style rules correctly as FieldConfig instances and evaluates them as expected', function (): void {
     $field = Field::key('test_key')
         ->styleRule(fn($row): string => $row->active ? 'active' : 'inactive');
 

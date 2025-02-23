@@ -5,7 +5,7 @@ declare(strict_types=1);
 use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Option;
 
-it('should creates an option instance using add()', function (): void {
+it('creates an Option instance using the add() method', function (): void {
     $option = Option::add('Option 1', 'icon-1');
 
     expect($option)->toBeInstanceOf(Option::class)
@@ -13,7 +13,7 @@ it('should creates an option instance using add()', function (): void {
         ->and($option->getIcon())->toBe('icon-1');
 });
 
-it('should creates a divider option with divider()', function (): void {
+it('creates a divider Option and correctly stores its divider options', function (): void {
     $subOption1 = Option::add('Sub Option 1', 'icon-sub1');
     $subOption2 = Option::add('Sub Option 2', 'icon-sub2');
 
@@ -27,7 +27,7 @@ it('should creates a divider option with divider()', function (): void {
         ->and($divider->getDividerOptions()[1]->getName())->toBe('Sub Option 2');
 });
 
-it('should sets href on option and returns the correct URL, target, and wireNavigate flag', function (): void {
+it('sets href on an Option and returns the correct URL, target, and wireNavigate flag', function (): void {
     $option = Option::add('Link Option')
         ->href('https://example.com', true, Target::NONE);
 
@@ -36,7 +36,7 @@ it('should sets href on option and returns the correct URL, target, and wireNavi
         ->and($option->getTarget())->toBe(Target::NONE->value);
 });
 
-it('should sets event on option and returns the correct event data', function (): void {
+it('configures an event on an Option and returns the correct event data', function (): void {
     $option = Option::add('Event Option')
         ->event('optionEvent', fn($row) => $row['id']);
 
@@ -47,7 +47,7 @@ it('should sets event on option and returns the correct event data', function ()
         ->and($event['params'])->toBe(123);
 });
 
-it('should sets disabled flag on option as boolean and using a closure', function (): void {
+it('sets the disabled flag on an Option using both a boolean value and a closure', function (): void {
     $option = Option::add('Disabled Option')->disabled();
 
     expect($option->isDisabled([]))->toBeTrue();
@@ -58,7 +58,7 @@ it('should sets disabled flag on option as boolean and using a closure', functio
         ->and($option->isDisabled(['disable' => false]))->toBeFalse();
 });
 
-it('should sets hidden flag on option as boolean and using a closure, respecting the "can" condition', function (): void {
+it('sets the hidden flag on an Option using both a boolean value and a closure while respecting the "can" condition', function (): void {
     $option = Option::add('Hidden Option')->hidden()->can();
 
     expect($option->isHidden([]))->toBeTrue();
@@ -77,7 +77,7 @@ it('should sets hidden flag on option as boolean and using a closure, respecting
         ->and($option->isHidden(['hidden' => false]))->toBeFalse();
 });
 
-it('should sets iconStyle and buttonStyle on option and returns them correctly', function (): void {
+it('sets iconStyle and buttonStyle on an Option and returns the correct styles', function (): void {
     $option = Option::add('Style Option')
         ->iconStyle('icon-style')
         ->buttonStyle('button-style');
