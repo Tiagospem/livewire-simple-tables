@@ -12,6 +12,7 @@ final class CreateCommand extends Command
     protected $signature = 'st:create {type : The component type (table|filter)} {name : The name of the component}';
 
     protected $description = 'Make a new SimpleTable or SimpleFilter component.';
+
     public function __construct(private readonly StubService $stubService)
     {
         parent::__construct();

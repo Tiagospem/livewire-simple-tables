@@ -87,9 +87,14 @@ trait HasTheme
             }
 
             [$section, $key] = $this->parseStyleProperty($propertyName);
-            $propValue       = mb_trim(parserString($value));
+
+            $propValue = mb_trim(parserString($value));
+
             if ('' !== $propValue) {
-                $this->theme[$section][$key] = $propValue;
+                /** @var array<string, string> $sectionTheme */
+                $sectionTheme          = $this->theme[$section];
+                $sectionTheme[$key]    = $propValue;
+                $this->theme[$section] = $sectionTheme;
             }
         }
     }
