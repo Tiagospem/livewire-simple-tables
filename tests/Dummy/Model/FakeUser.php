@@ -14,6 +14,7 @@ use TiagoSpem\SimpleTables\Tests\Dummy\Factories\FakeUserFactory;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property string $phone
  * @property int $country_id
  * @property bool $is_active
  * @property string $created_at
@@ -30,6 +31,7 @@ final class FakeUser extends Model
         'id',
         'name',
         'email',
+        'phone',
         'is_active',
         'country_id',
         'created_at',

@@ -10,7 +10,7 @@ use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
 
-final class DynamicTableComponent extends SimpleTableComponent
+class DynamicTableComponent extends SimpleTableComponent
 {
     public string $datasetTesting;
 

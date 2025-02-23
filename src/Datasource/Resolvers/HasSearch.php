@@ -122,7 +122,7 @@ trait HasSearch
             return '';
         }
 
-        return mb_strtolower(htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        return htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     private function applyBeforeSearchModifiers(string $field, string $value): string

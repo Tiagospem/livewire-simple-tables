@@ -23,6 +23,7 @@ final class FakeUserFactory extends Factory
         return [
             'name'       => fake()->name(),
             'email'      => fake()->unique()->safeEmail(),
+            'phone'      => fake()->phoneNumber(),
             'is_active'  => fake()->boolean(),
         ];
     }
