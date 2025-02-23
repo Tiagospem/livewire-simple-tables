@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
 use function Pest\Livewire\livewire;
@@ -10,8 +11,8 @@ use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Facades\SimpleTables;
 use TiagoSpem\SimpleTables\Field;
+use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
-use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
 use TiagoSpem\SimpleTables\Themes\DefaultTheme;
 
 beforeEach(function (): void {
@@ -24,15 +25,13 @@ beforeEach(function (): void {
 });
 
 it('should be able to mutate column style', function (): void {
-    $dataset = FakeUser::query();
-
     $theme = (new DefaultTheme())->getStyles();
 
     $themeTdStyle = theme($theme, 'table.td');
 
     $expectedStyle = mergeStyle($themeTdStyle, 'new-style-for-name-column');
 
-    $dynamicComponent = fn(): DynamicTableComponent => new class () extends DynamicTableComponent {
+    $dynamicComponent = new class () extends SimpleTableComponent {
         public function mutation(): Mutation
         {
             return SimpleTables::mutation()
@@ -41,17 +40,22 @@ it('should be able to mutate column style', function (): void {
                         ->style('new-style-for-name-column'),
                 ]);
         }
+
+        public function columns(): array
+        {
+            return [
+                Column::text('phone', 'phone'),
+                Column::text('name', 'name'),
+            ];
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
     };
 
-    $columns = [
-        Column::text('phone', 'phone'),
-        Column::text('name', 'name'),
-    ];
-
-    livewire($dynamicComponent()::class, [
-        'columns' => $columns,
-        'dataset' => $dataset,
-    ])
+    livewire($dynamicComponent::class)
         ->assertSeeHtml('<td class="' . $expectedStyle . '">John Doe</td>')
         ->assertSeeHtml('<td class="' . $expectedStyle . '">Jane Doe</td>')
         ->assertSeeHtml('<td class="' . $themeTdStyle . '">1123456789</td>')
@@ -60,9 +64,7 @@ it('should be able to mutate column style', function (): void {
 });
 
 it('should be able to mutate column by return a view', function (): void {
-    $dataset = FakeUser::query();
-
-    $dynamicComponent = fn(): DynamicTableComponent => new class () extends DynamicTableComponent {
+    $dynamicComponent = new class () extends SimpleTableComponent {
         public function mutation(): Mutation
         {
             return SimpleTables::mutation()
@@ -71,17 +73,22 @@ it('should be able to mutate column by return a view', function (): void {
                         ->view('simple-tables::tests.column-view', ['name' => 'custom-name']),
                 ]);
         }
+
+        public function columns(): array
+        {
+            return [
+                Column::text('phone', 'phone'),
+                Column::text('name', 'name'),
+            ];
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
     };
 
-    $columns = [
-        Column::text('phone', 'phone'),
-        Column::text('name', 'name'),
-    ];
-
-    livewire($dynamicComponent()::class, [
-        'columns' => $columns,
-        'dataset' => $dataset,
-    ])
+    livewire($dynamicComponent::class)
         ->assertSee('custom-name')
         ->assertDontSee('John Doe')
         ->assertDontSee('Jane Doe')
@@ -89,9 +96,7 @@ it('should be able to mutate column by return a view', function (): void {
 });
 
 it('should be able to mutate column value by using callback', function (): void {
-    $dataset = FakeUser::query();
-
-    $dynamicComponent = fn(): DynamicTableComponent => new class () extends DynamicTableComponent {
+    $dynamicComponent = new class () extends SimpleTableComponent {
         public function mutation(): Mutation
         {
             return SimpleTables::mutation()
@@ -114,17 +119,22 @@ it('should be able to mutate column value by using callback', function (): void 
                         }),
                 ]);
         }
+
+        public function columns(): array
+        {
+            return  [
+                Column::text('phone', 'phone'),
+                Column::text('name', 'name'),
+            ];
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
     };
 
-    $columns = [
-        Column::text('phone', 'phone'),
-        Column::text('name', 'name'),
-    ];
-
-    livewire($dynamicComponent()::class, [
-        'columns' => $columns,
-        'dataset' => $dataset,
-    ])
+    livewire($dynamicComponent::class)
         ->assertSee('Jonny Doe')
         ->assertSee('Jane Doe')
         ->assertDontSee('John Doe')

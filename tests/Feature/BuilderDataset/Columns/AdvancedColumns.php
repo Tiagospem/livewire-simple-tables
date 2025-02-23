@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 use function Pest\Livewire\livewire;
 
+use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Column;
+use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Facades\SimpleTables;
+use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCar;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCountry;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
@@ -98,8 +102,6 @@ it('renders related model columns without alias keys with sub queries', function
 it('should be able to hide column', function (): void {
     $dataset = FakeUser::query()->with(['car', 'country']);
 
-    $user = $dataset->first();
-
     $columns = [
         Column::text('Country', 'country.name'),
         Column::text('Model', 'car.model')->hide(),
@@ -164,4 +166,30 @@ it('create test for boolean column', function (): void {})->todo();
 
 it('create test for toggleable column', function (): void {})->todo();
 
-it('create test for action column', function (): void {})->todo();
+it('should be able to render action column', function (): void {
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function columns(): array
+        {
+            return [
+                Column::action('actions', 'action column'),
+            ];
+        }
+
+        public function actionBuilder(): ActionBuilder
+        {
+            return SimpleTables::actionBuilder()
+                ->actions([
+                    Action::for('actions'),
+                ]);
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertSee('action column')
+        ->assertOk();
+});

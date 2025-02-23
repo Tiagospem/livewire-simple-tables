@@ -30,12 +30,18 @@ class DynamicTableComponent extends SimpleTableComponent
             'aliasKey'   => $column->getAliasKey(),
             'isVisible'  => $column->isVisible(),
             'style'      => $column->getStyle(),
+            'isAction'   => $column->isActionColumn(),
+            'actionId'   => $column->getColumnId(),
         ], $columns);
     }
 
     public function columns(): array
     {
         return array_map(function (array $column): Column {
+            if ($column['isAction']) {
+                return Column::action($column['actionId'], $column['title']);
+            }
+
             $columnInstance = Column::text($column['title'], $column['key'], $column['aliasKey'], $column['style']);
 
             if ($column['searchable']) {
