@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Dto\TableData;
-use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 
 abstract class AbstractResolver
@@ -25,13 +23,8 @@ abstract class AbstractResolver
      */
     abstract protected function executeQuery(): Collection|LengthAwarePaginatorContract|LengthAwarePaginator|Builder;
 
-    /**
-     * @throws InvalidColumnException
-     */
     public function process(): TableData
     {
-        $this->validateColumns();
-
         $rows = $this->executeQuery();
 
         return new TableData(
@@ -43,17 +36,5 @@ abstract class AbstractResolver
             paginated: $this->component->paginated,
             showSearch: $this->component->showSearch(),
         );
-    }
-
-    /**
-     * @throws InvalidColumnException
-     */
-    private function validateColumns(): void
-    {
-        foreach ($this->component->columns() as $column) {
-            if ( ! $column instanceof Column) {
-                throw new InvalidColumnException();
-            }
-        }
     }
 }

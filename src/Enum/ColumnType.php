@@ -11,11 +11,6 @@ enum ColumnType: string
     case BOOLEAN = 'boolean';
     case TOGGLE  = 'toggle';
 
-    public function isText(): bool
-    {
-        return self::TEXT === $this;
-    }
-
     public function isAction(): bool
     {
         return self::ACTION === $this;

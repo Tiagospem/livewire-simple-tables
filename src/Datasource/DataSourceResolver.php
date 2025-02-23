@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Datasource\Resolvers\DataBuilderResolver;
 use TiagoSpem\SimpleTables\Datasource\Resolvers\DataCollectionResolver;
 use TiagoSpem\SimpleTables\Dto\TableData;
-use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Interfaces\ProcessorInterface;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 
@@ -16,9 +15,6 @@ final readonly class DataSourceResolver implements ProcessorInterface
 {
     public function __construct(private SimpleTableComponent $component) {}
 
-    /**
-     * @throws InvalidColumnException
-     */
     public function process(): TableData
     {
         $datasource = $this->component->datasource();
