@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables;
 
 use Closure;
+use Illuminate\Support\Facades\View;
 use TiagoSpem\SimpleTables\Dto\FieldConfig;
 
 final class Field
@@ -30,7 +31,7 @@ final class Field
 
     public static function key(string $rowKey): self
     {
-        $instance = new self;
+        $instance         = new self();
         $instance->rowKey = $rowKey;
 
         return $instance;
@@ -41,7 +42,7 @@ final class Field
      */
     public function view(string $view, array $customParams = []): self
     {
-        $this->mutation = FieldConfig::fromClosure(fn (object $row) => view($view, ['row' => $row, ...$customParams]));
+        $this->mutation = FieldConfig::fromClosure(fn(object $row) => View::make($view, ['row' => $row, ...$customParams])->render());
 
         return $this;
     }

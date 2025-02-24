@@ -25,13 +25,13 @@ final class DataCollectionResolver extends AbstractResolver
             $collection = $this->collectionSearch($collection);
         }
 
-        $sortBy = $this->component->sortBy;
+        $sortBy        = $this->component->sortBy;
         $sortDirection = $this->component->sortDirection;
 
         $sorted = $collection->sortBy(
-            fn ($item) => data_get($item, $sortBy),
+            fn($item) => data_get($item, $sortBy),
             SORT_REGULAR,
-            $sortDirection === 'desc',
+            'desc' === $sortDirection,
         );
 
         return $this->component->paginated
@@ -48,9 +48,9 @@ final class DataCollectionResolver extends AbstractResolver
      */
     private function paginateCollection(Collection $collection): LengthAwarePaginator
     {
-        $page = LengthAwarePaginator::resolveCurrentPage();
+        $page    = LengthAwarePaginator::resolveCurrentPage();
         $perPage = $this->component->perPage;
-        $total = $collection->count();
+        $total   = $collection->count();
 
         return new LengthAwarePaginator(
             $collection->forPage($page, $perPage)->values(),
@@ -58,7 +58,7 @@ final class DataCollectionResolver extends AbstractResolver
             $perPage,
             $page,
             [
-                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'path'     => LengthAwarePaginator::resolveCurrentPath(),
                 'pageName' => 'page',
             ],
         );

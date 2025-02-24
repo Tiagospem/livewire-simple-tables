@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Enum\ColumnType;
 
-it('should creates a text column correctly', function (): void {
+it('creates a text column with correct configuration', function (): void {
     $column = Column::text('Name', 'name', 'alias_name', 'text-red-100');
 
     expect($column->getTitle())->toBe('Name')
@@ -16,62 +18,62 @@ it('should creates a text column correctly', function (): void {
         ->and($column->isVisible())->toBeTrue();
 });
 
-it('should allows setting an alias', function (): void {
+it('sets the alias correctly for a text column', function (): void {
     $column = Column::text('Country', 'country.name')
         ->alias('country_name');
 
     expect($column->getAliasKey())->toBe('country_name');
 });
 
-it('should updates the style correctly', function (): void {
+it('updates the column style correctly', function (): void {
     $column = Column::text('Email', 'email')
         ->style('text-red-100');
 
     expect($column->getStyle())->toBe('text-red-100');
 });
 
-it('should applies the centered style', function (): void {
+it('applies the centered style modifier correctly', function (): void {
     $column = Column::text('Email', 'email')
         ->centered();
 
     expect($column->getStyle())->toContain('[&>:last-child]:justify-center');
 });
 
-it('should hides the column when hide() is called', function (): void {
+it('hides the column when hide() is invoked', function (): void {
     $column = Column::text('Email', 'email')
         ->hide();
 
     expect($column->isVisible())->toBeFalse();
 });
 
-it('should marks the column as searchable', function (): void {
+it('marks the column as searchable when searchable() is called', function (): void {
     $column = Column::text('Email', 'email')
         ->searchable();
 
     expect($column->isSearchable())->toBeTrue();
 });
 
-it('should marks the column as sortable', function (): void {
+it('marks the column as sortable when sortable() is called', function (): void {
     $column = Column::text('Email', 'email')
         ->sortable();
 
     expect($column->isSortable())->toBeTrue();
 });
 
-it('should returns the alias key as the row key when defined', function (): void {
+it('returns the alias as the row key when an alias is set', function (): void {
     $column = Column::text('Country', 'country.name')
         ->alias('country_name');
 
     expect($column->getRowKey())->toBe('country_name');
 });
 
-it('should returns the original key if alias is not defined', function (): void {
+it('returns the original key as the row key when no alias is defined', function (): void {
     $column = Column::text('Country', 'country.name');
 
     expect($column->getRowKey())->toBe('country.name');
 });
 
-it('should creates a boolean column correctly', function (): void {
+it('creates a boolean column with the correct properties', function (): void {
     $column = Column::boolean('Active', 'is_active', null, true);
 
     expect($column->getTitle())->toBe('Active')
@@ -80,7 +82,7 @@ it('should creates a boolean column correctly', function (): void {
         ->and($column->isInverse())->toBeTrue();
 });
 
-it('should creates a toggle column correctly', function (): void {
+it('creates a toggle column with the correct configuration', function (): void {
     $column = Column::toggle('Status', 'status', 'alias_status');
 
     expect($column->getTitle())->toBe('Status')
@@ -89,7 +91,7 @@ it('should creates a toggle column correctly', function (): void {
         ->and($column->getColumnType())->toBe(ColumnType::TOGGLE);
 });
 
-it('should creates an action column correctly', function (): void {
+it('creates an action column with proper attributes', function (): void {
     $column = Column::action('btn-1', 'Action', 'btn-style');
 
     expect($column->getTitle())->toBe('Action')
@@ -99,7 +101,7 @@ it('should creates an action column correctly', function (): void {
         ->and($column->isActionColumn())->toBeTrue();
 });
 
-it('should convert the value to Livewire format correctly', function (): void {
+it('converts the column configuration to Livewire format correctly', function (): void {
     $column = Column::text('Email', 'email');
 
     $livewireData = $column->toLivewire();
@@ -107,7 +109,7 @@ it('should convert the value to Livewire format correctly', function (): void {
     $normalized = [];
 
     foreach ($livewireData as $key => $value) {
-        $parts = explode("\0", $key);
+        $parts                   = explode("\0", $key);
         $normalized[end($parts)] = $value;
     }
 
@@ -116,7 +118,7 @@ it('should convert the value to Livewire format correctly', function (): void {
         ->and($normalized)->toHaveKey('key');
 });
 
-it('should returns the same value with fromLivewire', function (): void {
+it('returns the original value when using fromLivewire', function (): void {
     $value = ['test' => 'value'];
 
     expect(Column::fromLivewire($value))->toBe($value);

@@ -16,7 +16,7 @@ final class BeforeSearch
     public function format(string $field, Closure $callback): self
     {
         $this->fields[] = [
-            'field' => $field,
+            'field'    => $field,
             'callback' => $callback,
         ];
 

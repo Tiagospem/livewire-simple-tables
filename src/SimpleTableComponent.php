@@ -13,7 +13,6 @@ use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
 use TiagoSpem\SimpleTables\Datasource\DataSourceResolver;
-use TiagoSpem\SimpleTables\Exceptions\InvalidColumnException;
 use TiagoSpem\SimpleTables\Traits\HasDetail;
 use TiagoSpem\SimpleTables\Traits\HasFilters;
 use TiagoSpem\SimpleTables\Traits\HasPagination;
@@ -59,13 +58,10 @@ abstract class SimpleTableComponent extends Component
         return app(TableRowStyle::class);
     }
 
-    /**
-     * @throws InvalidColumnException
-     */
     public function render(): string
     {
         $processor = new DataSourceResolver($this);
-        $renderer = new TableRenderer($this, $processor->process(), $this->theme);
+        $renderer  = new TableRenderer($this, $processor->process(), $this->theme);
 
         return $renderer->render();
     }

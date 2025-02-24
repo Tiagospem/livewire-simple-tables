@@ -1,10 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
-use TiagoSpem\SimpleTables\Tests\Dummy\Tables\BasicTable;
 
 use function Pest\Livewire\livewire;
+
+use TiagoSpem\SimpleTables\Column;
+use TiagoSpem\SimpleTables\SimpleTableComponent;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+
+$component = new class () extends SimpleTableComponent {
+    public function columns(): array
+    {
+        return [
+            Column::text('User Id', 'id'),
+            Column::text('User Name', 'name'),
+            Column::text('User Email', 'email'),
+            Column::boolean('User Active', 'is_active'),
+        ];
+    }
+
+    public function datasource(): Builder
+    {
+        return FakeUser::query();
+    }
+};
 
 it('should be able to create a dummy user', function (): void {
     $user = FakeUser::factory()->create([
@@ -16,10 +38,10 @@ it('should be able to create a dummy user', function (): void {
         ->and($user->is_active)->toBeTrue();
 });
 
-it('should render the component', function (): void {
+it('should render the component', function () use ($component): void {
     $user = FakeUser::factory()->create();
 
-    livewire(BasicTable::class)
+    livewire($component::class)
         ->assertSeeInOrder([
             'User Id',
             'User Name',
@@ -34,7 +56,7 @@ it('should render the component', function (): void {
         ->assertOk();
 });
 
-it('should be able to search only when has columns to search', function (): void {
+it('should be able to search only when has columns to search', function () use ($component): void {
     $userOne = FakeUser::factory()->create([
         'name' => 'John Doe',
     ]);
@@ -43,7 +65,7 @@ it('should be able to search only when has columns to search', function (): void
         'name' => 'Jane Doe',
     ]);
 
-    livewire(BasicTable::class)
+    livewire($component::class)
         ->assertSee($userOne->name)
         ->assertSee($userTwo->name)
         ->set('search', 'John')
@@ -63,20 +85,20 @@ it('should be able to search only when has columns to search', function (): void
         ->assertOk();
 });
 
-it('should be able to see the search input only when has columns to search', function (): void {
+it('should be able to see the search input only when has columns to search', function () use ($component): void {
     FakeUser::factory()->create();
 
-    livewire(BasicTable::class)
+    livewire($component::class)
         ->assertDontSeeHtml('id="search-input"')
         ->set('columnsToSearch', ['name'])
         ->assertSeeHtml('id="search-input"')
         ->assertOk();
 });
 
-it('should be able to sort the table', function (): void {
+it('should be able to sort the table', function () use ($component): void {
     FakeUser::factory(5)->create();
 
-    livewire(BasicTable::class)
+    livewire($component::class)
         ->set('sortBy', 'id')
         ->set('sortDirection', 'asc')
         ->assertSeeInOrder(['1', '2', '3', '4', '5'])
@@ -85,7 +107,7 @@ it('should be able to sort the table', function (): void {
         ->assertOk();
 });
 
-it('should be able to paginate the table', function (): void {
+it('should be able to paginate the table', function () use ($component): void {
     FakeUser::factory(5)
         ->state(new Sequence(
             ['name' => 'Amon Doe'],
@@ -96,7 +118,7 @@ it('should be able to paginate the table', function (): void {
         ))
         ->create();
 
-    livewire(BasicTable::class)
+    livewire($component::class)
         ->set('sortBy', 'name')
         ->set('sortDirection', 'asc')
         ->set('perPage', 1)
@@ -107,25 +129,25 @@ it('should be able to paginate the table', function (): void {
         ->assertOk();
 });
 
-it('should be able to override theme style', function (): void {
+it('should be able to override theme style', function () use ($component): void {
     FakeUser::factory()->create();
 
-    livewire(BasicTable::class, [
-        'tableContentStyle' => 'table-content-style',
-        'tableTrStyle' => 'table-tr-style',
-        'tableTbodyStyle' => 'table-tbody-style',
-        'tableTheadStyle' => 'table-thead-style',
-        'tableThStyle' => 'table-th-style',
-        'tableTdStyle' => 'table-td-style',
-        'tableTdNoRecordsStyle' => 'table-td-no-records-style',
-        'tableTrHeaderStyle' => 'table-tr-header-style',
-        'tableSortIconStyle' => 'table-sort-icon-style',
-        'tableBooleanIconStyle' => 'table-boolean-icon-style',
-        'actionButtonStyle' => 'action-button-style',
-        'dropdownContentStyle' => 'dropdown-content-style',
-        'dropdownOptionStyle' => 'dropdown-option-style',
-        'paginationContainerStyle' => 'pagination-container-style',
-        'paginationStickyStyle' => 'pagination-sticky-style',
+    livewire($component::class, [
+        'tableContent_Stl'        => 'table-content-style',
+        'tableTr_Stl'             => 'table-tr-style',
+        'tableTbody_Stl'          => 'table-tbody-style',
+        'tableThead_Stl'          => 'table-thead-style',
+        'tableTh_Stl'             => 'table-th-style',
+        'tableTd_Stl'             => 'table-td-style',
+        'tableTdNoRecords_Stl'    => 'table-td-no-records-style',
+        'tableTrHeader_Stl'       => 'table-tr-header-style',
+        'tableSortIcon_Stl'       => 'table-sort-icon-style',
+        'tableBooleanIcon_Stl'    => 'table-boolean-icon-style',
+        'actionButton_Stl'        => 'action-button-style',
+        'dropdownContent_Stl'     => 'dropdown-content-style',
+        'dropdownOption_Stl'      => 'dropdown-option-style',
+        'paginationContainer_Stl' => 'pagination-container-style',
+        'paginationSticky_Stl'    => 'pagination-sticky-style',
     ])
         ->assertSeeHtml('table-content-style')
         ->assertSeeHtml('table-tr-style')

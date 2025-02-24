@@ -1,15 +1,13 @@
 <div>
     @if ($hasView)
         {!! $view !!}
-    @else
+    @elseif(!$isHidden)
         <div
             class="flex items-center justify-center"
             x-data="clickEvent"
         >
             @php
                 $clickEvent = [
-                    'url' => $buttonUrl,
-                    'target' => $buttonTarget,
                     'event' => $buttonEvent,
                     'hasDropdown' => $hasDropdown,
                     'disabled' => $isDisabled,
@@ -24,17 +22,24 @@
                 :$row
             >
                 <x-slot:actionButton>
-                    <button
-                        x-on:click="handleClick(@js($clickEvent))"
-                        x-ref="dropdownButton"
+                    <a
+                        @if (filled($buttonUrl) && !$isDisabled) href="{{ $buttonUrl }}"
+                            target="{{ $buttonTarget }}"
+                            @if ($isWireNavigate) wire:navigate @endif
+                        @elseif(filled($buttonEvent) && !$isDisabled)
+                            x-on:click="handleClick(@js($event))"
+                        @endif
+
+                        @if($hasDropdown)
+                            x-ref="dropdownButton"
+                        @endif
+
                         @class([
                             'gap-x-1.5' => $hasName,
-                            '!pointer-events-none !opacity-50' => $isDisabled,
+                            '!pointer-events-none !opacity-50 disabled' => $isDisabled,
                             $themeActionButtonStyle,
                             $buttonStyle,
-                        ])
-                        type="button"
-                    >
+                        ])>
                         @if ($hasIcon)
                             <x-dynamic-component
                                 :component="$buttonIcon"
@@ -45,7 +50,7 @@
                             />
                         @endif
                         <span>{{ $buttonName }}</span>
-                    </button>
+                    </a>
                 </x-slot:actionButton>
             </x-simple-tables::dropdown>
         </div>

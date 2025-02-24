@@ -5,9 +5,7 @@
     @foreach ($rowContent as $row)
         @includeWhen($loop->first && $detailViewEnabled, 'simple-tables::table.partials.detail-icon')
 
-        <td class="{{ $row->style }}">
-            {!! $row->content !!}
-        </td>
+        <td class="{{ $row->style }}">{!! $row->content !!}</td>
     @endforeach
 </tr>
 

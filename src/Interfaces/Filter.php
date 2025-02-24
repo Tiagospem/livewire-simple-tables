@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Interfaces;
 
 use Illuminate\Database\Eloquent\Builder;

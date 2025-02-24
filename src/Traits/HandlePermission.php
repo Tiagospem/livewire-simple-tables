@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TiagoSpem\SimpleTables\Traits;
 
 use BackedEnum;
@@ -16,7 +18,7 @@ trait HandlePermission
     {
         if (is_array($permission)) {
             return collect($permission)->every(
-                fn ($p) => $this->checkSinglePermission($p)
+                fn($p) => $this->checkSinglePermission($p),
             );
         }
 
@@ -27,17 +29,19 @@ trait HandlePermission
     {
         $user = Auth::user();
 
-        if (! $user instanceof Authorizable) {
+        if ( ! $user instanceof Authorizable) {
             throw new InvalidArgumentException(
-                'User must implement Authorizable interface');
+                'User must implement Authorizable interface',
+            );
         }
 
         $permissionName = match (true) {
             $permission instanceof BackedEnum => (string) $permission->value,
-            is_string($permission) => $permission,
-            is_int($permission) => (string) $permission,
-            default => throw new InvalidArgumentException(
-                'Invalid permission type: '.gettype($permission))
+            is_string($permission)            => $permission,
+            is_int($permission)               => (string) $permission,
+            default                           => throw new InvalidArgumentException(
+                'Invalid permission type: ' . gettype($permission),
+            ),
         };
 
         return $user->can($permissionName);

@@ -11,74 +11,24 @@ use InvalidArgumentException;
 
 trait HasSearch
 {
-    //    /**
-    //     * @param  Builder<Model>  $query
-    //     * @return Builder<Model>
-    //     */
-    //    protected function builderSearch(Builder $query): Builder
-    //    {
-    //        $columns = $this->component->getSearchableColumns();
-    //
-    //        $search = $this->sanitizeSearch($this->component->search);
-    //
-    //        $model = $query->getModel();
-    //        $modelTable = $model->getTable();
-    //
-    //        return $query->where(function (Builder $query) use ($columns, $search, $model, $modelTable): void {
-    //            foreach ($columns as $column) {
-    //                $field = $column->getRowKey();
-    //
-    //                $search = $this->applyBeforeSearchModifiers(field: $field, value: $search);
-    //
-    //                if (str_contains($field, '.')) {
-    //                    $parts = explode('.', $field);
-    //                    $columnName = array_pop($parts);
-    //
-    //                    if ($model->isRelation($parts[0])) {
-    //                        $query->orWhere(function (Builder $q) use ($parts, $columnName, $search): void {
-    //                            $this->applyNestedWhereHas($q, $parts, $columnName, $search);
-    //                        });
-    //                    } else {
-    //                        $qualifiedField = implode('.', $parts).".{$columnName}";
-    //
-    //                        $query->orWhere($qualifiedField, 'like', "%{$search}%");
-    //                    }
-    //                } else {
-    //                    $qualifiedField = "{$modelTable}.{$field}";
-    //
-    //                    $query->orWhere($qualifiedField, 'like', "%{$search}%");
-    //                }
-    //            }
-    //        });
-    //    }
-
-    private function modelHasColumn(Model $model, string $column): bool
-    {
-        $table = $model->getTable();
-
-        return $model->getConnection()
-            ->getSchemaBuilder()
-            ->hasColumn($table, $column);
-    }
-
     /**
      * @param  Builder<Model>  $query
      * @return Builder<Model>
      */
     protected function builderSearch(Builder $query): Builder
     {
-        $columns = $this->component->getSearchableColumns();
-        $search = $this->sanitizeSearch($this->component->search);
-        $model = $query->getModel();
+        $columns    = $this->component->getSearchableColumns();
+        $search     = $this->sanitizeSearch($this->component->search);
+        $model      = $query->getModel();
         $modelTable = $model->getTable();
 
         return $query->where(function (Builder $query) use ($columns, $search, $model, $modelTable): void {
             foreach ($columns as $column) {
-                $field = $column->getRowKey();
+                $field  = $column->getRowKey();
                 $search = $this->applyBeforeSearchModifiers(field: $field, value: $search);
 
                 if (str_contains($field, '.')) {
-                    $parts = explode('.', $field);
+                    $parts      = explode('.', $field);
                     $columnName = array_pop($parts);
 
                     if ($model->isRelation($parts[0])) {
@@ -86,7 +36,7 @@ trait HasSearch
                             $this->applyNestedWhereHas($q, $parts, $columnName, $search);
                         });
                     } else {
-                        $qualifiedField = implode('.', $parts).".{$columnName}";
+                        $qualifiedField = implode('.', $parts) . ".{$columnName}";
                         $query->orWhere($qualifiedField, 'like', "%{$search}%");
                     }
                 } else {
@@ -117,9 +67,9 @@ trait HasSearch
 
         return $collection->filter(function ($item) use ($columns, $search): bool {
             foreach ($columns as $column) {
-                $field = $column->getRowKey();
+                $field          = $column->getRowKey();
                 $modifiedSearch = $this->applyBeforeSearchModifiers($field, $search);
-                $value = data_get($item, $field);
+                $value          = data_get($item, $field);
 
                 $value = parserString($value);
 
@@ -130,6 +80,15 @@ trait HasSearch
 
             return false;
         });
+    }
+
+    private function modelHasColumn(Model $model, string $column): bool
+    {
+        $table = $model->getTable();
+
+        return $model->getConnection()
+            ->getSchemaBuilder()
+            ->hasColumn($table, $column);
     }
 
     /**
@@ -149,7 +108,7 @@ trait HasSearch
         }
 
         $query->whereHas($relation, function (Builder $q) use ($relations, $column, $search): void {
-            if ($relations !== []) {
+            if ([] !== $relations) {
                 $this->applyNestedWhereHas($q, $relations, $column, $search);
             } else {
                 $q->where($column, 'like', "%{$search}%");
@@ -163,13 +122,13 @@ trait HasSearch
             return '';
         }
 
-        return mb_strtolower(htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        return htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     private function applyBeforeSearchModifiers(string $field, string $value): string
     {
         $modifier = collect($this->component->beforeSearch()->getFields())
-            ->filter(fn (array $modifier): bool => $modifier['field'] === $field)
+            ->filter(fn(array $modifier): bool => $modifier['field'] === $field)
             ->first();
 
         return filled($modifier) ? parserString($modifier['callback']->__invoke($value)) : $value;
