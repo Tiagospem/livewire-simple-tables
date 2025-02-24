@@ -265,3 +265,9 @@ it('create test for view button', function (): void {})->todo();
 it('create test for permission button', function (): void {})->todo();
 
 it('create test for dropdown button', function (): void {})->todo();
+
+it('create test for align style when has name', function (): void {})->todo();
+
+it('create test for align style when has name and icon', function (): void {})->todo();
+
+it('create test for validate icon on button', function (): void {})->todo();
