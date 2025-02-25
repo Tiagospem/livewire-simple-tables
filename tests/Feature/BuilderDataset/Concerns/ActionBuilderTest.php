@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
@@ -55,6 +56,65 @@ it('should be able to create an action builder as a simple button', function ():
         ->assertSeeHtml('href="https://example.com"')
         ->assertSeeHtml('target="_blank"')
         ->assertSeeHtml('wire:navigate')
+        ->assertOk();
+});
+
+it('should be able to create an action builder with icon', function (): void {
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function columns(): array
+        {
+            return [
+                Column::action('action', 'action column'),
+            ];
+        }
+
+        public function actionBuilder(): ActionBuilder
+        {
+            return SimpleTables::actionBuilder()
+                ->actions([
+                    Action::for('action')
+                        ->button(icon: 'simple-tables::svg.x'),
+                ]);
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertSeeHtml('data-cy="simple-tables::svg.x"')
+        ->assertOk();
+});
+
+it('should be able to create an action builder with icon and label', function (): void {
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function columns(): array
+        {
+            return [
+                Column::action('action', 'action column'),
+            ];
+        }
+
+        public function actionBuilder(): ActionBuilder
+        {
+            return SimpleTables::actionBuilder()
+                ->actions([
+                    Action::for('action')
+                        ->button(icon: 'simple-tables::svg.x', name: 'act-btn'),
+                ]);
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertSeeHtml(['data-cy="simple-tables::svg.x"', '-mr-0.5', 'gap-x-1.5'])
+        ->assertSee('act-btn')
         ->assertOk();
 });
 
@@ -260,14 +320,122 @@ it('should be able to hidde action button using callback', function (): void {
         ->assertOk();
 });
 
-it('create test for view button', function (): void {})->todo();
+it('should be able to show button based on user permission', function (): void {
+    $user = Mockery::mock(Authorizable::class);
 
-it('create test for permission button', function (): void {})->todo();
+    $user->shouldReceive('can')
+        ->with('is_admin')
+        ->andReturn(true);
+
+    Auth::shouldReceive('user')->andReturn($user);
+
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function columns(): array
+        {
+            return [
+                Column::text('Name', 'name')->searchable(),
+                Column::action('action', 'action column'),
+            ];
+        }
+
+        public function actionBuilder(): ActionBuilder
+        {
+            return SimpleTables::actionBuilder()
+                ->actions([
+                    Action::for('action')
+                        ->button(name: 'act button', href: 'https://example.com', wireNavigate: true, target: Target::BLANK)
+                        ->can('is_admin'),
+                ]);
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertSee('act button')
+        ->assertSeeHtml('href="https://example.com"')
+        ->assertSeeHtml('wire:navigate')
+        ->assertSeeHtml('target="_blank"')
+        ->assertOk();
+});
+
+it('should be able to hide button based on user permission', function (): void {
+    $user = Mockery::mock(Authorizable::class);
+
+    $user->shouldReceive('can')
+        ->with('is_admin')
+        ->andReturn(false);
+
+    Auth::shouldReceive('user')->andReturn($user);
+
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function columns(): array
+        {
+            return [
+                Column::text('Name', 'name')->searchable(),
+                Column::action('action', 'action column'),
+            ];
+        }
+
+        public function actionBuilder(): ActionBuilder
+        {
+            return SimpleTables::actionBuilder()
+                ->actions([
+                    Action::for('action')
+                        ->button(name: 'act button', href: 'https://example.com', wireNavigate: true, target: Target::BLANK)
+                        ->can('is_admin'),
+                ]);
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertDontSee('act button')
+        ->assertDontSeeHtml('href="https://example.com"')
+        ->assertDontSeeHtml('wire:navigate')
+        ->assertDontSeeHtml('target="_blank"')
+        ->assertOk();
+});
+
+it('should be able to see action structure elements', function (): void {
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function columns(): array
+        {
+            return [
+                Column::action('action', 'action column'),
+            ];
+        }
+
+        public function actionBuilder(): ActionBuilder
+        {
+            return SimpleTables::actionBuilder()
+                ->actions([
+                    Action::for('action')
+                        ->button(icon: 'simple-tables::svg.x', name: 'act button'),
+                ]);
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertSeeHtml([
+            'data-cy="action-wrapper"',
+            'data-cy="dropdown-wrapper"',
+            'data-cy="action-button-href"',
+            'data-cy="simple-tables::svg.x"',
+        ])
+        ->assertOk();
+});
 
 it('create test for dropdown button', function (): void {})->todo();
-
-it('create test for align style when has name', function (): void {})->todo();
-
-it('create test for align style when has name and icon', function (): void {})->todo();
-
-it('create test for validate icon on button', function (): void {})->todo();

@@ -3,6 +3,7 @@
         {!! $view !!}
     @elseif(!$isHidden)
         <div
+            data-cy="action-wrapper"
             class="flex items-center justify-center"
             x-data="clickEvent"
         >
@@ -22,7 +23,7 @@
                 :$row
             >
                 <x-slot:actionButton>
-                    <a
+                    <a data-cy="action-button-href"
                         @if (filled($buttonUrl) && !$isDisabled) href="{{ $buttonUrl }}"
                             target="{{ $buttonTarget }}"
                             @if ($isWireNavigate) wire:navigate @endif
@@ -41,7 +42,7 @@
                             $buttonStyle,
                         ])>
                         @if ($hasIcon)
-                            <x-dynamic-component
+                            <x-dynamic-component :data-cy="$buttonIcon"
                                 :component="$buttonIcon"
                                 @class([
                                     '-mr-0.5' => $hasName,

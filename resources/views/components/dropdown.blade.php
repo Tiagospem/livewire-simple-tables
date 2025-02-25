@@ -6,7 +6,7 @@
     'themeDropdownStyle',
     'row',
 ])
-<div class="relative inline-block text-left">
+<div class="relative inline-block text-left" data-cy="dropdown-wrapper">
     {{ $actionButton }}
 
     @if ($hasDropdown)
