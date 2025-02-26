@@ -44,8 +44,8 @@ final class FakeUserFactory extends Factory
 
             FakeCar::factory()->for($user)->create(
                 array_filter([
-                    'model' => $model,
-                    'color' => $color,
+                    'model' => $model ?? fake()->word,
+                    'color' => $color ?? fake()->safeColorName,
                 ]),
             );
         });
@@ -57,7 +57,7 @@ final class FakeUserFactory extends Factory
 
             $fakeCountry = FakeCountry::factory()->create(
                 array_filter([
-                    'name' => $name,
+                    'name' => $name ?? fake()->country,
                 ]),
             );
 

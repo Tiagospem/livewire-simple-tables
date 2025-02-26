@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 
 use function Pest\Livewire\livewire;
 
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCar;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCarVendor;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCountry;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
 use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
@@ -16,11 +18,16 @@ use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
 beforeEach(function (): void {
     foreach (range(1, 2) as $index) {
         FakeUser::factory()
-            ->hasCar(
-                model: sprintf('Model %s', $index),
-                color: sprintf('Color %s', $index),
+            ->hasCountry(sprintf('Country %s', $index))
+            ->has(
+                FakeCar::factory()
+                    ->state([
+                        'model' => sprintf('Model %s', $index),
+                        'color' => sprintf('Color %s', $index),
+                    ])
+                    ->hasVendor(sprintf('Vendor %s', $index)),
+                'car',
             )
-            ->hasCountry(name: sprintf('Country %s', $index))
             ->create();
     }
 });
@@ -30,10 +37,11 @@ $assertions = function (Builder $dataset, array $columns): void {
         'dataset' => $dataset,
         'columns' => $columns,
     ])
-        ->assertSeeInOrder(['Country 1', 'Model 1', 'Color 1'])
-        ->assertSeeInOrder(['Country 2', 'Model 2', 'Color 2'])
+        ->assertSeeInOrder(['Country 1', 'Model 1', 'Color 1', 'Vendor 1'])
+        ->assertSeeInOrder(['Country 2', 'Model 2', 'Color 2', 'Vendor 2'])
         ->set('search', ' ')
-        ->assertSeeInOrder(['Country 1', 'Model 1', 'Color 1'])
+        ->assertSeeInOrder(['Country 1', 'Model 1', 'Color 1', 'Vendor 1'])
+        ->assertSeeInOrder(['Country 2', 'Model 2', 'Color 2', 'Vendor 2'])
         ->set('search', 'Country 1')
         ->assertSee('Country 1')
         ->assertDontSee('Country 2')
@@ -52,18 +60,25 @@ $assertions = function (Builder $dataset, array $columns): void {
         ->set('search', 'Color 2')
         ->assertSee('Color 2')
         ->assertDontSee('Color 1')
+        ->set('search', 'Vendor 1')
+        ->assertSee('Vendor 1')
+        ->assertDontSee('Vendor 2')
+        ->set('search', 'Vendor 2')
+        ->assertSee('Vendor 2')
+        ->assertDontSee('Vendor 1')
         ->set('search', 'Lorem Ipsum')
         ->assertSee('No records found.')
         ->assertOk();
 };
 
 it('should be able to search columns using dot notation with eager loading', function () use ($assertions): void {
-    $dataset = FakeUser::query()->with(['car', 'country']);
+    $dataset = FakeUser::query()->with(['car.vendor', 'country']);
 
     $columns = [
         Column::text('Country', 'country.name')->searchable(),
         Column::text('Model', 'car.model')->searchable(),
         Column::text('Color', 'car.color')->searchable(),
+        Column::text('Car vendor', 'car.vendor.vendor')->searchable(),
     ];
 
     $assertions($dataset, $columns);
@@ -76,14 +91,17 @@ it('should be able to search columns using alias keys with join queries', functi
             'fake_countries.name as country_name',
             'fake_cars.model as car_model',
             'fake_cars.color as car_color',
+            'fake_cars_vendor.vendor as car_vendor',
         ])
         ->join('fake_cars', 'fake_cars.fake_user_id', '=', 'fake_users.id')
-        ->join('fake_countries', 'fake_countries.id', '=', 'fake_users.country_id');
+        ->join('fake_countries', 'fake_countries.id', '=', 'fake_users.country_id')
+        ->join('fake_cars_vendor', 'fake_cars_vendor.fake_car_id', '=', 'fake_cars.id');
 
     $columns = [
         Column::text(title: 'Country', key: 'country.name', aliasKey: 'country_name')->searchable(),
         Column::text(title: 'Model', key: 'car.model', aliasKey: 'car_model')->searchable(),
         Column::text(title: 'Color', key: 'car.color', aliasKey: 'car_color')->searchable(),
+        Column::text(title: 'Vendor', key: 'car.vendor.vendor', aliasKey: 'car_vendor')->searchable(),
     ];
 
     $assertions($dataset, $columns);
@@ -98,9 +116,16 @@ it('should be able to search columns without alias keys with sub queries', funct
 
     $carSub = fn() => FakeCar::query()
         ->select([
+            'fake_cars.id as car_id',
             'fake_cars.model as car_model',
             'fake_cars.color as car_color',
             'fake_cars.fake_user_id as user_id',
+        ]);
+
+    $carVendorSub = fn() => FakeCarVendor::query()
+        ->select([
+            'fake_cars_vendor.vendor as car_vendor',
+            'fake_cars_vendor.fake_car_id as car_id',
         ]);
 
     $dataset = FakeUser::query()
@@ -109,15 +134,20 @@ it('should be able to search columns without alias keys with sub queries', funct
             'country_sub.country_name',
             'car_sub.car_model',
             'car_sub.car_color',
+            'car_vendor_sub.car_vendor',
         ])
         ->joinSub($countrySub(), 'country_sub', 'country_sub.country_id', '=', 'fake_users.country_id')
-        ->joinSub($carSub(), 'car_sub', 'car_sub.user_id', '=', 'fake_users.id');
+        ->joinSub($carSub(), 'car_sub', 'car_sub.user_id', '=', 'fake_users.id')
+        ->joinSub($carVendorSub(), 'car_vendor_sub', function (JoinClause $join): void {
+            $join->on('car_vendor_sub.car_id', '=', 'car_sub.car_id');
+        });
 
     $columns = [
         Column::text(title: 'Name', key: 'user_name')->searchable(),
         Column::text(title: 'Country', key: 'country_name')->searchable(),
         Column::text(title: 'Model', key: 'car_model')->searchable(),
         Column::text(title: 'Color', key: 'car_color')->searchable(),
+        Column::text(title: 'Vendor', key: 'car_vendor')->searchable(),
     ];
 
     $assertions($dataset, $columns);
