@@ -13,6 +13,7 @@ use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Facades\SimpleTables;
+use TiagoSpem\SimpleTables\Option;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
 use TiagoSpem\SimpleTables\Themes\DefaultTheme;
@@ -58,6 +59,8 @@ it('should be able to create an action builder as a simple button', function ():
         ->assertSeeHtml('wire:navigate')
         ->assertOk();
 });
+
+it('create button with event', function (): void {})->todo();
 
 it('should be able to create an action builder with icon', function (): void {
     $dynamicComponent = new class () extends SimpleTableComponent {
@@ -114,6 +117,7 @@ it('should be able to create an action builder with icon and label', function ()
 
     livewire($dynamicComponent::class)
         ->assertSeeHtml(['data-cy="simple-tables::svg.x"', '-mr-0.5', 'gap-x-1.5'])
+        ->assertDontSeeHtml('data-cy="dropdown-options-wrapper"')
         ->assertSee('act-btn')
         ->assertOk();
 });
@@ -418,7 +422,10 @@ it('should be able to see action structure elements', function (): void {
             return SimpleTables::actionBuilder()
                 ->actions([
                     Action::for('action')
-                        ->button(icon: 'simple-tables::svg.x', name: 'act button'),
+                        ->button(icon: 'simple-tables::svg.x', name: 'act button')
+                        ->dropdown([
+                            Option::add('edit user'),
+                        ]),
                 ]);
         }
 
@@ -434,8 +441,53 @@ it('should be able to see action structure elements', function (): void {
             'data-cy="dropdown-wrapper"',
             'data-cy="action-button-href"',
             'data-cy="simple-tables::svg.x"',
+            'data-cy="dropdown-options-wrapper"',
+            'data-cy="option-wrapper"',
+            'data-cy="option"',
         ])
         ->assertOk();
 });
 
-it('create test for dropdown button', function (): void {})->todo();
+it('should be able to create a action button with dropdown options', function (): void {
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function columns(): array
+        {
+            return [
+                Column::text('Name', 'name'),
+                Column::action('action', 'action column'),
+            ];
+        }
+
+        public function actionBuilder(): ActionBuilder
+        {
+            return SimpleTables::actionBuilder()
+                ->actions([
+                    Action::for('action')
+                        ->button(icon: 'simple-tables::svg.x')
+                        ->dropdown([
+                            Option::add(name: 'edit user', icon: 'simple-tables::svg.check-circle'),
+                            Option::add(name: 'delete user', icon: 'simple-tables::svg.funnel'),
+                            Option::add(name: 'impersonate user', icon: 'simple-tables::svg.x-circle'),
+                        ]),
+                ]);
+        }
+
+        public function datasource(): Builder
+        {
+            return FakeUser::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertSeeInOrder([
+            'edit user',
+            'delete user',
+            'impersonate user',
+        ])
+        ->assertSeeHtmlInOrder([
+            'data-cy="simple-tables::svg.check-circle"',
+            'data-cy="simple-tables::svg.funnel"',
+            'data-cy="simple-tables::svg.x-circle"',
+        ])
+        ->assertOk();
+});

@@ -28,7 +28,7 @@
                 aria-labelledby="menu-button"
                 tabindex="-1"
             >
-                <div class="max-h-[300px] overflow-auto custom-scrollbar">
+                <div class="max-h-[300px] overflow-auto custom-scrollbar" data-cy="dropdown-options-wrapper">
                     @php
                         $visibleOptions = collect($dropdownOptions)->filter(function ($dropdownOption) use ($row) {
                             if ($dropdownOption->isDivider() && $dropdownOption->hasDividerOptions()) {
