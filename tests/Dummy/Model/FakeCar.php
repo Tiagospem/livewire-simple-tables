@@ -34,7 +34,7 @@ final class FakeCar extends Model
         'updated_at',
     ];
 
-    public function user(): BelongsTo
+    public function fakeUser(): BelongsTo
     {
         return $this->belongsTo(FakeUser::class);
     }
