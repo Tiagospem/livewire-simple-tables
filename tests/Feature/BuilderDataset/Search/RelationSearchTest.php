@@ -9,6 +9,7 @@ use Illuminate\Database\Query\JoinClause;
 use function Pest\Livewire\livewire;
 
 use TiagoSpem\SimpleTables\Column;
+use TiagoSpem\SimpleTables\Datasource\Resolvers\HasSearch;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\Car;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\CarVendor;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\Country;
@@ -212,4 +213,46 @@ it('throws an exception for non-existent relation in manual joins without Eloque
     } catch (InvalidArgumentException $e) {
         expect($e->getMessage())->toContain('The relation [user_country] does not exist in the model');
     }
+});
+
+
+it('throws an exception when relation name is empty in columnsToSearch', function (): void {
+    $dataset = User::query()->with(['car.vendor', 'country']);
+
+    $columns = [
+        Column::text('name', 'name')->searchable(),
+    ];
+
+    try {
+        livewire(DynamicTableComponent::class, [
+            'dataset'         => $dataset,
+            'columns'         => $columns,
+            'columnsToSearch' => ['car..vendor'],
+        ])->set('search', 'lorem');
+    } catch (InvalidArgumentException $e) {
+        expect($e->getMessage())->toContain('The relation name cannot be empty.');
+    }
+});
+
+it('applyNestedWhereHas throws exception when relations array is empty', function (): void {
+    $traitInstance = new class () {
+        use HasSearch;
+    };
+
+    $invokeProtectedMethod = function (object $object, string $methodName, array $args = []) {
+        $reflection = new ReflectionClass($object);
+        $method     = $reflection->getMethod($methodName);
+        return $method->invokeArgs($object, $args);
+    };
+
+    $query = User::query();
+
+    expect(function () use ($invokeProtectedMethod, $traitInstance, $query): void {
+        $invokeProtectedMethod($traitInstance, 'applyNestedWhereHas', [
+            $query,
+            [],
+            'name',
+            'lorem',
+        ]);
+    })->toThrow(InvalidArgumentException::class, 'The relations array cannot be empty.');
 });
