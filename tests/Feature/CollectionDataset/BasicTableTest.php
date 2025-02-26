@@ -159,3 +159,30 @@ it('should be able to override theme style', function () use ($component): void 
         ->assertSeeHtml('pagination-sticky-style')
         ->assertOk();
 });
+
+it('should be able to list results without pagination', function () use ($component): void {
+    User::factory(12)
+        ->create();
+
+    livewire($component::class, [
+        'paginated' => false,
+    ])
+        ->assertSet('paginated', false)
+        ->assertSet('perPage', 10)
+        ->assertSeeHtml([
+            'wire:key="id_1"',
+            'wire:key="id_2"',
+            'wire:key="id_3"',
+            'wire:key="id_4"',
+            'wire:key="id_5"',
+            'wire:key="id_6"',
+            'wire:key="id_7"',
+            'wire:key="id_8"',
+            'wire:key="id_9"',
+            'wire:key="id_10"',
+            'wire:key="id_11"',
+            'wire:key="id_12"',
+        ])
+        ->assertDontSee('aria-label="paginator"')
+        ->assertOk();
+});

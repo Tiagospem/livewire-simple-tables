@@ -203,3 +203,30 @@ it('should be able to close other detail opens', function () use ($component): v
         ->assertSet('expandedRows', [])
         ->assertOk();
 });
+
+it('should be able to list results without pagination', function () use ($component): void {
+    User::factory(12)
+        ->create();
+
+    livewire($component::class, [
+        'paginated' => false,
+    ])
+        ->assertSet('paginated', false)
+        ->assertSet('perPage', 10)
+        ->assertDontSee('aria-label="paginator"')
+        ->assertSeeHtml([
+            'wire:key="id_1"',
+            'wire:key="id_2"',
+            'wire:key="id_3"',
+            'wire:key="id_4"',
+            'wire:key="id_5"',
+            'wire:key="id_6"',
+            'wire:key="id_7"',
+            'wire:key="id_8"',
+            'wire:key="id_9"',
+            'wire:key="id_10"',
+            'wire:key="id_11"',
+            'wire:key="id_12"',
+        ])
+        ->assertOk();
+});
