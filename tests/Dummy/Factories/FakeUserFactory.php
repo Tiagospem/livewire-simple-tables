@@ -42,14 +42,12 @@ final class FakeUserFactory extends Factory
     {
         return $this->afterCreating(function (FakeUser $user) use ($model, $color): void {
 
-            $car = FakeCar::factory()->for($user)->create(
+            FakeCar::factory()->for($user)->create(
                 array_filter([
                     'model' => $model,
                     'color' => $color,
                 ]),
             );
-
-            $user->car()->save($car);
         });
     }
 

@@ -36,8 +36,7 @@ trait HasSearch
                             $this->applyNestedWhereHas($q, $parts, $columnName, $search);
                         });
                     } else {
-                        $qualifiedField = implode('.', $parts) . ".{$columnName}";
-                        $query->orWhere($qualifiedField, 'like', "%{$search}%");
+                        throw new InvalidArgumentException("The relation [{$parts[0]}] does not exist in the model [{$model->getMorphClass()}].");
                     }
                 } else {
                     $qualifiedField = $this->modelHasColumn($model, $field) ? "{$modelTable}.{$field}" : $field;

@@ -16,14 +16,10 @@ final class DataCollectionResolver extends AbstractResolver
      */
     protected function executeQuery(): Collection|LengthAwarePaginator
     {
-        $search = $this->component->search;
-
         /** @var Collection<int, mixed> $collection */
         $collection = $this->component->datasource();
 
-        if (filled($search)) {
-            $collection = $this->collectionSearch($collection);
-        }
+        $collection = $this->collectionSearch($collection);
 
         $sortBy        = $this->component->sortBy;
         $sortDirection = $this->component->sortDirection;

@@ -32,6 +32,8 @@ $assertions = function (Builder $dataset, array $columns): void {
     ])
         ->assertSeeInOrder(['Country 1', 'Model 1', 'Color 1'])
         ->assertSeeInOrder(['Country 2', 'Model 2', 'Color 2'])
+        ->set('search', ' ')
+        ->assertSeeInOrder(['Country 1', 'Model 1', 'Color 1'])
         ->set('search', 'Country 1')
         ->assertSee('Country 1')
         ->assertDontSee('Country 2')
@@ -152,4 +154,32 @@ it('should be able to search fields that is not set in the columns', function ()
         ->set('search', 'Color 2')
         ->assertSee('Country 2')
         ->assertDontSee('Country 1');
+});
+
+it('throws an exception for non-existent relation in manual joins without Eloquent relationship', function (): void {
+    $dataset = FakeUser::query()
+        ->join('fake_cars as user_car', 'user_car.fake_user_id', '=', 'fake_users.id')
+        ->join('fake_countries as user_country', 'user_country.id', '=', 'fake_users.country_id')
+        ->select([
+            'fake_users.*',
+            'user_car.model',
+            'user_car.color',
+            'user_country.name',
+        ]);
+
+    $columns = [
+        Column::text('Country', 'user_country.name')->searchable(),
+        Column::text('Model', 'user_car.model')->searchable(),
+        Column::text('Color', 'user_car.color')->searchable(),
+    ];
+
+    try {
+        livewire(DynamicTableComponent::class, [
+            'dataset' => $dataset,
+            'columns' => $columns,
+        ])->set('search', 'Country 1')
+            ->assertSee('Country 1');
+    } catch (InvalidArgumentException $e) {
+        expect($e->getMessage())->toContain('The relation [user_country] does not exist in the model');
+    }
 });
