@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     public function up(): void
     {
-        Schema::create('fake_countries', function (Blueprint $table): void {
+        Schema::create('countries', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -18,6 +18,6 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('fake_countries');
+        Schema::dropIfExists('countries');
     }
 };

@@ -9,7 +9,7 @@ use function Pest\Livewire\livewire;
 
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 
 $component = new class () extends SimpleTableComponent {
     public function columns(): array
@@ -24,12 +24,12 @@ $component = new class () extends SimpleTableComponent {
 
     public function datasource(): Collection
     {
-        return collect(FakeUser::all());
+        return collect(User::all());
     }
 };
 
 it('should render the component', function () use ($component): void {
-    $user = FakeUser::factory()->create();
+    $user = User::factory()->create();
 
     livewire($component::class)
         ->assertSeeInOrder([
@@ -47,11 +47,11 @@ it('should render the component', function () use ($component): void {
 });
 
 it('should be able to search only when has columns to search', function () use ($component): void {
-    $userOne = FakeUser::factory()->create([
+    $userOne = User::factory()->create([
         'name' => 'John Doe',
     ]);
 
-    $userTwo = FakeUser::factory()->create([
+    $userTwo = User::factory()->create([
         'name' => 'Jane Doe',
     ]);
 
@@ -79,7 +79,7 @@ it('should be able to search only when has columns to search', function () use (
 });
 
 it('should be able to see the search input only when has columns to search', function () use ($component): void {
-    FakeUser::factory()->create();
+    User::factory()->create();
 
     livewire($component::class)
         ->assertDontSeeHtml('id="search-input"')
@@ -89,7 +89,7 @@ it('should be able to see the search input only when has columns to search', fun
 });
 
 it('should be able to sort the table', function () use ($component): void {
-    FakeUser::factory(5)->create();
+    User::factory(5)->create();
 
     livewire($component::class)
         ->set('sortBy', 'id')
@@ -101,7 +101,7 @@ it('should be able to sort the table', function () use ($component): void {
 });
 
 it('should be able to paginate the table', function () use ($component): void {
-    FakeUser::factory(5)
+    User::factory(5)
         ->state(new Sequence(
             ['name' => 'Amon Doe'],
             ['name' => 'Bane Doe'],
@@ -123,7 +123,7 @@ it('should be able to paginate the table', function () use ($component): void {
 });
 
 it('should be able to override theme style', function () use ($component): void {
-    FakeUser::factory()->create();
+    User::factory()->create();
 
     livewire($component::class, [
         'tableContent_Stl'        => 'table-content-style',

@@ -12,11 +12,11 @@ use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Facades\SimpleTables;
 use TiagoSpem\SimpleTables\Field;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 use TiagoSpem\SimpleTables\Themes\DefaultTheme;
 
 beforeEach(function (): void {
-    FakeUser::factory(2)
+    User::factory(2)
         ->state(new Sequence(
             ['phone' => '1123456789', 'name' => 'John Doe'],
             ['phone' => '2123456789', 'name' => 'Jane Doe'],
@@ -51,7 +51,7 @@ it('should be able to mutate column style', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -84,7 +84,7 @@ it('should be able to mutate column by return a view', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -130,7 +130,7 @@ it('should be able to mutate column value by using callback', function (): void 
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 

@@ -11,11 +11,11 @@ use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
 use TiagoSpem\SimpleTables\Facades\SimpleTables;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 use TiagoSpem\SimpleTables\Themes\DefaultTheme;
 
 beforeEach(function (): void {
-    FakeUser::factory(2)
+    User::factory(2)
         ->state(new Sequence(
             ['name' => 'John Doe', 'is_active' => true],
             ['name' => 'Jane Doe', 'is_active' => false],
@@ -45,7 +45,7 @@ it('merges custom table row style with default theme styles', function (): void 
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -65,7 +65,7 @@ it('merges custom row style via callback based on callback', function (): void {
         public function tableRowStyle(): TableRowStyle
         {
             return SimpleTables::tableRowStyle()
-                ->style(fn(FakeUser $user): ?string => $user->is_active ? null : 'user-inactive-row-style');
+                ->style(fn(User $user): ?string => $user->is_active ? null : 'user-inactive-row-style');
         }
 
         public function columns(): array
@@ -78,7 +78,7 @@ it('merges custom row style via callback based on callback', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -115,7 +115,7 @@ it('overrides default theme style with custom style', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 

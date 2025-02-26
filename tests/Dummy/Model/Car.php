@@ -8,45 +8,45 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use TiagoSpem\SimpleTables\Tests\Dummy\Factories\FakeCarFactory;
+use TiagoSpem\SimpleTables\Tests\Dummy\Factories\CarFactory;
 
 /**
  * @property int $id
  * @property string $model
  * @property string $color
- * @property int $fake_user_id
+ * @property int $user_id
  * @property string $created_at
  * @property string $updated_at
  */
-final class FakeCar extends Model
+final class Car extends Model
 {
-    /** @use HasFactory<FakeCarFactory> */
+    /** @use HasFactory<CarFactory> */
     use HasFactory;
 
-    protected $table = 'fake_cars';
+    protected $table = 'cars';
 
     protected $fillable = [
         'id',
         'model',
         'color',
-        'fake_user_id',
+        'user_id',
         'created_at',
         'updated_at',
     ];
 
-    public function fakeUser(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(FakeUser::class);
+        return $this->belongsTo(User::class);
     }
 
     public function vendor(): HasOne
     {
-        return $this->hasOne(FakeCarVendor::class);
+        return $this->hasOne(CarVendor::class);
     }
 
-    protected static function newFactory(): FakeCarFactory
+    protected static function newFactory(): CarFactory
     {
-        return FakeCarFactory::new();
+        return CarFactory::new();
     }
 
 }

@@ -7,38 +7,38 @@ namespace TiagoSpem\SimpleTables\Tests\Dummy\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use TiagoSpem\SimpleTables\Tests\Dummy\Factories\FakeCarVendorFactory;
+use TiagoSpem\SimpleTables\Tests\Dummy\Factories\CarVendorFactory;
 
 /**
  * @property int $id
  * @property string $vendor
- * @property int $fake_car_id
+ * @property int $car_id
  * @property string $created_at
  * @property string $updated_at
  */
-final class FakeCarVendor extends Model
+final class CarVendor extends Model
 {
-    /** @use HasFactory<FakeCarVendorFactory> */
+    /** @use HasFactory<CarVendorFactory> */
     use HasFactory;
 
-    protected $table = 'fake_cars_vendor';
+    protected $table = 'cars_vendor';
 
     protected $fillable = [
         'id',
         'vendor',
-        'fake_car_id',
+        'car_id',
         'created_at',
         'updated_at',
     ];
 
-    public function fakeCar(): BelongsTo
+    public function car(): BelongsTo
     {
-        return $this->belongsTo(FakeCar::class);
+        return $this->belongsTo(Car::class);
     }
 
-    protected static function newFactory(): FakeCarVendorFactory
+    protected static function newFactory(): CarVendorFactory
     {
-        return FakeCarVendorFactory::new();
+        return CarVendorFactory::new();
     }
 
 }

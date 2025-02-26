@@ -9,18 +9,18 @@ use Illuminate\Database\Query\JoinClause;
 use function Pest\Livewire\livewire;
 
 use TiagoSpem\SimpleTables\Column;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCar;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCarVendor;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCountry;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\Car;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\CarVendor;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\Country;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
 
 beforeEach(function (): void {
     foreach (range(1, 2) as $index) {
-        FakeUser::factory()
+        User::factory()
             ->hasCountry(sprintf('Country %s', $index))
             ->has(
-                FakeCar::factory()
+                Car::factory()
                     ->state([
                         'model' => sprintf('Model %s', $index),
                         'color' => sprintf('Color %s', $index),
@@ -72,7 +72,7 @@ $assertions = function (Builder $dataset, array $columns): void {
 };
 
 it('should be able to search columns using dot notation with eager loading', function () use ($assertions): void {
-    $dataset = FakeUser::query()->with(['car.vendor', 'country']);
+    $dataset = User::query()->with(['car.vendor', 'country']);
 
     $columns = [
         Column::text('Country', 'country.name')->searchable(),
@@ -85,17 +85,17 @@ it('should be able to search columns using dot notation with eager loading', fun
 });
 
 it('should be able to search columns using alias keys with join queries', function () use ($assertions): void {
-    $dataset = FakeUser::query()
+    $dataset = User::query()
         ->select([
-            'fake_users.*',
-            'fake_countries.name as country_name',
-            'fake_cars.model as car_model',
-            'fake_cars.color as car_color',
-            'fake_cars_vendor.vendor as car_vendor',
+            'users.*',
+            'countries.name as country_name',
+            'cars.model as car_model',
+            'cars.color as car_color',
+            'cars_vendor.vendor as car_vendor',
         ])
-        ->join('fake_cars', 'fake_cars.fake_user_id', '=', 'fake_users.id')
-        ->join('fake_countries', 'fake_countries.id', '=', 'fake_users.country_id')
-        ->join('fake_cars_vendor', 'fake_cars_vendor.fake_car_id', '=', 'fake_cars.id');
+        ->join('cars', 'cars.user_id', '=', 'users.id')
+        ->join('countries', 'countries.id', '=', 'users.country_id')
+        ->join('cars_vendor', 'cars_vendor.car_id', '=', 'cars.id');
 
     $columns = [
         Column::text(title: 'Country', key: 'country.name', aliasKey: 'country_name')->searchable(),
@@ -108,36 +108,36 @@ it('should be able to search columns using alias keys with join queries', functi
 });
 
 it('should be able to search columns without alias keys with sub queries', function () use ($assertions): void {
-    $countrySub = fn() => FakeCountry::query()
+    $countrySub = fn() => Country::query()
         ->select([
-            'fake_countries.name as country_name',
-            'fake_countries.id as country_id',
+            'countries.name as country_name',
+            'countries.id as country_id',
         ]);
 
-    $carSub = fn() => FakeCar::query()
+    $carSub = fn() => Car::query()
         ->select([
-            'fake_cars.id as car_id',
-            'fake_cars.model as car_model',
-            'fake_cars.color as car_color',
-            'fake_cars.fake_user_id as user_id',
+            'cars.id as car_id',
+            'cars.model as car_model',
+            'cars.color as car_color',
+            'cars.user_id as user_id',
         ]);
 
-    $carVendorSub = fn() => FakeCarVendor::query()
+    $carVendorSub = fn() => CarVendor::query()
         ->select([
-            'fake_cars_vendor.vendor as car_vendor',
-            'fake_cars_vendor.fake_car_id as car_id',
+            'cars_vendor.vendor as car_vendor',
+            'cars_vendor.car_id as car_id',
         ]);
 
-    $dataset = FakeUser::query()
+    $dataset = User::query()
         ->select([
-            'fake_users.name as user_name',
+            'users.name as user_name',
             'country_sub.country_name',
             'car_sub.car_model',
             'car_sub.car_color',
             'car_vendor_sub.car_vendor',
         ])
-        ->joinSub($countrySub(), 'country_sub', 'country_sub.country_id', '=', 'fake_users.country_id')
-        ->joinSub($carSub(), 'car_sub', 'car_sub.user_id', '=', 'fake_users.id')
+        ->joinSub($countrySub(), 'country_sub', 'country_sub.country_id', '=', 'users.country_id')
+        ->joinSub($carSub(), 'car_sub', 'car_sub.user_id', '=', 'users.id')
         ->joinSub($carVendorSub(), 'car_vendor_sub', function (JoinClause $join): void {
             $join->on('car_vendor_sub.car_id', '=', 'car_sub.car_id');
         });
@@ -154,7 +154,7 @@ it('should be able to search columns without alias keys with sub queries', funct
 });
 
 it('should be able to search fields that is not set in the columns', function (): void {
-    $dataset = FakeUser::query()->with(['car', 'country']);
+    $dataset = User::query()->with(['car', 'country']);
 
     $columns = [
         Column::text('Country', 'country.name')->searchable(),
@@ -187,11 +187,11 @@ it('should be able to search fields that is not set in the columns', function ()
 });
 
 it('throws an exception for non-existent relation in manual joins without Eloquent relationship', function (): void {
-    $dataset = FakeUser::query()
-        ->join('fake_cars as user_car', 'user_car.fake_user_id', '=', 'fake_users.id')
-        ->join('fake_countries as user_country', 'user_country.id', '=', 'fake_users.country_id')
+    $dataset = User::query()
+        ->join('cars as user_car', 'user_car.user_id', '=', 'users.id')
+        ->join('countries as user_country', 'user_country.id', '=', 'users.country_id')
         ->select([
-            'fake_users.*',
+            'users.*',
             'user_car.model',
             'user_car.color',
             'user_country.name',

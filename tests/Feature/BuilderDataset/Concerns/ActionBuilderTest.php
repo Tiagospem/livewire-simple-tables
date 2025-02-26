@@ -15,11 +15,11 @@ use TiagoSpem\SimpleTables\Enum\Target;
 use TiagoSpem\SimpleTables\Facades\SimpleTables;
 use TiagoSpem\SimpleTables\Option;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 use TiagoSpem\SimpleTables\Themes\DefaultTheme;
 
 beforeEach(function (): void {
-    FakeUser::factory(2)
+    User::factory(2)
         ->state(new Sequence(
             ['is_active' => true, 'name' => 'John Doe'],
             ['is_active' => false, 'name' => 'Jane Doe'],
@@ -48,7 +48,7 @@ it('should be able to create an action builder as a simple button', function ():
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -82,7 +82,7 @@ it('should be able to create an action builder with icon', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -111,7 +111,7 @@ it('should be able to create an action builder with icon and label', function ()
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -144,7 +144,7 @@ it('should be able to create an action button with a custom style', function ():
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -182,7 +182,7 @@ it('should be able to disable action button', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -216,13 +216,13 @@ it('should be able to disable action button using callback', function (): void {
                 ->actions([
                     Action::for('action')
                         ->button(name: 'act button', href: 'https://example.com', wireNavigate: true, target: Target::BLANK)
-                        ->disabled(fn(FakeUser $user): bool => ! $user->is_active),
+                        ->disabled(fn(User $user): bool => ! $user->is_active),
                 ]);
         }
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -269,7 +269,7 @@ it('should be able to hidde action button', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -298,13 +298,13 @@ it('should be able to hidde action button using callback', function (): void {
                 ->actions([
                     Action::for('action')
                         ->button(name: 'act button', href: 'https://example.com', wireNavigate: true, target: Target::BLANK)
-                        ->hidden(fn(FakeUser $user): bool => ! $user->is_active),
+                        ->hidden(fn(User $user): bool => ! $user->is_active),
                 ]);
         }
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -354,7 +354,7 @@ it('should be able to show button based on user permission', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -396,7 +396,7 @@ it('should be able to hide button based on user permission', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -431,7 +431,7 @@ it('should be able to see action structure elements', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
@@ -474,7 +474,7 @@ it('should be able to create a action button with dropdown options', function ()
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 
