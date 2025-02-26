@@ -166,3 +166,40 @@ it('should be able to override theme style', function () use ($component): void 
         ->assertSeeHtml('pagination-sticky-style')
         ->assertOk();
 });
+
+it('should be able to use detail row feature', function () use ($component): void {
+    $users = User::factory(2)->create();
+
+    livewire($component::class, [
+        'detailView' => 'simple-tables::tests.detail-view',
+    ])
+        ->call('toggleRowDetail', $users[0]->id)
+        ->assertSet('expandedRows', [$users[0]->id])
+        ->assertSee('Detail view ' . $users[0]->name)
+        ->call('toggleRowDetail', $users[0]->id)
+        ->assertSet('expandedRows', [])
+        ->assertDontSee('Detail view ' . $users[0]->name)
+        ->call('toggleRowDetail', $users[0]->id)
+        ->call('toggleRowDetail', $users[1]->id)
+        ->assertSet('expandedRows', [$users[0]->id, $users[1]->id])
+        ->assertOk();
+});
+
+it('should be able to close other detail opens', function () use ($component): void {
+    $users = User::factory(2)->create();
+
+    livewire($component::class, [
+        'detailView'        => 'simple-tables::tests.detail-view',
+        'shouldCloseOthers' => true,
+    ])
+        ->call('toggleRowDetail', $users[0]->id)
+        ->assertSet('expandedRows', [$users[0]->id])
+        ->assertSee('Detail view ' . $users[0]->name)
+        ->call('toggleRowDetail', $users[1]->id)
+        ->assertSet('expandedRows', [$users[1]->id])
+        ->assertDontSee('Detail view ' . $users[0]->name)
+        ->assertSee('Detail view ' . $users[1]->name)
+        ->call('toggleRowDetail', $users[1]->id)
+        ->assertSet('expandedRows', [])
+        ->assertOk();
+});
