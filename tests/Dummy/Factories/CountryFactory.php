@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Tests\Dummy\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCountry;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\Country;
 
 /**
- * @method FakeCountry create(array $attributes = [])
+ * @method Country create(array $attributes = [])
  *
- * @extends Factory<FakeCountry>
+ * @extends Factory<Country>
  */
-final class FakeCountryFactory extends Factory
+final class CountryFactory extends Factory
 {
-    protected $model = FakeCountry::class;
+    protected $model = Country::class;
 
     public function definition(): array
     {

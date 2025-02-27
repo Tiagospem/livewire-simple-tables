@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Blade;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
@@ -146,15 +144,8 @@ final readonly class TableRenderer
      */
     private function getRowsCollection(): Collection
     {
-        return $this->convertRowsToCollection($this->table->rows);
-    }
+        $rows = $this->table->rows;
 
-    /**
-     * @param  LengthAwarePaginator<int, mixed>|LengthAwarePaginatorContract<int, mixed>|Collection<int, mixed>|Builder<Model>  $rows
-     * @return Collection<int, mixed>
-     */
-    private function convertRowsToCollection(mixed $rows): Collection
-    {
         if ($rows instanceof Collection) {
             return $rows;
         }
@@ -170,6 +161,8 @@ final readonly class TableRenderer
             return collect($results);
         }
 
+        // @codeCoverageIgnoreStart
         return collect();
+        // @codeCoverageIgnoreEnd
     }
 }

@@ -9,7 +9,7 @@ use function Pest\Livewire\livewire;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Concerns\BeforeSearch;
 use TiagoSpem\SimpleTables\Facades\SimpleTables;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
 
 $dynamicComponent = fn(): DynamicTableComponent => new class () extends DynamicTableComponent {
@@ -33,7 +33,7 @@ $dynamicComponent = fn(): DynamicTableComponent => new class () extends DynamicT
 };
 
 beforeEach(function (): void {
-    FakeUser::factory(2)
+    User::factory(2)
         ->state(new Sequence(
             ['phone' => '1123456789', 'name' => 'John Doe'],
             ['phone' => '2123456789', 'name' => 'Jane Doe'],
@@ -42,7 +42,7 @@ beforeEach(function (): void {
 });
 
 it('should be able to modify the search parameters before the search', function () use ($dynamicComponent): void {
-    $dataset = FakeUser::query();
+    $dataset = User::query();
 
     $columns = [
         Column::text('phone', 'phone')->searchable(),
@@ -68,7 +68,7 @@ it('should be able to modify the search parameters before the search', function 
 });
 
 it('should be able to modify the search parameters before the search using custom callback', function () use ($dynamicComponent): void {
-    $dataset = FakeUser::query();
+    $dataset = User::query();
 
     $columns = [
         Column::text('name', 'name')->searchable(),

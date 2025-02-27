@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 
 class DynamicTableComponent extends SimpleTableComponent
 {
@@ -60,7 +60,7 @@ class DynamicTableComponent extends SimpleTableComponent
     {
         $rawSql = unserialize($this->datasetTesting);
 
-        $query = FakeUser::query()->from(DB::raw("({$rawSql}) as fake_users"));
+        $query = User::query()->from(DB::raw("({$rawSql}) as users"));
 
         if ([] !== $this->eagerLoadsTesting) {
             $query->with($this->eagerLoadsTesting);

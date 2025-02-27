@@ -9,15 +9,16 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     public function up(): void
     {
-        Schema::create('countries', function (Blueprint $table): void {
+        Schema::create('cars_vendor', function (Blueprint $table): void {
             $table->id();
-            $table->string('name');
+            $table->string('vendor');
+            $table->foreignId('car_id')->constrained('cars');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('cars_vendor');
     }
 };

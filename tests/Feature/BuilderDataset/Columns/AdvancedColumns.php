@@ -11,17 +11,17 @@ use TiagoSpem\SimpleTables\Column;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Facades\SimpleTables;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCar;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeCountry;
-use TiagoSpem\SimpleTables\Tests\Dummy\Model\FakeUser;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\Car;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\Country;
+use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
 use TiagoSpem\SimpleTables\Tests\Feature\BuilderDataset\DynamicTableComponent;
 use TiagoSpem\SimpleTables\Themes\DefaultTheme;
 
 beforeEach(function (): void {
-    $this->user = FakeUser::factory()->hasCar()->hasCountry()->create();
+    $this->user = User::factory()->hasCar()->hasCountry()->create();
 });
 
-$assertions = function (Builder $dataset, array $columns, FakeUser $user): void {
+$assertions = function (Builder $dataset, array $columns, User $user): void {
     livewire(DynamicTableComponent::class, [
         'dataset' => $dataset,
         'columns' => $columns,
@@ -32,7 +32,7 @@ $assertions = function (Builder $dataset, array $columns, FakeUser $user): void 
 };
 
 it('renders related model columns using dot notation with eager loading', function () use ($assertions): void {
-    $dataset = FakeUser::query()->with(['car', 'country']);
+    $dataset = User::query()->with(['car', 'country']);
 
     $columns = [
         Column::text('Country', 'country.name'),
@@ -44,15 +44,15 @@ it('renders related model columns using dot notation with eager loading', functi
 });
 
 it('renders related model columns using alias keys with join queries', function () use ($assertions): void {
-    $dataset = FakeUser::query()
+    $dataset = User::query()
         ->select([
-            'fake_users.*',
-            'fake_countries.name as country_name',
-            'fake_cars.model as car_model',
-            'fake_cars.color as car_color',
+            'users.*',
+            'countries.name as country_name',
+            'cars.model as car_model',
+            'cars.color as car_color',
         ])
-        ->join('fake_cars', 'fake_cars.fake_user_id', '=', 'fake_users.id')
-        ->join('fake_countries', 'fake_countries.id', '=', 'fake_users.country_id');
+        ->join('cars', 'cars.user_id', '=', 'users.id')
+        ->join('countries', 'countries.id', '=', 'users.country_id');
 
 
     $columns = [
@@ -65,28 +65,28 @@ it('renders related model columns using alias keys with join queries', function 
 });
 
 it('renders related model columns without alias keys with sub queries', function () use ($assertions): void {
-    $countrySub = fn() => FakeCountry::query()
+    $countrySub = fn() => Country::query()
         ->select([
-            'fake_countries.name as country_name',
-            'fake_countries.id as country_id',
+            'countries.name as country_name',
+            'countries.id as country_id',
         ]);
 
-    $carSub = fn() => FakeCar::query()
+    $carSub = fn() => Car::query()
         ->select([
-            'fake_cars.model as car_model',
-            'fake_cars.color as car_color',
-            'fake_cars.fake_user_id as user_id',
+            'cars.model as car_model',
+            'cars.color as car_color',
+            'cars.user_id as user_id',
         ]);
 
-    $dataset = FakeUser::query()
+    $dataset = User::query()
         ->select([
-            'fake_users.name as user_name',
+            'users.name as user_name',
             'country_sub.country_name',
             'car_sub.car_model',
             'car_sub.car_color',
         ])
-        ->joinSub($countrySub(), 'country_sub', 'country_sub.country_id', '=', 'fake_users.country_id')
-        ->joinSub($carSub(), 'car_sub', 'car_sub.user_id', '=', 'fake_users.id');
+        ->joinSub($countrySub(), 'country_sub', 'country_sub.country_id', '=', 'users.country_id')
+        ->joinSub($carSub(), 'car_sub', 'car_sub.user_id', '=', 'users.id');
 
 
     $columns = [
@@ -100,7 +100,7 @@ it('renders related model columns without alias keys with sub queries', function
 });
 
 it('should be able to hide column', function (): void {
-    $dataset = FakeUser::query()->with(['car', 'country']);
+    $dataset = User::query()->with(['car', 'country']);
 
     $columns = [
         Column::text('Country', 'country.name'),
@@ -117,7 +117,7 @@ it('should be able to hide column', function (): void {
 });
 
 it('should be able to modify column style', function (): void {
-    $dataset = FakeUser::query();
+    $dataset = User::query();
 
     $theme = new DefaultTheme();
 
@@ -140,7 +140,7 @@ it('should be able to modify column style', function (): void {
 });
 
 it('should be able to center th elements', function (): void {
-    $dataset = FakeUser::query();
+    $dataset = User::query();
 
     $theme = new DefaultTheme();
 
@@ -185,7 +185,7 @@ it('should be able to render action column', function (): void {
 
         public function datasource(): Builder
         {
-            return FakeUser::query();
+            return User::query();
         }
     };
 

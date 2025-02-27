@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     public function up(): void
     {
-        Schema::create('fake_cars', function (Blueprint $table): void {
+        Schema::create('cars', function (Blueprint $table): void {
             $table->id();
             $table->string('model');
             $table->string('color');
-            $table->foreignId('fake_user_id')->constrained('fake_users');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('fake_cars');
+        Schema::dropIfExists('cars');
     }
 };

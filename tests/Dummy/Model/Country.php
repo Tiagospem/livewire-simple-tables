@@ -6,26 +6,26 @@ namespace TiagoSpem\SimpleTables\Tests\Dummy\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use TiagoSpem\SimpleTables\Tests\Dummy\Factories\FakeCountryFactory;
+use TiagoSpem\SimpleTables\Tests\Dummy\Factories\CountryFactory;
 
 /**
  * @property int $id
  * @property string $name
  */
-final class FakeCountry extends Model
+final class Country extends Model
 {
-    /** @use HasFactory<FakeCountryFactory> */
+    /** @use HasFactory<CountryFactory> */
     use HasFactory;
 
-    protected $table = 'fake_countries';
+    protected $table = 'countries';
 
     protected $fillable = [
         'id',
         'name',
     ];
 
-    protected static function newFactory(): FakeCountryFactory
+    protected static function newFactory(): CountryFactory
     {
-        return FakeCountryFactory::new();
+        return CountryFactory::new();
     }
 }
