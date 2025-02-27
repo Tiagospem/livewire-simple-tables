@@ -491,3 +491,13 @@ it('should be able to create a action button with dropdown options', function ()
         ])
         ->assertOk();
 });
+
+it('should be able to use dropdown option as a link', function (): void {})->todo();
+
+it('should be able to use dropdown option with event', function (): void {})->todo();
+
+it('should be able to show / hide option', function (): void {})->todo();
+
+it('should be able to show / hide option using callback', function (): void {})->todo();
+
+it('should be able to use show / hide option using permission', function (): void {})->todo();
