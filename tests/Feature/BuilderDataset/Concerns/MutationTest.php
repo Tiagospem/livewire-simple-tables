@@ -76,7 +76,7 @@ it('should be able to mutate column style using callback', function (): void {
             return SimpleTables::mutation()
                 ->fields([
                     Field::key('name')
-                        ->styleRule(fn(string $name) => 'John Doe' === $name ? 'new-style-for-name-column' : ''),
+                        ->styleRule(fn(string $name): string => 'John Doe' === $name ? 'new-style-for-name-column' : ''),
                 ]);
         }
 
