@@ -126,6 +126,7 @@ final readonly class ContentParser
         ];
     }
 
+    //@todo
     private function getToggleableColumn(Column $column): object
     {
         $tdStyle = theme($this->theme, 'table.td');

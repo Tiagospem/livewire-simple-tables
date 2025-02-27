@@ -63,6 +63,45 @@ it('should be able to mutate column style', function (): void {
         ->assertOk();
 });
 
+it('should be able to mutate column style using callback', function (): void {
+    $theme = (new DefaultTheme())->getStyles();
+
+    $themeTdStyle = theme($theme, 'table.td');
+
+    $expectedStyle = mergeStyle($themeTdStyle, 'new-style-for-name-column');
+
+    $dynamicComponent = new class () extends SimpleTableComponent {
+        public function mutation(): Mutation
+        {
+            return SimpleTables::mutation()
+                ->fields([
+                    Field::key('name')
+                        ->styleRule(fn(string $name) => 'John Doe' === $name ? 'new-style-for-name-column' : ''),
+                ]);
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::text('phone', 'phone'),
+                Column::text('name', 'name'),
+            ];
+        }
+
+        public function datasource(): Builder
+        {
+            return User::query();
+        }
+    };
+
+    livewire($dynamicComponent::class)
+        ->assertSeeHtml('<td class="' . $expectedStyle . '">John Doe</td>')
+        ->assertSeeHtml('<td class="' . $themeTdStyle . '">Jane Doe</td>')
+        ->assertSeeHtml('<td class="' . $themeTdStyle . '">1123456789</td>')
+        ->assertSeeHtml('<td class="' . $themeTdStyle . '">2123456789</td>')
+        ->assertOk();
+});
+
 it('should be able to mutate column by return a view', function (): void {
     $dynamicComponent = new class () extends SimpleTableComponent {
         public function mutation(): Mutation
