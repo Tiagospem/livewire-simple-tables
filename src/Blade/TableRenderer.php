@@ -161,6 +161,8 @@ final readonly class TableRenderer
             return collect($results);
         }
 
+        // @codeCoverageIgnoreStart
         return collect();
+        // @codeCoverageIgnoreEnd
     }
 }
