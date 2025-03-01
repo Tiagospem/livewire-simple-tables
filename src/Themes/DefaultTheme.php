@@ -16,7 +16,7 @@ final class DefaultTheme implements ThemeInterface
                 'tr'            => 'bg-white even:bg-slate-50 border-t',
                 'tr_header'     => 'bg-white',
                 'th'            => 'whitespace-nowrap px-3 py-2 text-sm font-semibold text-slate-900 [&>:first-child]:flex [&>:first-child]:items-center [&>:first-child]:gap-2 [&>:first-child]:justify-between',
-                'td'            => 'whitespace-nowrap px-3 py-2 text-sm text-slate-500',
+                'td'            => 'px-3 py-2 text-sm text-slate-500',
                 'td_no_records' => 'whitespace-nowrap px-3 py-4 text-sm text-slate-500 text-center',
                 'sort_icon'     => 'size-4',
                 'boolean_icon'  => 'size-6',

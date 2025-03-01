@@ -54,7 +54,7 @@ final readonly class ContentParser
 
         return (object) [
             'content' => $rowValue,
-            'style'   => mergeStyle($tdStyle, $fieldStyle),
+            'style'   => $fieldStyle,
         ];
     }
 
