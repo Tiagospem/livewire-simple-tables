@@ -15,7 +15,7 @@
             colspan="999"
             class="border-y"
         >
-            <div class="p-4 bg-white">
+            <div class="bg-white">
                 {!! $detailView !!}
             </div>
         </td>

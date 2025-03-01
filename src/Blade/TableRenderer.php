@@ -97,7 +97,7 @@ final readonly class TableRenderer
 
     private function detailViewEnabled(): bool
     {
-        return filled($this->component->detailView);
+        return filled($this->component->detailView()['view']);
     }
 
     private function shouldShowDetail(mixed $rowId): bool
@@ -107,8 +107,15 @@ final readonly class TableRenderer
 
     private function renderDetailView(mixed $row): string
     {
-        return View::make($this->component->detailView, [
+        $detail = $this->component->detailView();
+
+        if (empty($detail['view'])) {
+            return 'view not found.';
+        }
+
+        return View::make($detail['view'], [
             'row' => $row,
+            ...$detail['params'],
         ])->render();
     }
 
