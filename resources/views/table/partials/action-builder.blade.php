@@ -27,11 +27,8 @@
                         @if (filled($buttonUrl) && !$isDisabled) href="{{ $buttonUrl }}"
                             target="{{ $buttonTarget }}"
                             @if ($isWireNavigate) wire:navigate @endif
-                        @elseif(filled($buttonEvent) && !$isDisabled)
-                            x-on:click="handleClick(@js($event))"
-                        @endif
-
-                        @if($hasDropdown)
+                        @elseif($hasDropdown && !$isDisabled)
+                            x-on:click="handleClick(@js($clickEvent))"
                             x-ref="dropdownButton"
                         @endif
 
