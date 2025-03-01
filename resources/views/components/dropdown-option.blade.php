@@ -11,7 +11,10 @@
     'target' => '',
 ])
 
-<div @class(['opacity-50 pointer-events-none' => $disabled]) data-cy="option-wrapper">
+<div
+    @class(['opacity-50 pointer-events-none' => $disabled])
+    data-cy="option-wrapper"
+>
     <a
         data-cy="option"
         @if (filled($url)) href="{{ $url }}"
@@ -26,7 +29,8 @@
         tabindex="-1"
         >
         @if (filled($icon))
-            <x-dynamic-component :data-cy="$icon"
+            <x-dynamic-component
+                :data-cy="$icon"
                 :component="$icon"
                 @class(['mr-3 size-4.5 text-slate-500', $iconStyle])
             />

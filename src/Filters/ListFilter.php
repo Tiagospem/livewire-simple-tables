@@ -9,6 +9,8 @@ use TiagoSpem\SimpleTables\Interfaces\Filter;
 
 abstract class ListFilter implements Filter
 {
+    protected string $filterInlineStyle = 'col-span-6';
+
     protected string $valueKey = 'value';
 
     protected string $labelKey = 'label';
@@ -64,11 +66,12 @@ abstract class ListFilter implements Filter
     public function render(): string
     {
         return View::make('simple-tables::filters.list', [
-            'options'  => $this->getOptions(),
-            'filterId' => $this->getFilterId(),
-            'label'    => $this->getLabel(),
-            'valueKey' => $this->valueKey,
-            'labelKey' => $this->labelKey,
+            'options'           => $this->getOptions(),
+            'filterId'          => $this->getFilterId(),
+            'filterInlineStyle' => $this->filterInlineStyle,
+            'label'             => $this->getLabel(),
+            'valueKey'          => $this->valueKey,
+            'labelKey'          => $this->labelKey,
         ])->render();
     }
 }

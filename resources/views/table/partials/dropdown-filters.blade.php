@@ -2,7 +2,7 @@
     x-data="{
         open: false,
     }"
-    class="relative flex-1"
+    class="relative"
 >
     <div>
         <div

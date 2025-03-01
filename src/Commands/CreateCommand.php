@@ -49,8 +49,8 @@ final class CreateCommand extends Command
         $subPath = [] === $parts ? '' : implode('/', $parts) . '/';
 
         $basePath = 'filter' === $type
-            ? config('simple-tables.filter-path')
-            : config('simple-tables.create-path');
+            ? config('simple-tables.filters-path')
+            : config('simple-tables.tables-path');
 
         if ( ! is_string($basePath)) {
             $this->error('Invalid base path configuration');

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables\Traits;
 
+use Livewire\Attributes\Locked;
+
 trait HasDetail
 {
+    #[Locked]
     public string $detailView = '';
 
+    #[Locked]
     public bool $shouldCloseOthers = false;
 
     /**

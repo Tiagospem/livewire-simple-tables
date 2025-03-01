@@ -23,13 +23,14 @@
                 :$row
             >
                 <x-slot:actionButton>
-                    <a data-cy="action-button-href"
+                    <a
+                        data-cy="action-button-href"
                         @if (filled($buttonUrl) && !$isDisabled) href="{{ $buttonUrl }}"
                             target="{{ $buttonTarget }}"
                             @if ($isWireNavigate) wire:navigate @endif
-                        @elseif($hasDropdown && !$isDisabled)
-                            x-on:click="handleClick(@js($clickEvent))"
-                            x-ref="dropdownButton"
+                    @elseif($hasDropdown && !$isDisabled)
+                        x-on:click="handleClick(@js($clickEvent))"
+                        x-ref="dropdownButton"
                         @endif
 
                         @class([
@@ -39,7 +40,8 @@
                             $buttonStyle,
                         ])>
                         @if ($hasIcon)
-                            <x-dynamic-component :data-cy="$buttonIcon"
+                            <x-dynamic-component
+                                :data-cy="$buttonIcon"
                                 :component="$buttonIcon"
                                 @class([
                                     '-mr-0.5' => $hasName,

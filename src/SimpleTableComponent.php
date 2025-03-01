@@ -7,6 +7,7 @@ namespace TiagoSpem\SimpleTables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use TiagoSpem\SimpleTables\Blade\TableRenderer;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
@@ -31,6 +32,7 @@ abstract class SimpleTableComponent extends Component
     use HasSort;
     use HasTheme;
 
+    #[Locked]
     public string $primaryKey = 'id';
 
     /**

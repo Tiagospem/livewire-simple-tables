@@ -24,12 +24,17 @@ final readonly class TableRenderer
 
     public function render(): string
     {
+        $filters = $this->component->getFilters();
+
         return View::make('simple-tables::table.table', [
             'header'               => $this->renderHeader(),
             'body'                 => $this->renderBody(),
             'pagination'           => $this->renderPagination(),
-            'filters'              => $this->component->getFilters(),
+            'filters'              => $filters,
+            'hasFilters'           => count($filters) > 0,
             'totalFiltersSelected' => $this->component->getTotalFiltersSelected(),
+            'inlineFilters'        => $this->component->inlineFilters,
+            'filterGridStyle'      => $this->component->filterGridStyle,
             'showSearch'           => $this->table->showSearch,
             'tableStyle'           => theme($this->theme, 'table.content'),
             'bodyStyle'            => theme($this->theme, 'table.body'),

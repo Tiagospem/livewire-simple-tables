@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Locked;
 use TiagoSpem\SimpleTables\Interfaces\Filter;
 
 trait HasFilters
@@ -15,7 +16,14 @@ trait HasFilters
     /**
      * @var array<string, mixed>
      */
-    public array $filterValues     = [];
+    public array $filterValues = [];
+
+    #[Locked]
+    public string $filterGridStyle = 'grid-cols-1 md:grid-cols-12 gap-2';
+
+    #[Locked]
+    public bool $inlineFilters = false;
+
     protected bool $persistFilters = false;
 
     private ?string $tableCacheKey = null;
@@ -85,6 +93,16 @@ trait HasFilters
     public function getTotalFiltersSelected(): int
     {
         return collect($this->filterValues)->filter(fn($value): bool => null !== $value)->count();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function clearFilters(): void
+    {
+        $this->filterValues = [];
+
+        Cache::forget($this->getTableCacheKey());
     }
 
     /**
