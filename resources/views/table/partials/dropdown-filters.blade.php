@@ -31,5 +31,7 @@
         @foreach ($filters as $filter)
             {!! $filter->render() !!}
         @endforeach
+
+        @includeWhen($totalFiltersSelected, 'simple-tables::table.partials.clean-filters')
     </div>
 </div>
