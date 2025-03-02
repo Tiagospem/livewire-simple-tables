@@ -12,6 +12,9 @@ interface BulkActionInterface
 
     public function hasIcon(): bool;
 
+    /**
+     * @return array<int>
+     */
     public function getSelectedIds(): array;
 
     /**

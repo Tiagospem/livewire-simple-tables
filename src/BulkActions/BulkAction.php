@@ -27,6 +27,9 @@ abstract class BulkAction implements BulkActionInterface
         return $this->icon;
     }
 
+    /**
+     * @return array<int>
+     */
     public function getSelectedIds(): array
     {
         return $this->selectedIds;
