@@ -22,11 +22,11 @@ final readonly class ContentParser
      */
     public function mapFieldsWithContent(): array
     {
-        $tdStyle = theme($this->theme, 'table.td');
+        theme($this->theme, 'table.td');
 
         return collect($this->table->columns)
             ->filter(fn(Column $column): bool => $column->isVisible())
-            ->map(function (Column $column) use ($tdStyle) {
+            ->map(function (Column $column) {
                 $handlers = $this->getColumnHandlers();
 
                 foreach ($handlers as [$condition, $handler]) {
@@ -35,7 +35,7 @@ final readonly class ContentParser
                     }
                 }
 
-                return $this->getMutedData($column, $tdStyle, $this->table->mutations[$column->getRealKey()] ?? null);
+                return $this->getMutedData($column, $this->table->mutations[$column->getRealKey()] ?? null);
             })
             ->all();
     }
@@ -45,7 +45,7 @@ final readonly class ContentParser
         return $this->table->tableRowStyle->getRowStyle($this->row, $this->theme);
     }
 
-    private function getMutedData(Column $column, string $tdStyle, ?Field $mutation): object
+    private function getMutedData(Column $column, ?Field $mutation): object
     {
         $rowKey     = $column->getRowKey();
         $rowValue   = parserString(data_get($this->row, $rowKey));

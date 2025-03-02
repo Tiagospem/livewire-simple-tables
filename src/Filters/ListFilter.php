@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Filters;
 
 use Illuminate\Support\Facades\View;
-use TiagoSpem\SimpleTables\Interfaces\Filter;
+use TiagoSpem\SimpleTables\Interfaces\FilterInterface;
 
-abstract class ListFilter implements Filter
+abstract class ListFilter implements FilterInterface
 {
     protected string $filterInlineStyle = 'col-span-6';
 

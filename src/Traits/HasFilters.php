@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Locked;
-use TiagoSpem\SimpleTables\Interfaces\Filter;
+use TiagoSpem\SimpleTables\Interfaces\FilterInterface;
 
 trait HasFilters
 {
@@ -73,14 +73,14 @@ trait HasFilters
     }
 
     /**
-     * @return Collection<int, Filter>
+     * @return Collection<int, FilterInterface>
      */
     public function getFilters(): Collection
     {
-        /** @var Collection<int, Filter> $filters */
+        /** @var Collection<int, FilterInterface> $filters */
         $filters = collect($this->filters())
             ->map(fn(string $filterClass) => app($filterClass))
-            ->filter(fn($instance): bool => $instance instanceof Filter)
+            ->filter(fn($instance): bool => $instance instanceof FilterInterface)
             ->values();
 
         foreach ($filters as $filter) {

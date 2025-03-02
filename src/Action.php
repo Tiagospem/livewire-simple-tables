@@ -7,10 +7,10 @@ namespace TiagoSpem\SimpleTables;
 use Closure;
 use Illuminate\View\View;
 use TiagoSpem\SimpleTables\Enum\Target;
-use TiagoSpem\SimpleTables\Interfaces\HasActions;
+use TiagoSpem\SimpleTables\Interfaces\HasActionsInterface;
 use TiagoSpem\SimpleTables\Traits\HandleAction;
 
-final class Action implements HasActions
+final class Action implements HasActionsInterface
 {
     use HandleAction;
 

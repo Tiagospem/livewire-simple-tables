@@ -1,0 +1,17 @@
+<?php
+
+namespace {{ namespace }};
+
+use TiagoSpem\SimpleTables\BulkActions\BulkAction;
+
+class {{ class }} extends BulkAction
+{
+    protected string $name = '{{ bulkName }}';
+
+    public function can(): bool
+    {
+        return true;
+    }
+}
+
+

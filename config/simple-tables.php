@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 return [
-    'tables-path' => app_path('Livewire'),
+    'tables-path' => app_path('Livewire/Tables'),
 
-    'filters-path' => app_path('Filters'),
+    'filters-path' => app_path('Livewire/Tables/Filters'),
+
+    'bulk-actions-path' => app_path('Livewire/Tables/BulkActions'),
 
     'theme'       => TiagoSpem\SimpleTables\Themes\DefaultTheme::class,
 

@@ -5,6 +5,8 @@
     @foreach ($rowContent as $row)
         @includeWhen($loop->first && $detailViewEnabled, 'simple-tables::table.partials.detail-icon')
 
+        @includeWhen($loop->first && $hasBulkActions, 'simple-tables::table.partials.checkbox-icon')
+
         <td class="{{ $tdStyle }}">
             <div class="{{ $row->style }}">
                 {!! $row->content !!}

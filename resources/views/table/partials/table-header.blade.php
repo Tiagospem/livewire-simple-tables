@@ -5,6 +5,8 @@
         </th>
     @endif
 
+    @includeWhen($hasBulkActions, 'simple-tables::table.partials.dropdown-bulk-actions')
+
     @foreach ($columns as $column)
         <th class="{{ mergeStyle($thStyle, $column->getStyle()) }}">
             @if ($column->isActionColumn())
