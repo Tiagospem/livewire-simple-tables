@@ -7,8 +7,8 @@ namespace TiagoSpem\SimpleTables\Blade;
 use Illuminate\Support\Facades\View;
 use TiagoSpem\SimpleTables\Action;
 use TiagoSpem\SimpleTables\Column;
-use TiagoSpem\SimpleTables\Dto\TableData;
 use TiagoSpem\SimpleTables\Field;
+use TiagoSpem\SimpleTables\TransferData\TableData;
 
 final readonly class ContentParser
 {

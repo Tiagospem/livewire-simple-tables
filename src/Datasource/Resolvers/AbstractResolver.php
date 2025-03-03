@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use TiagoSpem\SimpleTables\Dto\TableData;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
+use TiagoSpem\SimpleTables\TransferData\TableData;
 
 abstract class AbstractResolver
 {

@@ -8,8 +8,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginator
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
-use TiagoSpem\SimpleTables\Dto\TableData;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
+use TiagoSpem\SimpleTables\TransferData\TableData;
 
 final readonly class TableRenderer
 {

@@ -11,10 +11,10 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 use TiagoSpem\SimpleTables\Blade\TableRenderer;
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
+use TiagoSpem\SimpleTables\Concerns\BulkAction;
 use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
 use TiagoSpem\SimpleTables\Datasource\DataSourceResolver;
-use TiagoSpem\SimpleTables\Traits\HasBulkActions;
 use TiagoSpem\SimpleTables\Traits\HasDetail;
 use TiagoSpem\SimpleTables\Traits\HasFilters;
 use TiagoSpem\SimpleTables\Traits\HasPagination;
@@ -25,7 +25,6 @@ use TiagoSpem\SimpleTables\Traits\HasTheme;
 
 abstract class SimpleTableComponent extends Component
 {
-    use HasBulkActions;
     use HasDetail;
     use HasFilters;
     use HasPagination;
@@ -60,6 +59,11 @@ abstract class SimpleTableComponent extends Component
     public function tableRowStyle(): TableRowStyle
     {
         return app(TableRowStyle::class);
+    }
+
+    public function bulkActions(): BulkAction
+    {
+        return app(BulkAction::class);
     }
 
     public function render(): string
