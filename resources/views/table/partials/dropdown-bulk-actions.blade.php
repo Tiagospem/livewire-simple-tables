@@ -24,9 +24,13 @@
             x-transition:enter-start="-translate-y-2"
             x-transition:enter-end="translate-y-0"
             class="{{ $themeDropdownStyle }}"
+            x-data="clickEvent"
         >
-            @foreach($bulkActions as $key => $action)
-                <a wire:click="handleBulkAction('{{ $key }}')" class="{{ mergeStyle($themeDropdownOptionStyle) }}">
+            @foreach ($bulkActions as $action)
+                <a
+                    x-on:click="dispatchEvent(@js($action->getEventName()))"
+                    class="{{ mergeStyle($themeDropdownOptionStyle) }}"
+                >
                     @if ($action->hasIcon())
                         <x-dynamic-component
                             :component="$action->getIcon()"
@@ -34,7 +38,7 @@
                         />
                     @endif
 
-                    {{ $action->getName() }} ({{ count($action->getSelectedIds()) }})
+                    {{ $action->getName() }} ({{ count($selectedIds) }})
                 </a>
             @endforeach
         </div>

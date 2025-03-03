@@ -25,7 +25,7 @@ final readonly class TableRenderer
     public function render(): string
     {
         $filters     = $this->component->getFilters();
-        $bulkActions = $this->component->getActionsBulk();
+        $bulkActions = $this->component->bulkActions();
 
         return View::make('simple-tables::table.table', [
             'header'               => $this->renderHeader(),
@@ -33,7 +33,7 @@ final readonly class TableRenderer
             'pagination'           => $this->renderPagination(),
             'filters'              => $filters,
             'hasFilters'           => count($filters)     > 0,
-            'hasBulkActions'       => count($bulkActions) > 0,
+            'hasBulkActions'       => $bulkActions->hasBulkActions(),
             'totalFiltersSelected' => $this->component->getTotalFiltersSelected(),
             'inlineFilters'        => $this->component->inlineFilters,
             'filterGridStyle'      => $this->component->filterGridStyle,
@@ -45,7 +45,7 @@ final readonly class TableRenderer
 
     private function renderHeader(): string
     {
-        $bulkActions = $this->component->getActionsBulk();
+        $bulkActions = $this->component->bulkActions();
 
         return View::make('simple-tables::table.partials.table-header', [
             'columns'                  => $this->getVisibleColumns(),
@@ -58,8 +58,9 @@ final readonly class TableRenderer
             'sortIconStyle'            => theme($this->theme, 'table.sort_icon'),
             'hasAction'                => $this->table->actionBuilder->hasActions(),
             'detailViewEnabled'        => $this->detailViewEnabled(),
-            'hasBulkActions'           => count($bulkActions) > 0,
-            'bulkActions'              => $bulkActions,
+            'hasBulkActions'           => $bulkActions->hasBulkActions(),
+            'bulkActions'              => $bulkActions->getBulkActions(),
+            'selectedIds'              => $this->component->selectedIds,
             'hasSelectedIds'           => count($this->component->selectedIds),
             'themeDropdownOptionStyle' => theme($this->theme, 'dropdown.option'),
             'themeDropdownStyle'       => theme($this->theme, 'dropdown.content'),
@@ -93,12 +94,14 @@ final readonly class TableRenderer
 
         $shouldShowDetail = $this->shouldShowDetail($rowId);
 
+        $bulkActions = $this->component->bulkActions();
+
         return View::make('simple-tables::table.partials.table-row', [
             'rowContent'        => $contentParser->mapFieldsWithContent(),
             'detailViewEnabled' => $this->detailViewEnabled(),
             'shouldShowDetail'  => $shouldShowDetail,
             'detailView'        => $shouldShowDetail ? $this->renderDetailView($row) : '',
-            'hasBulkActions'    => count($this->component->getActionsBulk()) > 0,
+            'hasBulkActions'    => $bulkActions->hasBulkActions(),
             'rowId'             => $rowId,
             'trStyle'           => $contentParser->getMutedRowStyle(),
             'tdStyle'           => theme($this->theme, 'table.td'),

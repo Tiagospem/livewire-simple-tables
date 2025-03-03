@@ -28,11 +28,13 @@ final class BulkAction
      */
     public function getBulkActions(): array
     {
-        return $this->bulkActions;
+        return collect($this->bulkActions)
+            ->filter(fn(Bulk $bulk): bool => $bulk->evaluatePermission())
+            ->all();
     }
 
     public function hasBulkActions(): bool
     {
-        return [] !== $this->bulkActions;
+        return [] !== $this->getBulkActions();
     }
 }

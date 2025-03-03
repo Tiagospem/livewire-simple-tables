@@ -34,5 +34,10 @@ export default () => ({
 
     updateComponent() {
         this.$wire.set('selectedIds', this.selectedItems);
-    }
+    },
+
+    dispatchEvent(eventName) {
+        console.log(eventName);
+        Livewire.dispatch(eventName);
+    },
 });

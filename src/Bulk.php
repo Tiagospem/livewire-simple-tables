@@ -20,13 +20,15 @@ final class Bulk
 
     private string $eventName;
 
-    public function add(string $name, string $eventName, ?string $icon = null): self
+    public static function event(string $name, string $eventName, ?string $icon = null): self
     {
-        $this->name      = $name;
-        $this->icon      = $icon;
-        $this->eventName = $eventName;
+        $bulk = new self();
 
-        return $this;
+        $bulk->name      = $name;
+        $bulk->icon      = $icon;
+        $bulk->eventName = $eventName;
+
+        return $bulk;
     }
 
     public function icon(string $icon): self
@@ -52,13 +54,6 @@ final class Bulk
         return $this;
     }
 
-    public function event(string $name): self
-    {
-        $this->eventName = $name;
-
-        return $this;
-    }
-
     public function getName(): string
     {
         return $this->name;
@@ -69,8 +64,20 @@ final class Bulk
         return $this->icon;
     }
 
+    public function getEventName(): string
+    {
+        return $this->eventName;
+    }
+
     public function hasIcon(): bool
     {
         return filled($this->icon);
+    }
+
+    public function evaluatePermission(): bool
+    {
+        return (bool) ($this->can instanceof Closure
+            ? $this->can->call($this)
+            : $this->can);
     }
 }
