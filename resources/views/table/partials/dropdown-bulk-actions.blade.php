@@ -25,8 +25,8 @@
             x-transition:enter-end="translate-y-0"
             class="{{ $themeDropdownStyle }}"
         >
-            @foreach($bulkActions as $action)
-                <a class="{{ mergeStyle($themeDropdownOptionStyle) }}">
+            @foreach($bulkActions as $key => $action)
+                <a wire:click="handleBulkAction('{{ $key }}')" class="{{ mergeStyle($themeDropdownOptionStyle) }}">
                     @if ($action->hasIcon())
                         <x-dynamic-component
                             :component="$action->getIcon()"

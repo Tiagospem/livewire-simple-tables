@@ -7,7 +7,7 @@ namespace TiagoSpem\SimpleTables\Datasource\Resolvers;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use TiagoSpem\SimpleTables\Interfaces\Filter;
+use TiagoSpem\SimpleTables\Interfaces\FilterInterface;
 
 final class DataBuilderResolver extends AbstractResolver
 {
@@ -30,7 +30,7 @@ final class DataBuilderResolver extends AbstractResolver
         foreach ($this->component->filterValues as $filterId => $value) {
             if (filled($value)) {
                 $filter = $this->component->getFilters()
-                    ->first(fn(Filter $f): bool => $f->getFilterId() === $filterId);
+                    ->first(fn(FilterInterface $f): bool => $f->getFilterId() === $filterId);
 
                 if ($filter) {
                     $query = $filter->getQuery($query, $value);

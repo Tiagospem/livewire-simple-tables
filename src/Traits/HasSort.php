@@ -13,7 +13,7 @@ trait HasSort
     public string $sortDirection = 'desc';
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function sortableIcons(): array
     {

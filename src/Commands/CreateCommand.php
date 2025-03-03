@@ -9,7 +9,7 @@ use TiagoSpem\SimpleTables\Services\StubService;
 
 final class CreateCommand extends Command
 {
-    protected $signature = 'st:create {type : The component type (table|filter|bulk)} {name : The name of the component}';
+    protected $signature = 'st:create {type : The component type (table|filter)} {name : The name of the component}';
 
     protected $description = 'Make a new SimpleTable or SimpleFilter component.';
 
@@ -22,14 +22,14 @@ final class CreateCommand extends Command
     {
         $type = mb_strtolower(parserString($this->argument('type')));
 
-        if ( ! in_array($type, ['table', 'filter', 'bulk'], true)) {
-            $this->error('Invalid component type. Allowed values: table, filter and Bulk');
+        if ( ! in_array($type, ['table', 'filter'], true)) {
+            $this->error('Invalid component type. Allowed values: table and filter');
 
             return self::FAILURE;
         }
 
         $name         = parserString($this->argument('name'));
-        $stubFileName = 'filter' === $type ? 'filter.stub' : ('bulk' === $type ? 'bulk.stub' : 'table.stub');
+        $stubFileName = 'filter' === $type ? 'filter.stub' : 'table.stub';
         $stubPath     = $this->stubService->getStubPath($stubFileName);
 
         if ( ! file_exists($stubPath)) {
@@ -46,10 +46,6 @@ final class CreateCommand extends Command
             $className .= 'Table';
         }
 
-        if ('bulk' === $type && ! str_ends_with($className, 'Bulk')) {
-            $className .= 'Bulk';
-        }
-
         if ('filter' === $type && ! str_ends_with($className, 'Filter')) {
             $className .= 'Filter';
         }
@@ -58,7 +54,6 @@ final class CreateCommand extends Command
 
         $basePath = match ($type) {
             'filter' => config('simple-tables.filters-path'),
-            'bulk'   => config('simple-tables.bulk-actions-path'),
             default  => config('simple-tables.tables-path'),
         };
 
@@ -85,9 +80,8 @@ final class CreateCommand extends Command
         $namespace     = $namespaceBase . ([] === $parts ? '' : '\\' . implode('\\', $parts));
         $content       = file_get_contents($stubPath) ?: '';
         $filterId      = uniqid('filter_');
-        $bulkName      = str($className)->replace('Bulk', '')->snake(' ')->title()->toString();
 
-        $content       = str_replace(['{{ namespace }}', '{{ class }}', '{{ filterId }}', '{{ bulkName }}'], [$namespace, $className, $filterId, $bulkName], $content);
+        $content       = str_replace(['{{ namespace }}', '{{ class }}', '{{ filterId }}'], [$namespace, $className, $filterId], $content);
 
         file_put_contents($targetPath, $content);
 
