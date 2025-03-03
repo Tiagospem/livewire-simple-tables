@@ -7,8 +7,6 @@ return [
 
     'filters-path' => app_path('Livewire/Tables/Filters'),
 
-    'bulk-actions-path' => app_path('Livewire/Tables/BulkActions'),
-
     'theme'       => TiagoSpem\SimpleTables\Themes\DefaultTheme::class,
 
     'sort' => [
