@@ -45,10 +45,10 @@ Column::boolean('Active', 'is_active')
 
 ### Toggle Columns
 
-Similar to boolean columns, but allows users to toggle the value:
+> **Note**: This feature is currently under development and should not be used in production environments.
 
 ```php
-Column::toggle('Published', 'is_published')
+Column::toggle('Published', 'is_published') // Not available yet
 ```
 
 ### Action Columns
