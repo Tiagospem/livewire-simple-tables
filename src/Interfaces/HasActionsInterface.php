@@ -7,7 +7,7 @@ namespace TiagoSpem\SimpleTables\Interfaces;
 use Closure;
 use TiagoSpem\SimpleTables\Enum\Target;
 
-interface HasActions
+interface HasActionsInterface
 {
     /**
      * @param  Closure(mixed): string|string  $href

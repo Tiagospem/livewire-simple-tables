@@ -13,7 +13,6 @@ use TiagoSpem\SimpleTables\Facades\SimpleTables;
 use TiagoSpem\SimpleTables\Field;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
 use TiagoSpem\SimpleTables\Tests\Dummy\Model\User;
-use TiagoSpem\SimpleTables\Themes\DefaultTheme;
 
 beforeEach(function (): void {
     User::factory(2)
@@ -25,11 +24,7 @@ beforeEach(function (): void {
 });
 
 it('should be able to mutate column style', function (): void {
-    $theme = (new DefaultTheme())->getStyles();
-
-    $themeTdStyle = theme($theme, 'table.td');
-
-    $expectedStyle = mergeStyle($themeTdStyle, 'new-style-for-name-column');
+    $expectedStyle = 'new-style-for-name-column';
 
     $dynamicComponent = new class () extends SimpleTableComponent {
         public function mutation(): Mutation
@@ -56,19 +51,15 @@ it('should be able to mutate column style', function (): void {
     };
 
     livewire($dynamicComponent::class)
-        ->assertSeeHtml('<td class="' . $expectedStyle . '">John Doe</td>')
-        ->assertSeeHtml('<td class="' . $expectedStyle . '">Jane Doe</td>')
-        ->assertSeeHtml('<td class="' . $themeTdStyle . '">1123456789</td>')
-        ->assertSeeHtml('<td class="' . $themeTdStyle . '">2123456789</td>')
+        ->assertSeeHtml('<div data-cy="row-content" class="' . $expectedStyle . '">')
+        ->assertSeeHtml('<div data-cy="row-content" class="' . $expectedStyle . '">')
+        ->assertSeeHtml('<div data-cy="row-content" class="">')
+        ->assertSeeHtml('<div data-cy="row-content" class="">')
         ->assertOk();
 });
 
 it('should be able to mutate column style using callback', function (): void {
-    $theme = (new DefaultTheme())->getStyles();
-
-    $themeTdStyle = theme($theme, 'table.td');
-
-    $expectedStyle = mergeStyle($themeTdStyle, 'new-style-for-name-column');
+    $expectedStyle = 'new-style-for-name-column';
 
     $dynamicComponent = new class () extends SimpleTableComponent {
         public function mutation(): Mutation
@@ -95,10 +86,10 @@ it('should be able to mutate column style using callback', function (): void {
     };
 
     livewire($dynamicComponent::class)
-        ->assertSeeHtml('<td class="' . $expectedStyle . '">John Doe</td>')
-        ->assertSeeHtml('<td class="' . $themeTdStyle . '">Jane Doe</td>')
-        ->assertSeeHtml('<td class="' . $themeTdStyle . '">1123456789</td>')
-        ->assertSeeHtml('<td class="' . $themeTdStyle . '">2123456789</td>')
+        ->assertSeeHtml('<div data-cy="row-content" class="' . $expectedStyle . '">')
+        ->assertSeeHtml('<div data-cy="row-content" class="">')
+        ->assertSeeHtml('<div data-cy="row-content" class="">')
+        ->assertSeeHtml('<div data-cy="row-content" class="">')
         ->assertOk();
 });
 

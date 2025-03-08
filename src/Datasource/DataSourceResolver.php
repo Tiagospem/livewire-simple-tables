@@ -7,9 +7,9 @@ namespace TiagoSpem\SimpleTables\Datasource;
 use Illuminate\Support\Collection;
 use TiagoSpem\SimpleTables\Datasource\Resolvers\DataBuilderResolver;
 use TiagoSpem\SimpleTables\Datasource\Resolvers\DataCollectionResolver;
-use TiagoSpem\SimpleTables\Dto\TableData;
 use TiagoSpem\SimpleTables\Interfaces\ProcessorInterface;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
+use TiagoSpem\SimpleTables\TransferData\TableData;
 
 final readonly class DataSourceResolver implements ProcessorInterface
 {

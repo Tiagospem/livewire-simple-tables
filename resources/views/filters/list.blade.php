@@ -1,4 +1,4 @@
-<div>
+<div class="{{ $filterInlineStyle }}">
     @if (filled($label))
         <label
             for="{{ $filterId }}"

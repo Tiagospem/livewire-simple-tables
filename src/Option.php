@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables;
 
-use TiagoSpem\SimpleTables\Interfaces\HasActions;
+use TiagoSpem\SimpleTables\Interfaces\HasActionsInterface;
 use TiagoSpem\SimpleTables\Traits\HandleAction;
 
-final class Option implements HasActions
+final class Option implements HasActionsInterface
 {
     use HandleAction;
 

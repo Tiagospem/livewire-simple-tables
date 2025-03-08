@@ -6,7 +6,7 @@ namespace TiagoSpem\SimpleTables;
 
 use Closure;
 use Illuminate\Support\Facades\View;
-use TiagoSpem\SimpleTables\Dto\FieldConfig;
+use TiagoSpem\SimpleTables\TransferData\FieldConfig;
 
 final class Field
 {

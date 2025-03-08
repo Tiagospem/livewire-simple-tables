@@ -6,10 +6,19 @@
 
 <div
     class="cursor-pointer"
-    wire:click="sortTableBy('{{ $column }}')"
+    wire:loading.remove
+    wire:target="sortTableBy('{{ $column }}')"
 >
-    <x-dynamic-component
-        :component="$icon"
-        :class="$sortIconStyle"
-    />
+    <a wire:click="sortTableBy('{{ $column }}')">
+        <x-dynamic-component
+            :component="$icon"
+            :class="$sortIconStyle"
+        />
+    </a>
+</div>
+<div
+    wire:loading
+    wire:target="sortTableBy('{{ $column }}')"
+>
+    <x-simple-tables::svg.spinner2 class="{{ $sortIconStyle }}" />
 </div>

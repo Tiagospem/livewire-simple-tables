@@ -6,6 +6,7 @@ namespace TiagoSpem\SimpleTables;
 
 use TiagoSpem\SimpleTables\Concerns\ActionBuilder;
 use TiagoSpem\SimpleTables\Concerns\BeforeSearch;
+use TiagoSpem\SimpleTables\Concerns\BulkAction;
 use TiagoSpem\SimpleTables\Concerns\Mutation;
 use TiagoSpem\SimpleTables\Concerns\TableRowStyle;
 
@@ -29,5 +30,10 @@ final class SimpleTableManager
     public function beforeSearch(): BeforeSearch
     {
         return app(BeforeSearch::class);
+    }
+
+    public function bulkActions(): BulkAction
+    {
+        return app(BulkAction::class);
     }
 }

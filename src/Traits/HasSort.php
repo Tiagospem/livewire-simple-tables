@@ -13,14 +13,16 @@ trait HasSort
     public string $sortDirection = 'desc';
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function sortableIcons(): array
     {
+        $config = config('simple-tables.sort.icons');
+
         return [
-            'default' => 'simple-tables::svg.chevron-up-down',
-            'asc'     => 'simple-tables::svg.chevron-up',
-            'desc'    => 'simple-tables::svg.chevron-down',
+            'default' => data_get($config, 'default'),
+            'asc'     => data_get($config, 'asc'),
+            'desc'    => data_get($config, 'desc'),
         ];
     }
 

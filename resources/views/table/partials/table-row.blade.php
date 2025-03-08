@@ -5,7 +5,13 @@
     @foreach ($rowContent as $row)
         @includeWhen($loop->first && $detailViewEnabled, 'simple-tables::table.partials.detail-icon')
 
-        <td class="{{ $row->style }}">{!! $row->content !!}</td>
+        @includeWhen($loop->first && $hasBulkActions, 'simple-tables::table.partials.checkbox-icon')
+
+        <td class="{{ $tdStyle }}">
+            <div data-cy="row-content" class="{{ $row->style }}">
+                {!! $row->content !!}
+            </div>
+        </td>
     @endforeach
 </tr>
 
@@ -15,7 +21,7 @@
             colspan="999"
             class="border-y"
         >
-            <div class="p-4 bg-white">
+            <div class="bg-white">
                 {!! $detailView !!}
             </div>
         </td>

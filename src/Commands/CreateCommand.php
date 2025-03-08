@@ -23,7 +23,7 @@ final class CreateCommand extends Command
         $type = mb_strtolower(parserString($this->argument('type')));
 
         if ( ! in_array($type, ['table', 'filter'], true)) {
-            $this->error('Invalid component type. Allowed values: table, filter');
+            $this->error('Invalid component type. Allowed values: table and filter');
 
             return self::FAILURE;
         }
@@ -46,11 +46,16 @@ final class CreateCommand extends Command
             $className .= 'Table';
         }
 
+        if ('filter' === $type && ! str_ends_with($className, 'Filter')) {
+            $className .= 'Filter';
+        }
+
         $subPath = [] === $parts ? '' : implode('/', $parts) . '/';
 
-        $basePath = 'filter' === $type
-            ? config('simple-tables.filter-path')
-            : config('simple-tables.create-path');
+        $basePath = match ($type) {
+            'filter' => config('simple-tables.filters-path'),
+            default  => config('simple-tables.tables-path'),
+        };
 
         if ( ! is_string($basePath)) {
             $this->error('Invalid base path configuration');
@@ -75,6 +80,7 @@ final class CreateCommand extends Command
         $namespace     = $namespaceBase . ([] === $parts ? '' : '\\' . implode('\\', $parts));
         $content       = file_get_contents($stubPath) ?: '';
         $filterId      = uniqid('filter_');
+
         $content       = str_replace(['{{ namespace }}', '{{ class }}', '{{ filterId }}'], [$namespace, $className, $filterId], $content);
 
         file_put_contents($targetPath, $content);

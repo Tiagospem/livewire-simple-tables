@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Concerns;
 
 use Closure;
-use TiagoSpem\SimpleTables\Dto\TableStyleData;
+use TiagoSpem\SimpleTables\TransferData\TableStyleData;
 
 final class TableRowStyle
 {

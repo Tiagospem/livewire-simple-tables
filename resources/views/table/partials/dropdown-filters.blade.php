@@ -2,7 +2,7 @@
     x-data="{
         open: false,
     }"
-    class="relative flex-1"
+    class="relative"
 >
     <div>
         <div
@@ -20,16 +20,15 @@
         x-cloak
         x-show="open"
         x-on:click.away="open = false"
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="opacity-0 transform scale-95"
-        x-transition:enter-end="opacity-100 transform scale-100"
-        x-transition:leave="transition ease-in duration-75"
-        x-transition:leave-start="opacity-100 transform scale-100"
-        x-transition:leave-end="opacity-0 transform scale-95"
+        x-transition:enter="ease-out duration-200"
+        x-transition:enter-start="-translate-y-2"
+        x-transition:enter-end="translate-y-0"
         class="overflow-auto shadow-lg ring-1 ring-black/5 focus:outline-none bg-white p-3 rounded-lg absolute z-50 w-[350px] top-9 flex flex-col gap-2"
     >
         @foreach ($filters as $filter)
             {!! $filter->render() !!}
         @endforeach
+
+        @includeWhen($totalFiltersSelected, 'simple-tables::table.partials.clean-filters')
     </div>
 </div>

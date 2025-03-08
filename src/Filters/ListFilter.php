@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace TiagoSpem\SimpleTables\Filters;
 
 use Illuminate\Support\Facades\View;
-use TiagoSpem\SimpleTables\Interfaces\Filter;
+use TiagoSpem\SimpleTables\Interfaces\FilterInterface;
 
-abstract class ListFilter implements Filter
+abstract class ListFilter implements FilterInterface
 {
+    protected string $filterInlineStyle = 'col-span-6';
+
     protected string $valueKey = 'value';
 
     protected string $labelKey = 'label';
@@ -64,11 +66,12 @@ abstract class ListFilter implements Filter
     public function render(): string
     {
         return View::make('simple-tables::filters.list', [
-            'options'  => $this->getOptions(),
-            'filterId' => $this->getFilterId(),
-            'label'    => $this->getLabel(),
-            'valueKey' => $this->valueKey,
-            'labelKey' => $this->labelKey,
+            'options'           => $this->getOptions(),
+            'filterId'          => $this->getFilterId(),
+            'filterInlineStyle' => $this->filterInlineStyle,
+            'label'             => $this->getLabel(),
+            'valueKey'          => $this->valueKey,
+            'labelKey'          => $this->labelKey,
         ])->render();
     }
 }

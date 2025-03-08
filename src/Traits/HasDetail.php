@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace TiagoSpem\SimpleTables\Traits;
 
+use Livewire\Attributes\Locked;
+
 trait HasDetail
 {
-    public string $detailView = '';
-
+    #[Locked]
     public bool $shouldCloseOthers = false;
 
     /**
@@ -24,6 +25,17 @@ trait HasDetail
         }
 
         $this->expandedRows = $this->shouldCloseOthers ? [$rowId] : [...$this->expandedRows, $rowId];
+    }
+
+    /**
+     * @return array{view: string, params: array<string, mixed>}
+     */
+    public function detailView(): array
+    {
+        return [
+            'view'   => '',
+            'params' => [],
+        ];
     }
 
     private function isRowExpanded(int $rowId): bool

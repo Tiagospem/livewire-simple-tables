@@ -131,7 +131,7 @@ trait HandleAction
     {
         $isHidden = $this->evaluateCondition($this->hidden, $row);
 
-        $can = $this->evaluateCondition($this->can, $row);
+        $can = $this->evaluatePermission();
 
         return $isHidden || ! $can;
     }
@@ -206,5 +206,12 @@ trait HandleAction
         return (bool) ($condition instanceof Closure
             ? $condition($row)
             : $condition);
+    }
+
+    private function evaluatePermission(): bool
+    {
+        return (bool) ($this->can instanceof Closure
+            ? $this->can->call($this)
+            : $this->can);
     }
 }

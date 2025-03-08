@@ -14,6 +14,6 @@
         wire:loading
         wire:target="toggleRowDetail({{ $rowId }})"
     >
-        <x-simple-tables::svg.spinner @class(['h-4 w-4 transition', 'spin-reverse' => $shouldShowDetail]) />
+        <x-simple-tables::svg.spinner2 @class(['h-4 w-4 transition']) />
     </div>
 </td>

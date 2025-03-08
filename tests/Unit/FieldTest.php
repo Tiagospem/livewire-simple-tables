@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use TiagoSpem\SimpleTables\Dto\FieldConfig;
 use TiagoSpem\SimpleTables\Field;
+use TiagoSpem\SimpleTables\TransferData\FieldConfig;
 
 it('creates a Field instance with the specified key', function (): void {
     $field = Field::key('test_key');

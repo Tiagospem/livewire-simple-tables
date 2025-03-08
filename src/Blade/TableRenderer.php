@@ -8,8 +8,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginator
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
-use TiagoSpem\SimpleTables\Dto\TableData;
 use TiagoSpem\SimpleTables\SimpleTableComponent;
+use TiagoSpem\SimpleTables\TransferData\TableData;
 
 final readonly class TableRenderer
 {
@@ -24,12 +24,19 @@ final readonly class TableRenderer
 
     public function render(): string
     {
+        $filters     = $this->component->getFilters();
+        $bulkActions = $this->component->bulkActions();
+
         return View::make('simple-tables::table.table', [
             'header'               => $this->renderHeader(),
             'body'                 => $this->renderBody(),
             'pagination'           => $this->renderPagination(),
-            'filters'              => $this->component->getFilters(),
+            'filters'              => $filters,
+            'hasFilters'           => count($filters)     > 0,
+            'hasBulkActions'       => $bulkActions->hasBulkActions(),
             'totalFiltersSelected' => $this->component->getTotalFiltersSelected(),
+            'inlineFilters'        => $this->component->inlineFilters,
+            'filterGridStyle'      => $this->component->filterGridStyle,
             'showSearch'           => $this->table->showSearch,
             'tableStyle'           => theme($this->theme, 'table.content'),
             'bodyStyle'            => theme($this->theme, 'table.body'),
@@ -38,17 +45,25 @@ final readonly class TableRenderer
 
     private function renderHeader(): string
     {
+        $bulkActions = $this->component->bulkActions();
+
         return View::make('simple-tables::table.partials.table-header', [
-            'columns'           => $this->getVisibleColumns(),
-            'sortBy'            => $this->component->sortBy,
-            'sortDirection'     => $this->component->sortDirection,
-            'sortableIcons'     => $this->component->sortableIcons(),
-            'trHeaderStyle'     => theme($this->theme, 'table.tr_header'),
-            'thStyle'           => theme($this->theme, 'table.th'),
-            'thLastStyle'       => theme($this->theme, 'table.th_last'),
-            'sortIconStyle'     => theme($this->theme, 'table.sort_icon'),
-            'hasAction'         => $this->table->actionBuilder->hasActions(),
-            'detailViewEnabled' => $this->detailViewEnabled(),
+            'columns'                  => $this->getVisibleColumns(),
+            'sortBy'                   => $this->component->sortBy,
+            'sortDirection'            => $this->component->sortDirection,
+            'sortableIcons'            => $this->component->sortableIcons(),
+            'trHeaderStyle'            => theme($this->theme, 'table.tr_header'),
+            'thStyle'                  => theme($this->theme, 'table.th'),
+            'thLastStyle'              => theme($this->theme, 'table.th_last'),
+            'sortIconStyle'            => theme($this->theme, 'table.sort_icon'),
+            'hasAction'                => $this->table->actionBuilder->hasActions(),
+            'detailViewEnabled'        => $this->detailViewEnabled(),
+            'hasBulkActions'           => $bulkActions->hasBulkActions(),
+            'bulkActions'              => $bulkActions->getBulkActions(),
+            'selectedIds'              => $this->component->selectedIds,
+            'hasSelectedIds'           => count($this->component->selectedIds),
+            'themeDropdownOptionStyle' => theme($this->theme, 'dropdown.option'),
+            'themeDropdownStyle'       => theme($this->theme, 'dropdown.content'),
         ])->render();
     }
 
@@ -79,11 +94,14 @@ final readonly class TableRenderer
 
         $shouldShowDetail = $this->shouldShowDetail($rowId);
 
+        $bulkActions = $this->component->bulkActions();
+
         return View::make('simple-tables::table.partials.table-row', [
             'rowContent'        => $contentParser->mapFieldsWithContent(),
             'detailViewEnabled' => $this->detailViewEnabled(),
             'shouldShowDetail'  => $shouldShowDetail,
             'detailView'        => $shouldShowDetail ? $this->renderDetailView($row) : '',
+            'hasBulkActions'    => $bulkActions->hasBulkActions(),
             'rowId'             => $rowId,
             'trStyle'           => $contentParser->getMutedRowStyle(),
             'tdStyle'           => theme($this->theme, 'table.td'),
@@ -92,7 +110,7 @@ final readonly class TableRenderer
 
     private function detailViewEnabled(): bool
     {
-        return filled($this->component->detailView);
+        return filled($this->component->detailView()['view']);
     }
 
     private function shouldShowDetail(mixed $rowId): bool
@@ -102,8 +120,15 @@ final readonly class TableRenderer
 
     private function renderDetailView(mixed $row): string
     {
-        return View::make($this->component->detailView, [
+        $detail = $this->component->detailView();
+
+        if (empty($detail['view'])) {
+            return 'view not found.';
+        }
+
+        return View::make($detail['view'], [
             'row' => $row,
+            ...$detail['params'],
         ])->render();
     }
 

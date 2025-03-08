@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TiagoSpem\SimpleTables\Dto;
+namespace TiagoSpem\SimpleTables\TransferData;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorContract;
 use Illuminate\Database\Eloquent\Builder;
