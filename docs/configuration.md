@@ -50,50 +50,82 @@ module.exports = {
 
 The package provides a configuration file that allows you to customize various aspects of its behavior. After publishing the configuration file as described in the Installation guide, you can find it at `config/simple-tables.php`.
 
-Here are some key configuration options:
+Here are the key configuration options:
 
-### Pagination
+### File Paths
 
-You can customize the default pagination settings:
+You can customize where generated table and filter files are saved when using the package's commands:
 
 ```php
 // config/simple-tables.php
 
-'pagination' => [
-    'per_page' => [
-        'options' => [10, 25, 50, 100],
-        'default' => 25,
-    ],
-],
+// Where table components will be created when using the st:create table command
+'tables-path' => app_path('Livewire/Tables'),
+
+// Where filter components will be created when using the st:create filter command
+'filters-path' => app_path('Livewire/Tables/Filters'),
 ```
 
-### Sorting
+### Theme Configuration
 
-Configure the default sorting behavior and icons:
+You can specify a custom theme for all your tables:
+
+```php
+// config/simple-tables.php
+
+// Use the default theme
+'theme' => TiagoSpem\SimpleTables\Themes\DefaultTheme::class,
+
+// Or use a custom theme
+// 'theme' => App\Themes\CustomTheme::class,
+```
+
+To create a custom theme, you can extend the default theme or implement the `ThemeInterface`. See the [Theming](/usage/theming) guide for more details.
+
+### Sorting Icons
+
+Configure the default sorting icons:
 
 ```php
 // config/simple-tables.php
 
 'sort' => [
     'icons' => [
-        'default' => 'svg.sort',
-        'asc' => 'svg.sort-up',
-        'desc' => 'svg.sort-down',
+        'default' => 'simple-tables::svg.chevron-up-down',
+        'asc'     => 'simple-tables::svg.chevron-up',
+        'desc'    => 'simple-tables::svg.chevron-down',
     ],
 ],
 ```
 
-### Themes
+## Complete Configuration Example
 
-The package comes with a default theme, but you can create and configure custom themes:
+Here's a complete example of the configuration file:
 
 ```php
-// config/simple-tables.php
+<?php
 
-'themes' => [
-    'default' => \TiagoSpem\SimpleTables\Themes\DefaultTheme::class,
-    // Add your custom themes here
-],
+declare(strict_types=1);
+
+return [
+    // Where table components will be created when using the st:create table command
+    'tables-path' => app_path('Livewire/Tables'),
+
+    // Where filter components will be created when using the st:create filter command
+    'filters-path' => app_path('Livewire/Tables/Filters'),
+
+    // Theme configuration
+    'theme' => TiagoSpem\SimpleTables\Themes\DefaultTheme::class,
+
+    // Sort icon configuration
+    'sort' => [
+        'icons' => [
+            'default' => 'simple-tables::svg.chevron-up-down',
+            'asc'     => 'simple-tables::svg.chevron-up',
+            'desc'    => 'simple-tables::svg.chevron-down',
+        ],
+    ],
+];
 ```
 
 ## Customizing Views
