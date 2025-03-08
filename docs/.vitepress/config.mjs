@@ -34,6 +34,7 @@ export default defineConfig({
           { text: 'Searching', link: '/usage/searching' },
           { text: 'Sorting', link: '/usage/sorting' },
           { text: 'Actions', link: '/usage/actions' },
+          { text: 'Mutations', link: '/usage/mutations' },
           { text: 'Row Details', link: '/usage/row-details' },
           { text: 'Theming', link: '/usage/theming' },
         ]
