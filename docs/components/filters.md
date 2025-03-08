@@ -93,7 +93,7 @@ By default, when `$inlineFilters` is set to `false`, filters will be displayed i
 public bool $inlineFilters = false; // Filters in dropdown
 ```
 
-![Dropdown Filters Example](docs/images/dropdown-filters.png)
+![Dropdown Filters Example](images/dropdown-filters.png)
 
 ### Inline Filters
 
@@ -103,7 +103,7 @@ When `$inlineFilters` is set to `true`, filters will be displayed inline in a gr
 public bool $inlineFilters = true; // Inline grid filters
 ```
 
-![Inline Filters Example](docs/images/inline-filters.png)
+![Inline Filters Example](images/inline-filters.png)
 
 Choose the display format that best fits your user interface and the number of filters you're using.
 

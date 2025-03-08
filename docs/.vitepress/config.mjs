@@ -46,12 +46,6 @@ export default defineConfig({
           { text: 'Bulk Actions', link: '/components/bulk-actions' },
           { text: 'Filters', link: '/components/filters' },
           { text: 'Placeholders', link: '/components/placeholders' },
-          { text: 'Columns', link: '/components/columns' },
-          { text: 'Fields', link: '/components/fields' },
-          { text: 'Options', link: '/components/options' },
-          { text: 'Mutations', link: '/components/mutations' },
-          { text: 'Table Row Styles', link: '/components/table-row-styles' },
-          { text: 'Action Builder', link: '/components/action-builder' },
         ]
       }
     ],
