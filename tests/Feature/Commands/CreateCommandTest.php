@@ -68,8 +68,8 @@ it('fails with an invalid component type', function (): void {
 });
 
 it('fails when the component already exists', function (): void {
-    File::ensureDirectoryExists(base_path('app/Tables'));
-    File::put(base_path('app/Tables/TestTable.php'), '');
+    File::ensureDirectoryExists(base_path('app/Livewire/Tables'));
+    File::put(base_path('app/Livewire/Tables/TestTable.php'), '');
 
     $exitCode = Artisan::call('st:create', ['type' => 'table', 'name' => 'TestTable']);
 
