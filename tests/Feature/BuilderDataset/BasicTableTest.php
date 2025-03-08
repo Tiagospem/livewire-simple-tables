@@ -22,6 +22,14 @@ $component = new class () extends SimpleTableComponent {
         ];
     }
 
+    public function detailView(): array
+    {
+        return [
+            'view'   => 'simple-tables::tests.detail-view',
+            'params' => [],
+        ];
+    }
+
     public function datasource(): Builder
     {
         return User::query();
@@ -170,9 +178,7 @@ it('should be able to override theme style', function () use ($component): void 
 it('should be able to use detail row feature', function () use ($component): void {
     $users = User::factory(2)->create();
 
-    livewire($component::class, [
-        'detailView' => 'simple-tables::tests.detail-view',
-    ])
+    livewire($component::class)
         ->call('toggleRowDetail', $users[0]->id)
         ->assertSet('expandedRows', [$users[0]->id])
         ->assertSee('Detail view ' . $users[0]->name)
@@ -189,7 +195,6 @@ it('should be able to close other detail opens', function () use ($component): v
     $users = User::factory(2)->create();
 
     livewire($component::class, [
-        'detailView'        => 'simple-tables::tests.detail-view',
         'shouldCloseOthers' => true,
     ])
         ->call('toggleRowDetail', $users[0]->id)

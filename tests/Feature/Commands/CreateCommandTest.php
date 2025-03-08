@@ -37,7 +37,7 @@ it('creates a table component successfully', function (): void {
 
     Artisan::call('st:create', ['type' => 'table', 'name' => $uniqueName]);
 
-    $this->assertFileExists(base_path('app/Tables/' . $uniqueName . 'Table.php'));
+    $this->assertFileExists(base_path('app/Livewire/Tables/' . $uniqueName . 'Table.php'));
 });
 
 it('creates a filter component successfully', function (): void {
@@ -57,14 +57,14 @@ it('creates a filter component successfully', function (): void {
 
     Artisan::call('st:create', ['type' => 'filter', 'name' => $uniqueName]);
 
-    $this->assertFileExists(base_path('app/Filters/' . $uniqueName . '.php'));
+    $this->assertFileExists(base_path('app/Livewire/Tables/Filters/' . $uniqueName . 'Filter.php'));
 });
 
 it('fails with an invalid component type', function (): void {
     $exitCode = Artisan::call('st:create', ['type' => 'invalid', 'name' => 'TestComponent']);
 
     expect($exitCode)->toBe(SymfonyCommand::FAILURE)
-        ->and(Artisan::output())->toContain('Invalid component type. Allowed values: table, filter');
+        ->and(Artisan::output())->toContain('Invalid component type. Allowed values: table and filter');
 });
 
 it('fails when the component already exists', function (): void {
@@ -74,7 +74,7 @@ it('fails when the component already exists', function (): void {
     $exitCode = Artisan::call('st:create', ['type' => 'table', 'name' => 'TestTable']);
 
     expect($exitCode)->toBe(SymfonyCommand::FAILURE)
-        ->and(Artisan::output())->toContain('Component already exists: ' . base_path('app/Tables/TestTable.php'));
+        ->and(Artisan::output())->toContain('Component already exists: ' . base_path('app/Livewire/Tables/TestTable.php'));
 });
 
 it('fails when the stub file is not found', function (): void {
@@ -100,9 +100,16 @@ it('fails when the stub file is not found', function (): void {
 });
 
 it('fails when the base path configuration is invalid', function (): void {
-    config(['simple-tables.create-path' => null]);
+    config(['simple-tables.tables-path' => null]);
 
     $exitCode = Artisan::call('st:create', ['type' => 'table', 'name' => 'TestTable']);
+
+    expect($exitCode)->toBe(SymfonyCommand::FAILURE)
+        ->and(Artisan::output())->toContain('Invalid base path configuration');
+
+    config(['simple-tables.filters-path' => null]);
+
+    $exitCode = Artisan::call('st:create', ['type' => 'filter', 'name' => 'FilterTest']);
 
     expect($exitCode)->toBe(SymfonyCommand::FAILURE)
         ->and(Artisan::output())->toContain('Invalid base path configuration');

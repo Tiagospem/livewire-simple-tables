@@ -8,7 +8,7 @@
         @includeWhen($loop->first && $hasBulkActions, 'simple-tables::table.partials.checkbox-icon')
 
         <td class="{{ $tdStyle }}">
-            <div class="{{ $row->style }}">
+            <div data-cy="row-content" class="{{ $row->style }}">
                 {!! $row->content !!}
             </div>
         </td>

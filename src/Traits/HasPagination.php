@@ -17,6 +17,5 @@ trait HasPagination
     #[Locked]
     public bool $stickyPagination = false;
 
-    #[Locked]
     public int $perPage = 10;
 }
