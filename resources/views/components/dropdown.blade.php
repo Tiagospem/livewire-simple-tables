@@ -3,6 +3,8 @@
     'dropdownOptions' => [],
     'defaultOptionIcon' => null,
     'themeDropdownOptionStyle',
+    'themeDropdownOptionIconStyle',
+    'themeDropdownOptionDividerStyle',
     'themeDropdownStyle',
     'row',
 ])
@@ -58,7 +60,7 @@
                             $isWireNavigate = $option->isWireNavigate();
                         @endphp
                         @if ($option->isDivider() && $option->hasDividerOptions())
-                            <div class="border-t border-b border-slate-100">
+                            <div @class([$themeDropdownOptionDividerStyle])>
                                 @foreach ($option->getDividerOptions() as $dividerOption)
                                     @php
                                         $dividerDisabled = $dividerOption->isDisabled($row);
@@ -85,6 +87,7 @@
                                         :$iconStyle
                                         :$buttonStyle
                                         :$themeDropdownOptionStyle
+                                        :$themeDropdownOptionIconStyle
                                         :$isWireNavigate
                                     />
                                 @endforeach
@@ -100,6 +103,7 @@
                                 :$iconStyle
                                 :$buttonStyle
                                 :$themeDropdownOptionStyle
+                                :$themeDropdownOptionIconStyle
                                 :$isWireNavigate
                             />
                         @endif

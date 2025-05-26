@@ -19,6 +19,8 @@
                 :$dropdownOptions
                 :$defaultOptionIcon
                 :$themeDropdownOptionStyle
+                :$themeDropdownOptionIconStyle
+                :$themeDropdownOptionDividerStyle
                 :$themeDropdownStyle
                 :$row
             >

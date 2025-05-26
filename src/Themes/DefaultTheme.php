@@ -25,8 +25,10 @@ final class DefaultTheme implements ThemeInterface
                 'button' => 'inline-block cursor-pointer rounded-md bg-slate-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600',
             ],
             'dropdown' => [
-                'content' => 'z-40 w-56 fixed overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none',
-                'option'  => 'hover:bg-slate-100 transition group flex items-center px-3 py-1.5 text-sm text-slate-700 cursor-pointer outline-none focus:outline-none',
+                'content'        => 'z-40 w-56 fixed overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none',
+                'option'         => 'hover:bg-slate-100 transition group flex items-center px-3 py-1.5 text-sm text-slate-700 cursor-pointer outline-none focus:outline-none',
+                'option_icon'    => 'mr-3 size-4.5 text-slate-500',
+                'option_divider' => 'border-t border-b border-slate-100',
             ],
             'pagination' => [
                 'container' => 'mt-4 w-full',

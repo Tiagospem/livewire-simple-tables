@@ -15,21 +15,23 @@ trait HasTheme
      */
     public array $theme = [];
 
-    public string $tableContent_Stl        = '';
-    public string $tableTr_Stl             = '';
-    public string $tableTbody_Stl          = '';
-    public string $tableThead_Stl          = '';
-    public string $tableTh_Stl             = '';
-    public string $tableTd_Stl             = '';
-    public string $tableTdNoRecords_Stl    = '';
-    public string $tableTrHeader_Stl       = '';
-    public string $tableSortIcon_Stl       = '';
-    public string $tableBooleanIcon_Stl    = '';
-    public string $actionButton_Stl        = '';
-    public string $dropdownContent_Stl     = '';
-    public string $dropdownOption_Stl      = '';
-    public string $paginationContainer_Stl = '';
-    public string $paginationSticky_Stl    = '';
+    public string $tableContent_Stl           = '';
+    public string $tableTr_Stl                = '';
+    public string $tableTbody_Stl             = '';
+    public string $tableThead_Stl             = '';
+    public string $tableTh_Stl                = '';
+    public string $tableTd_Stl                = '';
+    public string $tableTdNoRecords_Stl       = '';
+    public string $tableTrHeader_Stl          = '';
+    public string $tableSortIcon_Stl          = '';
+    public string $tableBooleanIcon_Stl       = '';
+    public string $actionButton_Stl           = '';
+    public string $dropdownContent_Stl        = '';
+    public string $dropdownOption_Stl         = '';
+    public string $dropdownOptionIcon_Stl     = '';
+    public string $dropdownOptionDivider_Stl  = '';
+    public string $paginationContainer_Stl    = '';
+    public string $paginationSticky_Stl       = '';
 
     /**
      * @throws InvalidThemeException

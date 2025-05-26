@@ -6,6 +6,7 @@
     'iconStyle' => '',
     'buttonStyle' => '',
     'themeDropdownOptionStyle',
+    'themeDropdownOptionIconStyle',
     'isWireNavigate' => false,
     'url' => '',
     'target' => '',
@@ -32,7 +33,7 @@
             <x-dynamic-component
                 :data-cy="$icon"
                 :component="$icon"
-                @class(['mr-3 size-4.5 text-slate-500', $iconStyle])
+                @class([mergeStyle($iconStyle, $themeDropdownOptionIconStyle)])
             />
         @endif
 
